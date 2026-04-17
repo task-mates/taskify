@@ -42,7 +42,7 @@ jobs:
             }
 
       - name: Add to Project
-        uses: actions/add-to-project@v1
+        uses: actions/add-to-project@v1.0.1
         with:
           project-url: https://github.com/orgs/task-mates/projects/1
           github-token: ${{ secrets.PROJECT_TOKEN }}
