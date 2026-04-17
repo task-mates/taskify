@@ -1,0 +1,48 @@
+name: PR Automation
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+jobs:
+  pr-setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Assign Author and Reviewers
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo, number } = context.issue;
+            const prAuthor = context.actor;
+            
+            await github.rest.issues.addAssignees({
+              owner,
+              repo,
+              issue_number: number,
+              assignees: [prAuthor]
+            });
+
+            const teamMembers = [
+              'pho9902', 
+              'chahyunlee', 
+              'devchae10', 
+              'ekdmskwon', 
+              'kimyum0307'
+            ];
+            const reviewers = teamMembers.filter(member => member !== prAuthor);
+
+            if (reviewers.length > 0) {
+              await github.rest.pulls.requestReviewers({
+                owner,
+                repo,
+                pull_number: number,
+                reviewers: reviewers
+              });
+            }
+
+      - name: Add to Project
+        uses: actions/add-to-project@v1
+        with:
+          project-url: https://github.com/orgs/task-mates/projects/1
+          github-token: ${{ secrets.PROJECT_TOKEN }}
