@@ -18,6 +18,12 @@ export interface Dashboard {
   userId: number;
 }
 
+export interface GetDashboardListRequest {
+  cursorId?: number;
+  page?: number;
+  size?: number;
+}
+
 export interface GetDashboardList {
   cursorId: number;
   totalCount: number;

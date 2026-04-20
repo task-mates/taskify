@@ -2,6 +2,7 @@ import instance from "@/src/apis/instance";
 import {
   CreateDashboardRequest,
   Dashboard,
+  GetDashboardListRequest,
   GetDashboardList,
   UpdateDashboardRequest,
 } from "@/src/apis/types";
@@ -17,8 +18,13 @@ export const dashboardsApi = {
     );
     return data;
   },
-  getList: async () => {
-    const { data } = await instance.get<GetDashboardList>("/dashboards");
+  getList: async ({ ...params }: GetDashboardListRequest) => {
+    const { data } = await instance.get<GetDashboardList>("/dashboards", {
+      params: {
+        navigationMethod: "infiniteScroll",
+        ...params,
+      },
+    });
     return data;
   },
   update: async (dashboardId: number, body: UpdateDashboardRequest) => {
