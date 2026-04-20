@@ -37,6 +37,6 @@ export interface GetInvitationListRequest {
 }
 
 export interface GetInvitationListResponse {
-  cursorId: number;
+  cursorId: number | null;
   invitations: Invitation[];
 }
