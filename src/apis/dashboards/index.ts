@@ -3,7 +3,7 @@ import {
   CreateDashboardRequest,
   Dashboard,
   GetDashboardListRequest,
-  GetDashboardList,
+  GetDashboardListResponse,
   UpdateDashboardRequest,
 } from "@/src/apis/dashboards/type";
 
@@ -21,12 +21,15 @@ export const dashboardsApi = {
   },
 
   getList: async (params: GetDashboardListRequest) => {
-    const { data } = await instance.get<GetDashboardList>("/dashboards", {
-      params: {
-        navigationMethod: "infiniteScroll",
-        ...params,
+    const { data } = await instance.get<GetDashboardListResponse>(
+      "/dashboards",
+      {
+        params: {
+          navigationMethod: "infiniteScroll",
+          ...params,
+        },
       },
-    });
+    );
     return data;
   },
 

@@ -13,7 +13,7 @@ export interface DashboardSummary {
   title: string;
 }
 
-export interface DashboardInvitation {
+export interface DashboardInvitationResponse {
   id: number;
   teamId: string;
 
@@ -27,7 +27,7 @@ export interface DashboardInvitation {
   updatedAt: string;
 }
 
-export interface DashboardInvitationList {
+export interface DashboardInvitationListResponse {
   totalCount: number;
   invitations: DashboardInvitation[];
 }

@@ -1,8 +1,8 @@
 import instance from "@/src/apis/instance";
 import {
   CreateDashboardInvitationRequest,
-  DashboardInvitationList,
-  DashboardInvitation,
+  DashboardInvitationListResponse,
+  DashboardInvitationResponse,
   GetInvitationListRequest,
 } from "@/src/apis/dashboard-invitations/type";
 
@@ -11,7 +11,7 @@ export const dashboardInvitationsApi = {
     dashboardId: number,
     body: CreateDashboardInvitationRequest,
   ) => {
-    const { data } = await instance.post<DashboardInvitation>(
+    const { data } = await instance.post<DashboardInvitationResponse>(
       `/dashboards/${dashboardId}/invitations`,
       body,
     );
@@ -19,7 +19,7 @@ export const dashboardInvitationsApi = {
   },
 
   getList: async (dashboardId: number, params: GetInvitationListRequest) => {
-    const { data } = await instance.get<DashboardInvitationList>(
+    const { data } = await instance.get<DashboardInvitationListResponse>(
       `/dashboards/${dashboardId}/invitations`,
       {
         params: {
