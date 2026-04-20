@@ -8,7 +8,7 @@ export const membersApi = {
     });
     return data;
   },
-  delete: async (memberId: number) => {
+  remove: async (memberId: number) => {
     await instance.delete(`/members/${memberId}`);
   },
 };

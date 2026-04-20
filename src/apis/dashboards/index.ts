@@ -41,7 +41,7 @@ export const dashboardsApi = {
     return data;
   },
 
-  delete: async (dashboardId: number) => {
+  remove: async (dashboardId: number) => {
     await instance.delete(`/dashboards/${dashboardId}`);
   },
 };
