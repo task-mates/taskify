@@ -24,7 +24,7 @@ export interface GetDashboardListRequest {
   size?: number;
 }
 
-export interface GetDashboardList {
+export interface GetDashboardListResponse {
   cursorId: number;
   totalCount: number;
   dashboards: Dashboard[];
