@@ -15,6 +15,10 @@ export interface Column {
   updatedAt: string;
 }
 
+export interface UploadCardImageResponse {
+  imageUrl: string;
+}
+
 export interface GetColumnListResponse {
   result: "SUCCESS";
   data: Column[];

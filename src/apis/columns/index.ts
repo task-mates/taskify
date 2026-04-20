@@ -4,6 +4,7 @@ import {
   UpdateColumnRequest,
   Column,
   GetColumnListResponse,
+  UploadCardImageResponse,
 } from "@/src/apis/columns/type";
 
 export const columnsApi = {
@@ -13,6 +14,15 @@ export const columnsApi = {
   },
   update: async (columnId: number, body: UpdateColumnRequest) => {
     const { data } = await instance.put<Column>(`/columns/${columnId}`, body);
+    return data;
+  },
+  uploadCardImage: async (columnId: number, image: File) => {
+    const formData = new FormData();
+    formData.append("image", image);
+    const { data } = await instance.post<UploadCardImageResponse>(
+      `/columns/${columnId}/card-image`,
+      formData,
+    );
     return data;
   },
   delete: async (columnId: number) => {
