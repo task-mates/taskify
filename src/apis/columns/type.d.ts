@@ -1,3 +1,7 @@
+export interface UpdateColumnRequest {
+  title: string;
+}
+
 export interface CreateColumnRequest {
   title: string;
   dashboardId: number;
