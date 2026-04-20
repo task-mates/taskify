@@ -20,13 +20,13 @@ export const cardsApi = {
 		return data;
 	},
 
-	getById: async (cardId: number) => {
-		const { data } = await instance.get<Card>(`/cards/${cardId}`);
+	update: async (cardId: number, body: UpdateCardRequest) => {
+		const { data } = await instance.put<Card>(`/cards/${cardId}`, body);
 		return data;
 	},
 
-	update: async (cardId: number, body: UpdateCardRequest) => {
-		const { data } = await instance.put<Card>(`/cards/${cardId}`, body);
+	getById: async (cardId: number) => {
+		const { data } = await instance.get<Card>(`/cards/${cardId}`);
 		return data;
 	},
 

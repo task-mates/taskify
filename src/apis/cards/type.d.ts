@@ -9,14 +9,10 @@ export interface CreateCardRequest {
 	imageUrl?: string;
 }
 
-export interface UpdateCardRequest {
-	columnId?: number;
-	assigneeUserId?: number | null;
-	title?: string;
-	description?: string;
-	dueDate?: string | null;
-	tags?: string[];
-	imageUrl?: string | null;
+export interface GetCardListRequest {
+	columnId: number;
+	size?: number;
+	cursorId?: number;
 }
 
 export interface Assignee {
@@ -39,14 +35,18 @@ export interface Card {
 	updatedAt: string;
 }
 
-export interface GetCardListRequest {
-	columnId: number;
-	size?: number;
-	cursorId?: number;
-}
-
 export interface GetCardListResponse {
 	cursorId: number;
 	totalCount: number;
 	cards: Card[];
+}
+
+export interface UpdateCardRequest {
+	columnId?: number;
+	assigneeUserId?: number | null;
+	title?: string;
+	description?: string;
+	dueDate?: string | null;
+	tags?: string[];
+	imageUrl?: string | null;
 }
