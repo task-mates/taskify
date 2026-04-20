@@ -15,6 +15,9 @@ export const columnsApi = {
     const { data } = await instance.put<Column>(`/columns/${columnId}`, body);
     return data;
   },
+  delete: async (columnId: number) => {
+    await instance.delete(`/columns/${columnId}`);
+  },
   getList: async (dashboardId: number) => {
     const { data } = await instance.get<GetColumnListResponse>(`/columns`, {
       params: { dashboardId },
