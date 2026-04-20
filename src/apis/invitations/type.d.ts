@@ -1,26 +1,11 @@
-export interface Inviter {
-  nickname: string;
-  email: string;
-  id: number;
-}
-
-export interface Invitee {
-  nickname: string;
-  email: string;
-  id: number;
-}
-
-export interface InvitationDashboard {
-  title: string;
-  id: number;
-}
+import { UserSummary, DashboardSummary } from "@/src/apis/common/type";
 
 export interface Invitation {
   id: number;
-  inviter: Inviter;
+  inviter: UserSummary;
   teamId: string;
-  dashboard: InvitationDashboard;
-  invitee: Invitee;
+  dashboard: DashboardSummary;
+  invitee: UserSummary;
   inviteAccepted: boolean;
   createdAt: string;
   updatedAt: string;
