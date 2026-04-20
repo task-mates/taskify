@@ -5,7 +5,7 @@ import {
   GetDashboardListRequest,
   GetDashboardList,
   UpdateDashboardRequest,
-} from "@/src/apis/types";
+} from "@/src/apis/dashboards/type";
 
 export const dashboardsApi = {
   create: async (body: CreateDashboardRequest) => {
