@@ -13,7 +13,7 @@ export const cardsApi = {
 		return data;
 	},
 
-	getList: async ({ ...params }: GetCardListRequest) => {
+	getList: async (params: GetCardListRequest) => {
 		const { data } = await instance.get<GetCardListResponse>("/cards", {
 			params,
 		});
