@@ -20,7 +20,7 @@ export const dashboardsApi = {
     return data;
   },
 
-  getList: async ({ ...params }: GetDashboardListRequest) => {
+  getList: async (params: GetDashboardListRequest) => {
     const { data } = await instance.get<GetDashboardList>("/dashboards", {
       params: {
         navigationMethod: "infiniteScroll",

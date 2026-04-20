@@ -18,10 +18,7 @@ export const dashboardInvitationsApi = {
     return data;
   },
 
-  getList: async (
-    dashboardId: number,
-    { ...params }: GetInvitationListRequest,
-  ) => {
+  getList: async (dashboardId: number, params: GetInvitationListRequest) => {
     const { data } = await instance.get<DashboardInvitationList>(
       `/dashboards/${dashboardId}/invitations`,
       {
