@@ -5,10 +5,6 @@ export interface CreateCommentRequest {
 	dashboardId: number;
 }
 
-export interface UpdateCommentRequest {
-	content: string;
-}
-
 export interface Author {
 	profileImageUrl: string | null;
 	nickname: string;
@@ -33,4 +29,8 @@ export interface GetCommentListRequest {
 export interface GetCommentListResponse {
 	cursorId: number | null;
 	comments: Comment[];
+}
+
+export interface UpdateCommentRequest {
+	content: string;
 }
