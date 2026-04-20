@@ -12,12 +12,14 @@ export const dashboardsApi = {
     const { data } = await instance.post<Dashboard>("/dashboards", body);
     return data;
   },
+
   getById: async (dashboardId: number) => {
     const { data } = await instance.get<Dashboard>(
       `/dashboards/${dashboardId}`,
     );
     return data;
   },
+
   getList: async ({ ...params }: GetDashboardListRequest) => {
     const { data } = await instance.get<GetDashboardList>("/dashboards", {
       params: {
@@ -27,6 +29,7 @@ export const dashboardsApi = {
     });
     return data;
   },
+
   update: async (dashboardId: number, body: UpdateDashboardRequest) => {
     const { data } = await instance.put<Dashboard>(
       `/dashboards/${dashboardId}`,
@@ -34,6 +37,7 @@ export const dashboardsApi = {
     );
     return data;
   },
+
   delete: async (dashboardId: number) => {
     await instance.delete(`/dashboards/${dashboardId}`);
   },
