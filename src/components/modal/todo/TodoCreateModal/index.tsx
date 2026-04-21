@@ -105,7 +105,7 @@ const Row = styled.div`
   display: flex;
   gap: 20px;
 `;
-const Field = styled.div<{ $inRow?: boolean }>`
+const Field = styled.div`
   flex: 1;
 `;
 const Label = styled.label<{ $required?: boolean }>`
