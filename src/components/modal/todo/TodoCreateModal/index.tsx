@@ -83,7 +83,7 @@ export default function TodoCreateModal({ onClose }: TodoCreateModalProps) {
   );
 }
 
-const Form = styled.div`
+const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 30px;
@@ -131,6 +131,7 @@ const Input = styled.input`
   padding: 6px 20px;
   height: 54px;
   border-radius: 14px;
+  border: none;
   border: 1px solid #d6d5d9;
   background: #fff;
   font-size: 16px;
@@ -146,6 +147,7 @@ const Textarea = styled.textarea`
   width: 100%;
   height: 160px;
   border-radius: 14px;
+  border: none;
   border: 1px solid #d6d5d9;
   background: #fff;
   font-size: 16px;
@@ -162,6 +164,7 @@ const SelectButton = styled.button`
   padding: 6px 20px;
   height: 54px;
   border-radius: 14px;
+  border: none;
   border: 1px solid #d6d5d9;
   background: #fff;
   font-size: 16px;
@@ -176,4 +179,6 @@ const SelectItem = styled.li``;
 const UploadLabel = styled.label``;
 const UploadBox = styled.div``;
 const UploadText = styled.div``;
-const HiddenInput = styled.input``;
+const HiddenInput = styled.input`
+  border: none;
+`;
