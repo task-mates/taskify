@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
   *, *::before, *::after {
@@ -32,10 +32,11 @@ const GlobalStyle = createGlobalStyle`
     background:none;
     border:0;
     cursor:pointer;
-    }
+  }
+    
   a {
     text-decoration:none;
-    }
+  }
 `;
 
 export default GlobalStyle;
