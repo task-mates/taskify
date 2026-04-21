@@ -13,10 +13,15 @@ export interface SignUpRequest {
   password: string;
 }
 
-export interface UpdateMyInfoRequest {
-  nickname: string;
-  profileImageUrl: string;
-}
+export type UpdateMyInfoRequest =
+  | {
+      nickname: string;
+      profileImageUrl?: string | null;
+    }
+  | {
+      nickname?: string;
+      profileImageUrl: string | null;
+    };
 
 export interface UploadProfileImageResponse {
   profileImageUrl: string;
