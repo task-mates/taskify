@@ -23,9 +23,8 @@ const GlobalStyle = createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
   }
 
-  img, picture, video, svg {
-    display: block;
-    max-width: 100%;
+  input, button {
+    border-radius: 0;
   }
 
   button {
@@ -34,8 +33,21 @@ const GlobalStyle = createGlobalStyle`
     cursor: pointer;
   }
 
+  ul, li{
+    list-style: none;
+  }
+
   a {
     text-decoration: none;
+  }
+
+  img, picture, video, svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  form {
+    width: 100%;
   }
 `;
 
