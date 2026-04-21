@@ -25,7 +25,6 @@ const GlobalStyle = createGlobalStyle`
 
   input, button, textarea {
     border-radius: 0;
-    border: none;
   }
 
   button {
