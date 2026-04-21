@@ -25,12 +25,12 @@ const GlobalStyle = createGlobalStyle`
 
   input, button {
     border-radius: 0;
-    border: 0;
+    border: none;
   }
 
   button {
     background: none;
-    border: 0;
+    border: none;
     cursor: pointer;
   }
 
