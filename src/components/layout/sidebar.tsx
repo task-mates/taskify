@@ -1,12 +1,12 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
-
 import styled from "styled-components";
 import Image from "next/image";
 import LogoIcon from "@/public/images/icon-logo.svg";
-import PlusIcon from "@/src/components/common/icons/icon-plus.svg";
-import CrownIcon from "@/src/components/common/icons/icon-crown.svg";
+import PlusIcon from "@/src/components/layout/icons/icon-plus.svg";
+import CrownIcon from "@/src/components/layout/icons/icon-crown.svg";
 
 const dashboardsList = [
   { id: 1, title: "포트폴리오", color: "#7AC555", createdByMe: true },
@@ -33,6 +33,7 @@ const dashboardsList = [
 
 export default function Sidebar() {
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleDashboardClick = (dashboardId: number) => {
     router.push(`/dashboard/${dashboardId}`);
@@ -60,6 +61,7 @@ export default function Sidebar() {
             <DashboardItem
               key={board.id}
               onClick={() => handleDashboardClick(board.id)}
+              $active={pathname === `/dashboard/${board.id}`}
             >
               <ColorDot $color={board.color} />
               <Title>{board.title}</Title>
@@ -132,12 +134,16 @@ const DashboardList = styled.ul`
   padding: 20px;
 `;
 
-const DashboardItem = styled.li`
+const DashboardItem = styled.li<{ $active: boolean }>`
   width: 100%;
   display: flex;
   align-items: center;
   padding: 14px 20px;
+
   cursor: pointer;
+
+  background-color: ${({ $active }) => ($active ? "#cadfe7" : "transparent")};
+
   &:hover {
     background-color: #cadfe7;
     border-radius: 12px;
