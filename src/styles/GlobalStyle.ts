@@ -25,6 +25,7 @@ const GlobalStyle = createGlobalStyle`
 
   input, button {
     border-radius: 0;
+    border: 0;
   }
 
   button {
