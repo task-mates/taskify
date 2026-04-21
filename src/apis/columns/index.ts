@@ -25,7 +25,7 @@ export const columnsApi = {
     );
     return data;
   },
-  delete: async (columnId: number) => {
+  remove: async (columnId: number) => {
     await instance.delete(`/columns/${columnId}`);
   },
   getList: async (dashboardId: number) => {
