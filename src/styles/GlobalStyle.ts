@@ -23,19 +23,19 @@ const GlobalStyle = createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
   }
 
-  img, picture, video, svg{
+  img, picture, video, svg {
     display: block;
     max-width: 100%;
   }
 
   button {
-    background:none;
-    border:0;
-    cursor:pointer;
+    background: none;
+    border: 0;
+    cursor: pointer;
   }
-    
+
   a {
-    text-decoration:none;
+    text-decoration: none;
   }
 `;
 
