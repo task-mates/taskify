@@ -93,11 +93,8 @@ const Content = styled.div`
 
   min-height: 0;
   overflow-y: auto;
-  padding-right: 0;
 
-  ::-webkit-scrollbar {
-    display: none;
-  }
+  scrollbar-color: rgba(131, 198, 229, 0.3) transparent;
 `;
 const Footer = styled.div`
   margin-top: 30px;
