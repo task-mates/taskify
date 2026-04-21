@@ -23,14 +23,13 @@ const GlobalStyle = createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
   }
 
-  input, button {
+  input, button, textarea {
     border-radius: 0;
     border: none;
   }
 
   button {
     background: none;
-    border: none;
     cursor: pointer;
   }
 
