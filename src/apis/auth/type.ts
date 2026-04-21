@@ -19,7 +19,7 @@ export interface LoginResponse
 
 export interface PasswordRequest
 {
-  "password": "string",
-  "newPassword": "string"
+  "password": string,
+  "newPassword": string
 }
 
