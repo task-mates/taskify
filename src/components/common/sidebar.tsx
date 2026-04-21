@@ -1,3 +1,7 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+
 import styled from "styled-components";
 import Image from "next/image";
 import LogoIcon from "@/public/images/icon-logo.svg";
@@ -28,6 +32,12 @@ const dashboardsList = [
 ];
 
 export default function Sidebar() {
+  const router = useRouter();
+
+  const handleDashboardClick = (dashboardId: number) => {
+    router.push(`/dashboard/${dashboardId}`);
+  };
+
   return (
     <Wrapper>
       <Header>
@@ -47,7 +57,10 @@ export default function Sidebar() {
       <Body>
         <DashboardList>
           {dashboardsList.map((board) => (
-            <DashboardItem key={board.id}>
+            <DashboardItem
+              key={board.id}
+              onClick={() => handleDashboardClick(board.id)}
+            >
               <ColorDot $color={board.color} />
               <Title>{board.title}</Title>
               {board.createdByMe && <Image src={CrownIcon} alt="" />}
@@ -124,6 +137,11 @@ const DashboardItem = styled.li`
   display: flex;
   align-items: center;
   padding: 14px 20px;
+  cursor: pointer;
+  &:hover {
+    background-color: #cadfe7;
+    border-radius: 12px;
+  }
 `;
 
 const Title = styled.span`
