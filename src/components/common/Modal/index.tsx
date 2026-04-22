@@ -10,7 +10,9 @@ export default function Modal({ onClose, children }: ModalProps) {
   useScrollLock();
 
   const onCloseRef = useRef(onClose);
-  onCloseRef.current = onClose;
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -28,7 +30,7 @@ export default function Modal({ onClose, children }: ModalProps) {
     <Overlay onClick={handleOverlayClick} role="dialog" aria-modal="true">
       {children}
     </Overlay>,
-    document.body,
+    document.body
   );
 }
 
