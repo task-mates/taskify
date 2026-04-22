@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { useScrollLock } from '@/src/hooks/useScrollLock';
@@ -9,20 +9,25 @@ import type { ModalProps } from './type';
 export default function Modal({ onClose, children }: ModalProps) {
   useScrollLock();
 
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') onCloseRef.current();
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
+  }, []);
 
   const handleOverlayClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) onClose();
   };
 
   return createPortal(
-    <Overlay onClick={handleOverlayClick}>{children}</Overlay>,
+    <Overlay onClick={handleOverlayClick} role="dialog" aria-modal="true">
+      {children}
+    </Overlay>,
     document.body,
   );
 }

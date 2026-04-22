@@ -91,11 +91,10 @@ export default function TodoCreateModal({ onClose }: TodoCreateModalProps) {
             </UploadLabel>
             <HiddenInput id="uploadfile" type="file" />
           </Field>
+          <Footer>
+            <ModalActionButtons onCancel={onClose} submitText="생성" />
+          </Footer>
         </Form>
-
-        <Footer>
-          <ModalActionButtons onCancel={onClose} submitText="생성" />
-        </Footer>
       </Container>
     </Modal>
   );
