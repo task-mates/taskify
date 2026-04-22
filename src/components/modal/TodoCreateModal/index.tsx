@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Modal from '@/src/components/common/Modal';
-import ModalActionButtons from '../common/ModalActionButtons';
+import ModalActionButtons from './ModalActionButtons';
 import type { TodoCreateModalProps } from './type';
 import { DEVICE } from '@/src/styles/Breakpoints';
 
