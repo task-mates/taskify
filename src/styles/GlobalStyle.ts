@@ -77,6 +77,7 @@ const GlobalStyle = createGlobalStyle`
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
+    font-family: var(--font-main);
     font-size: var(--text-lg-size);
     line-height: var(--text-lg-line);
   }
