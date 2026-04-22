@@ -53,4 +53,6 @@ const Layout = styled.div`
   display: flex;
 `;
 
-const Content = styled.main``;
+const Content = styled.main`
+  flex: 1;
+`;

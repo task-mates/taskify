@@ -1,6 +1,7 @@
 "use client";
 
-import { useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import styled from "styled-components";
 import Image from "next/image";
 import LogoIcon from "@/public/images/icon-logo.svg";
@@ -38,13 +39,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
-  const router = useRouter();
   const pathname = usePathname();
-
-  const handleDashboardClick = (dashboardId: number) => {
-    router.push(`/dashboard/${dashboardId}`);
-    onClose();
-  };
 
   return (
     <Wrapper $isOpen={isOpen}>
@@ -77,12 +72,13 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           {dashboardsList.map((board) => (
             <DashboardItem
               key={board.id}
-              onClick={() => handleDashboardClick(board.id)}
               $active={pathname === `/dashboard/${board.id}`}
             >
-              <ColorDot $color={board.color} />
-              <Title>{board.title}</Title>
-              {board.createdByMe && <Image src={CrownIcon} alt="" />}
+              <Link href={`/dashboard/${board.id}`} onClick={onClose}>
+                <ColorDot $color={board.color} />
+                <Title>{board.title}</Title>
+                {board.createdByMe && <Image src={CrownIcon} alt="" />}
+              </Link>
             </DashboardItem>
           ))}
         </DashboardList>
@@ -142,9 +138,6 @@ const TopRow = styled.div`
 `;
 
 const Logo = styled.div`
-  font-size: 24px;
-  font-weight: 700;
-  color: #333236;
   margin-bottom: 18px;
 `;
 
@@ -195,6 +188,14 @@ const DashboardItem = styled.li<{ $active: boolean }>`
   cursor: pointer;
 
   background-color: ${({ $active }) => ($active ? "#CADFE7" : "transparent")};
+
+  a {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+  }
 
   &:hover {
     background-color: ${({ $active }) => ($active ? "#CADFE7" : "#eef3f8")};
