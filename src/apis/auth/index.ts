@@ -2,7 +2,7 @@ import instance from "@/src/apis/instance";
 import {
    LoginRequest,
    LoginResponse,
-   PasswordRequest
+   ResetPasswordRequest
   } from "@/src/apis/auth/type";
 
 export const postLogin = async (data: LoginRequest): Promise<LoginResponse> => {
@@ -10,7 +10,7 @@ export const postLogin = async (data: LoginRequest): Promise<LoginResponse> => {
   return response.data;
 };
 
-export const putPassword = async (data: PasswordRequest) => {
+export const putResetPassword = async (data: ResetPasswordRequest): Promise<any> => {
   const response = await instance.put(`/password`, data);
-  return response.data; 
+  return response.data;
 };
