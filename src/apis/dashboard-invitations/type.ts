@@ -21,7 +21,6 @@ export interface DashboardInvitationListResponse {
 }
 
 export interface GetInvitationListRequest {
-  cursorId?: number;
   page?: number;
   size?: number;
 }
