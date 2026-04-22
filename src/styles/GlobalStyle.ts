@@ -7,6 +7,8 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    font:inherit;
+    color:inherit;
   }
 
   html, body {
@@ -19,6 +21,33 @@ const GlobalStyle = createGlobalStyle`
     min-height: 100%;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  input, button, textarea {
+    border-radius: 0;
+    border: none;
+  }
+
+  button {
+    background: none;
+    cursor: pointer;
+  }
+
+  ul, li{
+    list-style: none;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  img, picture, video, svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  form {
+    width: 100%;
   }
 `;
 
