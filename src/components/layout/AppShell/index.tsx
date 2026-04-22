@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import styled from "styled-components";
-import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
-import Sidebar from "@/src/components/layout/sidebar";
-import { DEVICE } from "@/src/styles/Breakpoints";
+import styled from 'styled-components';
+import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
+import Sidebar from '@/src/components/layout/Sidebar';
+import { DEVICE } from '@/src/styles/Breakpoints';
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

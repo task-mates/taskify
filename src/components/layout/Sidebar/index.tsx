@@ -1,42 +1,38 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import styled from "styled-components";
-import Image from "next/image";
-import LogoIcon from "@/public/images/icon-logo.svg";
-import PlusIcon from "@/src/components/icons/icon-plus.svg";
-import CrownIcon from "@/src/components/icons/icon-crown.svg";
-import { DEVICE } from "@/src/styles/Breakpoints";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import styled from 'styled-components';
+import Image from 'next/image';
+import LogoIcon from '@/public/images/icon-logo.svg';
+import PlusIcon from '@/src/components/icons/icon-plus.svg';
+import CrownIcon from '@/src/components/icons/icon-crown.svg';
+import type { SidebarProps } from '@/src/components/layout/Sidebar/type';
+import { DEVICE } from '@/src/styles/Breakpoints';
 
 //API 연동 후 삭제 예정
 const dashboardsList = [
-  { id: 1, title: "포트폴리오", color: "#7AC555", createdByMe: true },
-  { id: 2, title: "코드잇", color: "#760DDE", createdByMe: true },
-  { id: 3, title: "3분기 계획", color: "#FFA500", createdByMe: true },
-  { id: 4, title: "회의록", color: "#FF5C5C", createdByMe: false },
-  { id: 5, title: "중요 문서함", color: "#0D3F8F", createdByMe: true },
-  { id: 6, title: "마케팅 전략", color: "#4CAF50", createdByMe: false },
-  { id: 7, title: "디자인 시스템", color: "#9C27B0", createdByMe: false },
-  { id: 8, title: "백엔드 작업", color: "#3F51B5", createdByMe: false },
-  { id: 9, title: "프론트 개선", color: "#2196F3", createdByMe: true },
-  { id: 10, title: "버그 트래킹", color: "#FF9800", createdByMe: false },
-  { id: 11, title: "고객 피드백", color: "#795548", createdByMe: false },
-  { id: 12, title: "온보딩 개선", color: "#607D8B", createdByMe: false },
-  { id: 13, title: "QA 테스트", color: "#E91E63", createdByMe: true },
-  { id: 14, title: "데이터 분석", color: "#00BCD4", createdByMe: false },
-  { id: 15, title: "운영 관리", color: "#8BC34A", createdByMe: false },
-  { id: 16, title: "리팩토링", color: "#CDDC39", createdByMe: true },
-  { id: 17, title: "신규 기능 개발", color: "#FFC107", createdByMe: true },
-  { id: 18, title: "배포 관리", color: "#FF5722", createdByMe: false },
-  { id: 19, title: "문서 정리", color: "#673AB7", createdByMe: false },
-  { id: 20, title: "기획 아이디어", color: "#009688", createdByMe: false },
+  { id: 1, title: '포트폴리오', color: '#7AC555', createdByMe: true },
+  { id: 2, title: '코드잇', color: '#760DDE', createdByMe: true },
+  { id: 3, title: '3분기 계획', color: '#FFA500', createdByMe: true },
+  { id: 4, title: '회의록', color: '#FF5C5C', createdByMe: false },
+  { id: 5, title: '중요 문서함', color: '#0D3F8F', createdByMe: true },
+  { id: 6, title: '마케팅 전략', color: '#4CAF50', createdByMe: false },
+  { id: 7, title: '디자인 시스템', color: '#9C27B0', createdByMe: false },
+  { id: 8, title: '백엔드 작업', color: '#3F51B5', createdByMe: false },
+  { id: 9, title: '프론트 개선', color: '#2196F3', createdByMe: true },
+  { id: 10, title: '버그 트래킹', color: '#FF9800', createdByMe: false },
+  { id: 11, title: '고객 피드백', color: '#795548', createdByMe: false },
+  { id: 12, title: '온보딩 개선', color: '#607D8B', createdByMe: false },
+  { id: 13, title: 'QA 테스트', color: '#E91E63', createdByMe: true },
+  { id: 14, title: '데이터 분석', color: '#00BCD4', createdByMe: false },
+  { id: 15, title: '운영 관리', color: '#8BC34A', createdByMe: false },
+  { id: 16, title: '리팩토링', color: '#CDDC39', createdByMe: true },
+  { id: 17, title: '신규 기능 개발', color: '#FFC107', createdByMe: true },
+  { id: 18, title: '배포 관리', color: '#FF5722', createdByMe: false },
+  { id: 19, title: '문서 정리', color: '#673AB7', createdByMe: false },
+  { id: 20, title: '기획 아이디어', color: '#009688', createdByMe: false },
 ];
-
-interface SidebarProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
@@ -108,7 +104,7 @@ const Wrapper = styled.aside<{ $isOpen: boolean }>`
     z-index: 1000;
     width: 280px;
     max-width: 80vw;
-    transform: translateX(${({ $isOpen }) => ($isOpen ? "0" : "-100%")});
+    transform: translateX(${({ $isOpen }) => ($isOpen ? '0' : '-100%')});
     transition: transform 0.3s ease;
   }
 `;
@@ -183,10 +179,10 @@ const DashboardItem = styled.li<{ $active: boolean }>`
   width: 100%;
   border-radius: 12px;
   cursor: pointer;
-  background-color: ${({ $active }) => ($active ? "#CADFE7" : "transparent")};
+  background-color: ${({ $active }) => ($active ? '#CADFE7' : 'transparent')};
 
   &:hover {
-    background-color: ${({ $active }) => ($active ? "#CADFE7" : "#eef3f8")};
+    background-color: ${({ $active }) => ($active ? '#CADFE7' : '#eef3f8')};
   }
 
   a {
