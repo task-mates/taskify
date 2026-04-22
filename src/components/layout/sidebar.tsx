@@ -1,13 +1,14 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import styled from "styled-components";
 import Image from "next/image";
 import LogoIcon from "@/public/images/icon-logo.svg";
 import PlusIcon from "@/src/components/layout/icons/icon-plus.svg";
 import CrownIcon from "@/src/components/layout/icons/icon-crown.svg";
+import { DEVICE } from "@/src/styles/Breakpoints";
 
+//API 연동 후 삭제 예정
 const dashboardsList = [
   { id: 1, title: "포트폴리오", color: "#7AC555", createdByMe: true },
   { id: 2, title: "코드잇", color: "#760DDE", createdByMe: true },
@@ -31,23 +32,39 @@ const dashboardsList = [
   { id: 20, title: "기획 아이디어", color: "#009688", createdByMe: false },
 ];
 
-export default function Sidebar() {
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const router = useRouter();
   const pathname = usePathname();
 
   const handleDashboardClick = (dashboardId: number) => {
     router.push(`/dashboard/${dashboardId}`);
+    onClose();
   };
 
   return (
-    <Wrapper>
+    <Wrapper $isOpen={isOpen}>
       <Header>
-        <Logo>
-          <Image src={LogoIcon} alt="Taskify 로고" />
-        </Logo>
+        <TopRow>
+          <Logo>
+            <Image src={LogoIcon} alt="Taskify 로고" />
+          </Logo>
+          {/* 논의 후 아이콘으로 변경 예정 */}
+          <CloseButton
+            type="button"
+            onClick={onClose}
+            aria-label="사이드바 닫기"
+          >
+            ✕
+          </CloseButton>
+        </TopRow>
         <AddSection>
           <AddButton>
-            <div>대시보드 추가</div>
+            <span>대시보드 추가</span>
             <IconContainer>
               <Image src={PlusIcon} alt="" />
             </IconContainer>
@@ -74,7 +91,7 @@ export default function Sidebar() {
   );
 }
 
-const Wrapper = styled.aside`
+const Wrapper = styled.aside<{ $isOpen: boolean }>`
   width: 360px;
   height: 100vh;
 
@@ -83,11 +100,45 @@ const Wrapper = styled.aside`
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+
+  @media ${DEVICE.tablet} {
+    width: 280px;
+  }
+
+  @media ${DEVICE.mobile} {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 280px;
+    max-width: 80vw;
+    transform: translateX(${({ $isOpen }) => ($isOpen ? "0" : "-100%")});
+    transition: transform 0.3s ease;
+  }
+`;
+
+const CloseButton = styled.button`
+  display: none;
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 2px;
+
+  @media ${DEVICE.mobile} {
+    display: block;
+  }
 `;
 
 const Header = styled.header`
   padding: 20px;
   border-bottom: 1px solid #f2f2f2;
+`;
+
+const TopRow = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
 `;
 
 const Logo = styled.div`
@@ -139,14 +190,14 @@ const DashboardItem = styled.li<{ $active: boolean }>`
   display: flex;
   align-items: center;
   padding: 14px 20px;
+  border-radius: 12px;
 
   cursor: pointer;
 
-  background-color: ${({ $active }) => ($active ? "#cadfe7" : "transparent")};
+  background-color: ${({ $active }) => ($active ? "#CADFE7" : "transparent")};
 
   &:hover {
-    background-color: #cadfe7;
-    border-radius: 12px;
+    background-color: ${({ $active }) => ($active ? "#CADFE7" : "#eef3f8")};
   }
 `;
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import StyledComponentsRegistry from "./registry";
 import GlobalStyle from "@/src/styles/GlobalStyle";
+import AppShell from "@/src/components/layout/appshell";
 
 export const metadata: Metadata = {
   title: "Taskify",
@@ -17,7 +18,7 @@ export default function RootLayout({
       <body>
         <StyledComponentsRegistry>
           <GlobalStyle />
-          {children}
+          <AppShell>{children}</AppShell>
         </StyledComponentsRegistry>
       </body>
     </html>
