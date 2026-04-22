@@ -1,12 +1,19 @@
 "use client";
 
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import Sidebar from "@/src/components/layout/sidebar";
 import { DEVICE } from "@/src/styles/Breakpoints";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [pathname]);
+
   return (
     <>
       <MobileHeader>

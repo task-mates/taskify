@@ -74,7 +74,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               key={board.id}
               $active={pathname === `/dashboard/${board.id}`}
             >
-              <Link href={`/dashboard/${board.id}`} onClick={onClose}>
+              <Link href={`/dashboard/${board.id}`}>
                 <ColorDot $color={board.color} />
                 <Title>{board.title}</Title>
                 {board.createdByMe && <Image src={CrownIcon} alt="" />}
@@ -176,29 +176,27 @@ const IconContainer = styled.div`
 const DashboardList = styled.ul`
   margin: 0;
   padding: 20px;
+  list-style: none;
 `;
 
 const DashboardItem = styled.li<{ $active: boolean }>`
   width: 100%;
-  display: flex;
-  align-items: center;
-  padding: 14px 20px;
   border-radius: 12px;
-
   cursor: pointer;
-
   background-color: ${({ $active }) => ($active ? "#CADFE7" : "transparent")};
+
+  &:hover {
+    background-color: ${({ $active }) => ($active ? "#CADFE7" : "#eef3f8")};
+  }
 
   a {
     display: flex;
     align-items: center;
     width: 100%;
+    padding: 14px 20px;
+    border-radius: 12px;
     color: inherit;
     text-decoration: none;
-  }
-
-  &:hover {
-    background-color: ${({ $active }) => ($active ? "#CADFE7" : "#eef3f8")};
   }
 `;
 
