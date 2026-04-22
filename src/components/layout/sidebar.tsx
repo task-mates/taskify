@@ -5,8 +5,8 @@ import { usePathname } from "next/navigation";
 import styled from "styled-components";
 import Image from "next/image";
 import LogoIcon from "@/public/images/icon-logo.svg";
-import PlusIcon from "@/src/components/layout/icons/icon-plus.svg";
-import CrownIcon from "@/src/components/layout/icons/icon-crown.svg";
+import PlusIcon from "@/src/components/icons/icon-plus.svg";
+import CrownIcon from "@/src/components/icons/icon-crown.svg";
 import { DEVICE } from "@/src/styles/Breakpoints";
 
 //API 연동 후 삭제 예정
