@@ -10,7 +10,7 @@ export const postLogin = async (data: LoginRequest): Promise<LoginResponse> => {
   return response.data;
 };
 
-export const putResetPassword = async (data: ResetPasswordRequest): Promise<any> => {
+export const putResetPassword = async (data: ResetPasswordRequest): Promise<void> => {
   const response = await instance.put(`/password`, data);
   return response.data;
 };
