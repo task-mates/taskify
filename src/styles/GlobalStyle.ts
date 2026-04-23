@@ -41,7 +41,7 @@ const GlobalStyle = createGlobalStyle`
     text-decoration: none;
   }
 
-  img, picture, video, svg {
+  img, picture, video{
     display: block;
     max-width: 100%;
   }
