@@ -4,7 +4,7 @@ const instance: AxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
   timeout: 5000,
   headers: {
-    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjY5OSwidGVhbUlkIjoiMjMtNCIsImlhdCI6MTc3NjkwNzQ3OCwiaXNzIjoic3AtdGFza2lmeSJ9.GuteqVl659UhQ566tOM_ljs_mvtc0c2f-jsE2HzaFLY`,
+    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjcwNSwidGVhbUlkIjoiMjMtNCIsImlhdCI6MTc3NjkzMDcxNCwiaXNzIjoic3AtdGFza2lmeSJ9.cK0Rkx_SqTi1n3AOMmWJrM36iALksewgDA82z0QFCsg`,
   },
 });
 
