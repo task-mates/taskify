@@ -33,8 +33,13 @@ const GlobalStyle = createGlobalStyle`
     cursor: pointer;
   }
 
-  ul, li{
+  form {
+    width: 100%;
+  }
+
+  ul, ol{
     list-style: none;
+    padding: 0;
   }
 
   a {
@@ -44,10 +49,6 @@ const GlobalStyle = createGlobalStyle`
   img, picture, video{
     display: block;
     max-width: 100%;
-  }
-
-  form {
-    width: 100%;
   }
 `;
 
