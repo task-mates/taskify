@@ -190,7 +190,7 @@ export default function LoginPage() {
       <S.DesktopImageWrapper>
         <Image
           src="/images/login-pc-img.png"
-          alt="Taskify 미리보기 이미지지"
+          alt="Taskify 미리보기 이미지"
           fill
           priority
         />
