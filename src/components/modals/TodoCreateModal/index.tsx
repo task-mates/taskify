@@ -1,16 +1,16 @@
 import styled from 'styled-components';
-import Modal from '@/src/components/common/Modal';
+import Modal from '@/src/components/Modal';
 import ModalActionButtons from './ModalActionButtons';
 import type { TodoCreateModalProps } from './type';
 import { DEVICE } from '@/src/styles/Breakpoints';
 
 export default function TodoCreateModal({ onClose }: TodoCreateModalProps) {
   return (
-    <Modal onClose={onClose}>
+    <Modal onClose={onClose} labelledById="todo-create-modal-title">
       <Container>
         <Header>
-          <Title>할 일 생성</Title>
-          <CloseButton type="button" onClick={onClose}>
+          <Title id="todo-create-modal-title">할 일 생성</Title>
+          <CloseButton type="button" onClick={onClose} aria-label="모달 닫기">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
