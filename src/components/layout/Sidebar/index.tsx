@@ -1,41 +1,65 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import styled from 'styled-components';
 import Image from 'next/image';
+import styled from 'styled-components';
+import { usePathname } from 'next/navigation';
 import LogoIcon from '@/public/images/icon-logo.svg';
 import PlusIcon from '@/src/components/icons/icon-plus.svg';
 import CrownIcon from '@/src/components/icons/icon-crown.svg';
 import type { SidebarProps } from '@/src/components/layout/Sidebar/type';
 import { DEVICE } from '@/src/styles/Breakpoints';
+import type { Dashboard } from '@/src/apis/dashboards/type';
+import { dashboardsApi } from '@/src/apis/dashboards';
 
 //API 연동 후 삭제 예정
-const dashboardsList = [
-  { id: 1, title: '포트폴리오', color: '#7AC555', createdByMe: true },
-  { id: 2, title: '코드잇', color: '#760DDE', createdByMe: true },
-  { id: 3, title: '3분기 계획', color: '#FFA500', createdByMe: true },
-  { id: 4, title: '회의록', color: '#FF5C5C', createdByMe: false },
-  { id: 5, title: '중요 문서함', color: '#0D3F8F', createdByMe: true },
-  { id: 6, title: '마케팅 전략', color: '#4CAF50', createdByMe: false },
-  { id: 7, title: '디자인 시스템', color: '#9C27B0', createdByMe: false },
-  { id: 8, title: '백엔드 작업', color: '#3F51B5', createdByMe: false },
-  { id: 9, title: '프론트 개선', color: '#2196F3', createdByMe: true },
-  { id: 10, title: '버그 트래킹', color: '#FF9800', createdByMe: false },
-  { id: 11, title: '고객 피드백', color: '#795548', createdByMe: false },
-  { id: 12, title: '온보딩 개선', color: '#607D8B', createdByMe: false },
-  { id: 13, title: 'QA 테스트', color: '#E91E63', createdByMe: true },
-  { id: 14, title: '데이터 분석', color: '#00BCD4', createdByMe: false },
-  { id: 15, title: '운영 관리', color: '#8BC34A', createdByMe: false },
-  { id: 16, title: '리팩토링', color: '#CDDC39', createdByMe: true },
-  { id: 17, title: '신규 기능 개발', color: '#FFC107', createdByMe: true },
-  { id: 18, title: '배포 관리', color: '#FF5722', createdByMe: false },
-  { id: 19, title: '문서 정리', color: '#673AB7', createdByMe: false },
-  { id: 20, title: '기획 아이디어', color: '#009688', createdByMe: false },
-];
+// const dashboardsList = [
+//   { id: 1, title: '포트폴리오', color: '#7AC555', createdByMe: true },
+//   { id: 2, title: '코드잇', color: '#760DDE', createdByMe: true },
+//   { id: 3, title: '3분기 계획', color: '#FFA500', createdByMe: true },
+//   { id: 4, title: '회의록', color: '#FF5C5C', createdByMe: false },
+//   { id: 5, title: '중요 문서함', color: '#0D3F8F', createdByMe: true },
+//   { id: 6, title: '마케팅 전략', color: '#4CAF50', createdByMe: false },
+//   { id: 7, title: '디자인 시스템', color: '#9C27B0', createdByMe: false },
+//   { id: 8, title: '백엔드 작업', color: '#3F51B5', createdByMe: false },
+//   { id: 9, title: '프론트 개선', color: '#2196F3', createdByMe: true },
+//   { id: 10, title: '버그 트래킹', color: '#FF9800', createdByMe: false },
+//   { id: 11, title: '고객 피드백', color: '#795548', createdByMe: false },
+//   { id: 12, title: '온보딩 개선', color: '#607D8B', createdByMe: false },
+//   { id: 13, title: 'QA 테스트', color: '#E91E63', createdByMe: true },
+//   { id: 14, title: '데이터 분석', color: '#00BCD4', createdByMe: false },
+//   { id: 15, title: '운영 관리', color: '#8BC34A', createdByMe: false },
+//   { id: 16, title: '리팩토링', color: '#CDDC39', createdByMe: true },
+//   { id: 17, title: '신규 기능 개발', color: '#FFC107', createdByMe: true },
+//   { id: 18, title: '배포 관리', color: '#FF5722', createdByMe: false },
+//   { id: 19, title: '문서 정리', color: '#673AB7', createdByMe: false },
+//   { id: 20, title: '기획 아이디어', color: '#009688', createdByMe: false },
+// ];
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
+
+  const [dashboards, setDashboards] = useState<Dashboard[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      setIsLoading(true);
+      setIsError(false);
+      try {
+        const { dashboards } = await dashboardsApi.getList({ size: 20 });
+        setDashboards(dashboards);
+      } catch (e) {
+        console.error(e);
+        setIsError(true);
+        setDashboards([]);
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+  }, []);
 
   return (
     <Wrapper $isOpen={isOpen}>
@@ -64,20 +88,27 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       </Header>
 
       <Body>
-        <DashboardList>
-          {dashboardsList.map((board) => (
-            <DashboardItem
-              key={board.id}
-              $active={pathname === `/dashboard/${board.id}`}
-            >
-              <Link href={`/dashboard/${board.id}`}>
-                <ColorDot $color={board.color} />
-                <Title>{board.title}</Title>
-                {board.createdByMe && <Image src={CrownIcon} alt="" />}
-              </Link>
-            </DashboardItem>
-          ))}
-        </DashboardList>
+        {isLoading && <div>불러오는 중…</div>}
+        {isError && <div>목록을 불러오지 못했습니다.</div>}
+        {!isLoading && !isError && dashboards.length === 0 && (
+          <div> 없어요 </div>
+        )}
+        {!isLoading && !isError && dashboards.length > 0 && (
+          <DashboardList>
+            {dashboards.map((board) => (
+              <DashboardItem
+                key={board.id}
+                $active={pathname === `/dashboard/${board.id}`}
+              >
+                <Link href={`/dashboard/${board.id}`}>
+                  <ColorDot $color={board.color} />
+                  <Title>{board.title}</Title>
+                  {board.createdByMe && <Image src={CrownIcon} alt="" />}
+                </Link>
+              </DashboardItem>
+            ))}
+          </DashboardList>
+        )}
       </Body>
     </Wrapper>
   );
@@ -165,7 +196,7 @@ const AddButton = styled.button`
 
 const IconContainer = styled.div`
   background-color: #e1eaf1;
-  padding: 3px 7px;
+  padding: 5px 5px;
   border-radius: 4px;
 `;
 
