@@ -12,13 +12,17 @@ const FOCUSABLE_SELECTORS =
 export default function Modal({ onClose, children, labelledById }: ModalProps) {
   useScrollLock();
 
-  const overlayRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
 
   useEffect(() => {
-    const focusable = overlayRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS);
+    const previouslyFocused = document.activeElement as HTMLElement;
+    const focusable = dialogRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS);
     focusable?.[0]?.focus();
+    return () => {
+      previouslyFocused?.focus();
+    };
   }, []);
 
   useEffect(() => {
@@ -30,7 +34,7 @@ export default function Modal({ onClose, children, labelledById }: ModalProps) {
 
       if (e.key !== 'Tab') return;
 
-      const focusable = overlayRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS);
+      const focusable = dialogRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS);
       if (!focusable || focusable.length === 0) return;
 
       const first = focusable[0];
@@ -58,14 +62,15 @@ export default function Modal({ onClose, children, labelledById }: ModalProps) {
   };
 
   return createPortal(
-    <Overlay
-      ref={overlayRef}
-      onClick={handleOverlayClick}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby={labelledById}
-    >
-      {children}
+    <Overlay onClick={handleOverlayClick}>
+      <DialogContainer
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={labelledById}
+      >
+        {children}
+      </DialogContainer>
     </Overlay>,
     document.body,
   );
@@ -82,4 +87,8 @@ const Overlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const DialogContainer = styled.div`
+  display: contents;
 `;
