@@ -3,8 +3,9 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
+import axios from 'axios';
 import { postLogin } from '@/src/apis/auth';
-import { useAuthToken } from '@/src/hooks/useAuthToken';
+import { setAccessToken } from '@/src/utils/authTokenStorage';
 import * as S from './styles';
 import Link from 'next/link';
 
@@ -14,10 +15,15 @@ type FormErrors = {
   common?: string;
 };
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const EMAIL_ERROR_MESSAGE = '이메일 형식이 올바르지 않아요.';
+const PASSWORD_ERROR_MESSAGE = '비밀번호를 8자 이상 작성해 주세요.';
+
+const isValidEmail = (value: string) => EMAIL_REGEX.test(value);
+const isValidPassword = (value: string) => value.length >= 8;
+
 export default function LoginPage() {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const router = useRouter();
-  const { saveToken } = useAuthToken();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailTouched, setEmailTouched] = useState(false);
@@ -26,16 +32,11 @@ export default function LoginPage() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const emailErrorMessage = '이메일 형식이 올바르지 않아요.';
-  const passwordErrorMessage = '비밀번호를 8자 이상 작성해 주세요.';
-  const isValidEmail = (value: string) => emailRegex.test(value);
-  const isValidPassword = (value: string) => value.length >= 8;
-
   const handleEmailBlur = () => {
     setEmailTouched(true);
     setErrors((prev) => ({
       ...prev,
-      email: isValidEmail(email) ? undefined : emailErrorMessage,
+      email: isValidEmail(email) ? undefined : EMAIL_ERROR_MESSAGE,
     }));
   };
 
@@ -43,7 +44,7 @@ export default function LoginPage() {
     setPasswordTouched(true);
     setErrors((prev) => ({
       ...prev,
-      password: isValidPassword(password) ? undefined : passwordErrorMessage,
+      password: isValidPassword(password) ? undefined : PASSWORD_ERROR_MESSAGE,
     }));
   };
 
@@ -52,11 +53,11 @@ export default function LoginPage() {
     const nextErrors: FormErrors = {};
 
     if (!isValidEmail(email)) {
-      nextErrors.email = emailErrorMessage;
+      nextErrors.email = EMAIL_ERROR_MESSAGE;
     }
 
     if (!isValidPassword(password)) {
-      nextErrors.password = passwordErrorMessage;
+      nextErrors.password = PASSWORD_ERROR_MESSAGE;
     }
 
     setErrors(nextErrors);
@@ -75,11 +76,32 @@ export default function LoginPage() {
       setIsLoading(true);
 
       const data = await postLogin({ email, password });
-      saveToken(data.accessToken);
+      setAccessToken(data.accessToken);
 
       router.push('/mydashboard');
-    } catch {
-      setErrors({ common: '네트워크 오류가 발생했어요.' });
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const status = error.response?.status;
+
+        if (status === 401 || status === 400) {
+          setErrors({
+            common: '이메일 또는 비밀번호가 일치하지 않아요.',
+          });
+          return;
+        }
+
+        if (error.code === 'ECONNABORTED' || !error.response) {
+          setErrors({ common: '네트워크 오류가 발생했어요.' });
+          return;
+        }
+
+        setErrors({
+          common: '일시적인 오류가 발생했어요. 잠시 후 다시 시도해 주세요.',
+        });
+        return;
+      }
+
+      setErrors({ common: '알 수 없는 오류가 발생했어요.' });
     } finally {
       setIsLoading(false);
     }
@@ -100,7 +122,7 @@ export default function LoginPage() {
         </Link>
 
         <S.LoginForm onSubmit={handleSubmit}>
-          <S.Label htmlFor="email">아이디</S.Label>
+          <S.Label htmlFor="email">이메일</S.Label>
           {/* 인풋 공통 컴포넌트 사용 예정 */}
           <S.TextInput
             id="email"
@@ -116,7 +138,7 @@ export default function LoginPage() {
                   ...prev,
                   email: isValidEmail(nextEmail)
                     ? undefined
-                    : emailErrorMessage,
+                    : EMAIL_ERROR_MESSAGE,
                 }));
               }
             }}
@@ -142,7 +164,7 @@ export default function LoginPage() {
                     ...prev,
                     password: isValidPassword(nextPassword)
                       ? undefined
-                      : passwordErrorMessage,
+                      : PASSWORD_ERROR_MESSAGE,
                   }));
                 }
               }}
@@ -181,9 +203,7 @@ export default function LoginPage() {
 
         <S.SignupRow>
           <S.HelperText>아직 회원이 아니신가요?</S.HelperText>
-          <S.SignupLink type="button" onClick={() => router.push('/signup')}>
-            회원가입
-          </S.SignupLink>
+          <S.SignupLink href="/signup">회원가입</S.SignupLink>
         </S.SignupRow>
       </S.FormSection>
 

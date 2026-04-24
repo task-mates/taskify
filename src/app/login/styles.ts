@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { DEVICE } from "@/src/styles/Breakpoints";
+import Link from "next/link";
 
 // AppShell 분리 후 로그인 페이지 레이아웃 재조정 예정
 export const Container = styled.main`
@@ -115,13 +116,12 @@ export const HelperText = styled.p`
   color: #667085;
 `;
 
-export const SignupLink = styled.button`
-  border: 0;
-  background: transparent;
+export const SignupLink = styled(Link)`
   color: #4b4b4b;
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
+  text-decoration: none;
 `;
 
 export const DesktopImageWrapper = styled.div`
