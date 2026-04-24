@@ -20,11 +20,12 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const [isError, setIsError] = useState(false);
 
   useEffect(() => {
-    (async () => {
+    const fetchDashboards = async () => {
       setIsLoading(true);
       setIsError(false);
+
       try {
-        const { dashboards } = await dashboardsApi.getList({ size: 20 });
+        const { dashboards } = await dashboardsApi.getList({ size: 20 }); //TODO 추후 무한 스크롤 구현을 위한 임의의 size 설정
         setDashboards(dashboards);
       } catch (e) {
         console.error(e);
@@ -33,7 +34,9 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       } finally {
         setIsLoading(false);
       }
-    })();
+    };
+
+    fetchDashboards();
   }, []);
 
   return (
