@@ -16,11 +16,19 @@ type FormErrors = {
 };
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const EMAIL_ERROR_MESSAGE = '이메일 형식이 올바르지 않아요.';
-const PASSWORD_ERROR_MESSAGE = '비밀번호를 8자 이상 작성해 주세요.';
+const MIN_PASSWORD_LENGTH = 8;
+const ERROR_MESSAGES = {
+  email: '이메일 형식이 올바르지 않아요.',
+  password: `비밀번호를 ${MIN_PASSWORD_LENGTH}자 이상 작성해 주세요.`,
+  loginFailed: '이메일 또는 비밀번호가 일치하지 않아요.',
+  network: '네트워크 오류가 발생했어요.',
+  temporary: '일시적인 오류가 발생했어요. 잠시 후 다시 시도해 주세요.',
+  unknown: '알 수 없는 오류가 발생했어요.',
+} as const;
 
 const isValidEmail = (value: string) => EMAIL_REGEX.test(value);
-const isValidPassword = (value: string) => value.length >= 8;
+const isValidPassword = (value: string) =>
+  value.length >= MIN_PASSWORD_LENGTH;
 
 export default function LoginPage() {
   const router = useRouter();
@@ -36,7 +44,7 @@ export default function LoginPage() {
     setEmailTouched(true);
     setErrors((prev) => ({
       ...prev,
-      email: isValidEmail(email) ? undefined : EMAIL_ERROR_MESSAGE,
+      email: isValidEmail(email) ? undefined : ERROR_MESSAGES.email,
     }));
   };
 
@@ -44,7 +52,7 @@ export default function LoginPage() {
     setPasswordTouched(true);
     setErrors((prev) => ({
       ...prev,
-      password: isValidPassword(password) ? undefined : PASSWORD_ERROR_MESSAGE,
+      password: isValidPassword(password) ? undefined : ERROR_MESSAGES.password,
     }));
   };
 
@@ -53,11 +61,11 @@ export default function LoginPage() {
     const nextErrors: FormErrors = {};
 
     if (!isValidEmail(email)) {
-      nextErrors.email = EMAIL_ERROR_MESSAGE;
+      nextErrors.email = ERROR_MESSAGES.email;
     }
 
     if (!isValidPassword(password)) {
-      nextErrors.password = PASSWORD_ERROR_MESSAGE;
+      nextErrors.password = ERROR_MESSAGES.password;
     }
 
     setErrors(nextErrors);
@@ -85,23 +93,23 @@ export default function LoginPage() {
 
         if (status === 401 || status === 400) {
           setErrors({
-            common: '이메일 또는 비밀번호가 일치하지 않아요.',
+            common: ERROR_MESSAGES.loginFailed,
           });
           return;
         }
 
         if (error.code === 'ECONNABORTED' || !error.response) {
-          setErrors({ common: '네트워크 오류가 발생했어요.' });
+          setErrors({ common: ERROR_MESSAGES.network });
           return;
         }
 
         setErrors({
-          common: '일시적인 오류가 발생했어요. 잠시 후 다시 시도해 주세요.',
+          common: ERROR_MESSAGES.temporary,
         });
         return;
       }
 
-      setErrors({ common: '알 수 없는 오류가 발생했어요.' });
+      setErrors({ common: ERROR_MESSAGES.unknown });
     } finally {
       setIsLoading(false);
     }
@@ -138,7 +146,7 @@ export default function LoginPage() {
                   ...prev,
                   email: isValidEmail(nextEmail)
                     ? undefined
-                    : EMAIL_ERROR_MESSAGE,
+                    : ERROR_MESSAGES.email,
                 }));
               }
             }}
@@ -164,7 +172,7 @@ export default function LoginPage() {
                     ...prev,
                     password: isValidPassword(nextPassword)
                       ? undefined
-                      : PASSWORD_ERROR_MESSAGE,
+                      : ERROR_MESSAGES.password,
                   }));
                 }
               }}
