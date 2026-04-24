@@ -5,11 +5,17 @@ import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { useScrollLock } from '@/src/hooks/useScrollLock';
 import { ModalProps } from './type';
+import type { ModalVariant } from './type';
 
 const FOCUSABLE_SELECTORS =
   'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
-export default function Modal({ onClose, children, labelledById }: ModalProps) {
+export default function Modal({
+  onClose,
+  children,
+  labelledById,
+  variant = 'default',
+}: ModalProps) {
   useScrollLock();
 
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -66,7 +72,7 @@ export default function Modal({ onClose, children, labelledById }: ModalProps) {
   };
 
   return createPortal(
-    <Overlay onClick={handleOverlayClick}>
+    <Overlay onClick={handleOverlayClick} $variant={variant}>
       <DialogContainer
         ref={dialogRef}
         role="dialog"
@@ -80,7 +86,7 @@ export default function Modal({ onClose, children, labelledById }: ModalProps) {
   );
 }
 
-const Overlay = styled.div`
+const Overlay = styled.div<{ $variant: ModalVariant }>`
   position: fixed;
   top: 0;
   left: 0;
@@ -90,7 +96,16 @@ const Overlay = styled.div`
   z-index: 999;
   display: flex;
   justify-content: center;
-  align-items: center;
+
+  ${({ $variant }) =>
+    $variant === 'full'
+      ? `
+        align-items: flex-start;
+      `
+      : `
+        justify-content: center;
+        align-items: center;
+      `}
 `;
 
 const DialogContainer = styled.div`
