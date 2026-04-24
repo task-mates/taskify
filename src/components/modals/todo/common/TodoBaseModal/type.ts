@@ -1,9 +1,12 @@
 import { ReactNode } from 'react';
+
+export type HeaderVariant = 'default' | 'card';
 export interface TodoBaseModalProps {
   onClose: () => void;
   title: string;
   labelId: string;
-  badgeArea?: ReactNode;
+  badgeGroup?: ReactNode;
   actionMenu?: ReactNode;
   children: ReactNode;
+  headerVariant?: HeaderVariant;
 }

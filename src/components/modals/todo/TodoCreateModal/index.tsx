@@ -154,7 +154,7 @@ const Form = styled.form`
   margin-top: 28px;
   min-height: 0;
   overflow-y: auto;
-  scrollbar-color: #5e5e66 transparent;
+  scrollbar-color: #5b5963 transparent;
 
   @media ${DEVICE.heightMd} {
     max-height: 460px;
