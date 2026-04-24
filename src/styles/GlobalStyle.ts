@@ -105,7 +105,6 @@ const GlobalStyle = createGlobalStyle`
     --color-red: #CA372B;
 
     --color-blue-100: #76A5EA;
-    --color-blue-200: #1458BC;
 
     --color-profile-green:#206E4E;
     --color-profile-violet: #593EA5;
@@ -123,12 +122,12 @@ const GlobalStyle = createGlobalStyle`
     --sm-13px-medium: 500 13px/normal Pretendard;
     --sm-13px-semibold: 600 13px/normal Pretendard;
     --md-14px-medium: 500 14px/normal Pretendard;
-    --md-14px-medium-150%: 500 14px/1.5rem Pretendard;
+    --md-14px-medium-150: 500 14px/1.5rem Pretendard;
     --lg-14px-semibold: 600 14px/normal Pretendard;
     --lg-14px-bold: 700 14px/normal Pretendard;
     --lg-16px-medium: 500 16px/normal Pretendard;
     --lg-16px-semibold: 600 16px/normal Pretendard;
-    --lg-16px-medium-150%: 500 16px/1.5rem Pretendard;
+    --lg-16px-medium-150: 500 16px/1.5rem Pretendard;
     --lg-16px-bold: 700 16px/normal Pretendard;
     --2lg-18px-medium: 500 18px/normal Pretendard;
     --2lg-18px-semibold: 600 18px/normal Pretendard;
