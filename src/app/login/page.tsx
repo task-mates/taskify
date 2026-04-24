@@ -20,15 +20,23 @@ const MIN_PASSWORD_LENGTH = 8;
 const ERROR_MESSAGES = {
   email: '이메일 형식이 올바르지 않아요.',
   password: `비밀번호를 ${MIN_PASSWORD_LENGTH}자 이상 작성해 주세요.`,
-  loginFailed: '이메일 또는 비밀번호가 일치하지 않아요.',
+  loginFailed: '비밀번호가 일치하지 않습니다.',
   network: '네트워크 오류가 발생했어요.',
   temporary: '일시적인 오류가 발생했어요. 잠시 후 다시 시도해 주세요.',
   unknown: '알 수 없는 오류가 발생했어요.',
 } as const;
 
 const isValidEmail = (value: string) => EMAIL_REGEX.test(value);
-const isValidPassword = (value: string) =>
-  value.length >= MIN_PASSWORD_LENGTH;
+const isValidPassword = (value: string) => value.length >= MIN_PASSWORD_LENGTH;
+const isAuthFailureMessage = (message: string) => {
+  const normalizedMessage = message.toLowerCase();
+  return (
+    normalizedMessage.includes('password') ||
+    normalizedMessage.includes('비밀번호') ||
+    normalizedMessage.includes('credential') ||
+    normalizedMessage.includes('invalid')
+  );
+};
 
 export default function LoginPage() {
   const router = useRouter();
@@ -90,10 +98,23 @@ export default function LoginPage() {
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         const status = error.response?.status;
+        const errorMessage =
+          typeof error.response?.data === 'object' &&
+          error.response?.data !== null &&
+          'message' in error.response.data &&
+          typeof error.response.data.message === 'string'
+            ? error.response.data.message
+            : '';
 
-        if (status === 401 || status === 400) {
+        if (
+          status === 400 ||
+          status === 401 ||
+          status === 403 ||
+          (typeof status === 'number' && status < 500) ||
+          isAuthFailureMessage(errorMessage)
+        ) {
           setErrors({
-            common: ERROR_MESSAGES.loginFailed,
+            password: ERROR_MESSAGES.loginFailed,
           });
           return;
         }
