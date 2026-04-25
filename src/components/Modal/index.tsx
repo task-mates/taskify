@@ -86,7 +86,7 @@ export default function Modal({
   );
 }
 
-const Overlay = styled.div<{ $variant: ModalVariant }>`
+const Overlay = styled.div<{ $overlayVariant: ModalVariant }>`
   position: fixed;
   top: 0;
   left: 0;
@@ -97,8 +97,8 @@ const Overlay = styled.div<{ $variant: ModalVariant }>`
   display: flex;
   justify-content: center;
 
-  ${({ $variant }) =>
-    $variant === 'full'
+  ${({ $overlayVariant }) =>
+    $overlayVariant === 'full'
       ? `
         align-items: flex-start;
       `

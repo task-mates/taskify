@@ -6,5 +6,5 @@ export interface ModalProps {
   onClose: () => void;
   children: ReactNode;
   labelledById?: string;
-  variant?: ModalVariant;
+  overlayVariant?: ModalVariant;
 }
