@@ -34,7 +34,7 @@ export default function DashboardCreateModal({
       <S.Container>
         <S.Header>
           <S.Title>새 대시보드 생성</S.Title>
-          <S.CloseButton type="button" aria-label="모달 닫기">
+          <S.CloseButton type="button" aria-label="모달 닫기" onClick={onClose}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
