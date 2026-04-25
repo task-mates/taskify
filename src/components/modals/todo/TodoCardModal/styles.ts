@@ -139,10 +139,6 @@ export const ActionButton = styled.button<{ $variant?: 'default' | 'delete' }>`
 export const TaskInfo = styled.div`
   display: flex;
   flex-direction: column;
-
-  @media ${DEVICE.mobile} {
-    margin-top: 20px;
-  }
 `;
 
 export const TaskInfoItem = styled.div`

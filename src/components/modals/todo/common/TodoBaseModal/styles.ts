@@ -13,6 +13,10 @@ export const Container = styled.div`
   border: 1px solid #9fa6b2;
   border-radius: 24px;
 
+  @media ${DEVICE.heightMd} {
+    height: 90vh;
+  }
+
   @media ${DEVICE.mobile} {
     padding: 0 10px 0 30px;
     max-width: none;
@@ -21,13 +25,9 @@ export const Container = styled.div`
     height: 100%;
   }
 
-  @media (max-width: 499px) {
-    padding: 0 30px;
-    overflow: auto;
-  }
-
-  @media ${DEVICE.mobile} and (hover: none) and (pointer: coarse) {
-    padding: 0 30px;
+  @media (max-width: 499px),
+    ${DEVICE.mobile} and (hover: none) and (pointer: coarse) {
+    padding: 0;
     overflow: auto;
   }
 `;
@@ -46,14 +46,9 @@ export const Wrapper = styled.div`
     height: 100%;
   }
 
-  @media (max-width: 499px) {
+  @media (max-width: 499px),
+    ${DEVICE.mobile} and (hover: none) and (pointer: coarse) {
     padding-right: 0;
-    height: auto;
-  }
-
-  @media ${DEVICE.mobile} and (hover: none) and (pointer: coarse) {
-    padding-right: 0;
-    height: auto;
   }
 `;
 
@@ -72,6 +67,13 @@ export const Header = styled.div<{ $variant: HeaderVariant }>`
 
       @media ${DEVICE.mobile}{
         padding-bottom: 20px;
+        min-height: 80px;
+      }
+
+      @media (max-width: 499px),
+    ${DEVICE.mobile} and (hover: none) and (pointer: coarse){
+        margin-left: 30px;
+        margin-right: 30px;
       }
   `}
 `;
@@ -117,4 +119,15 @@ export const Content = styled.div`
   padding-top: 30px;
   height: calc(100% - 90px);
   overflow: auto;
+
+  @media ${DEVICE.mobile} {
+    padding-top: 20px;
+    height: calc(100% - 80px);
+  }
+
+  @media (max-width: 499px),
+    ${DEVICE.mobile} and (hover: none) and (pointer: coarse) {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
 `;
