@@ -93,7 +93,11 @@ export default function DashboardCreateModal({
           <button type="button" onClick={onClose}>
             취소
           </button>
-          <button type="button" onClick={handleCreate}>
+          <button
+            type="button"
+            onClick={handleCreate}
+            disabled={!title.trim() || !color}
+          >
             생성
           </button>
         </div>
