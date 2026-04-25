@@ -1,7 +1,6 @@
-import styled from 'styled-components';
-import { DEVICE } from '@/src/styles/Breakpoints';
 import Modal from '@/src/components/Modal';
-import { HeaderVariant, TodoBaseModalProps } from './type';
+import { TodoBaseModalProps } from './type';
+import * as S from './styles';
 
 export default function TodoBaseModal({
   onClose,
@@ -11,20 +10,25 @@ export default function TodoBaseModal({
   actionMenu,
   children,
   headerVariant = 'default',
+  overlayVariant = 'default',
 }: TodoBaseModalProps) {
   return (
-    <Modal onClose={onClose} labelledById={labelId}>
-      <Container>
-        <Wrapper>
-          <Header $variant={headerVariant}>
-            <HeaderLeft>
-              <Title id={labelId}>{title}</Title>
+    <Modal
+      onClose={onClose}
+      labelledById={labelId}
+      overlayVariant={overlayVariant}
+    >
+      <S.Container>
+        <S.Wrapper>
+          <S.Header $variant={headerVariant}>
+            <S.HeaderLeft>
+              <S.Title id={labelId}>{title}</S.Title>
               {badgeGroup}
-            </HeaderLeft>
+            </S.HeaderLeft>
 
-            <HeaderRight>
+            <S.HeaderRight>
               {actionMenu}
-              <CloseButton
+              <S.CloseButton
                 type="button"
                 onClick={onClose}
                 aria-label="모달 닫기"
@@ -42,126 +46,13 @@ export default function TodoBaseModal({
                     fill="#333236"
                   />
                 </svg>
-              </CloseButton>
-            </HeaderRight>
-          </Header>
+              </S.CloseButton>
+            </S.HeaderRight>
+          </S.Header>
 
-          <Content>{children}</Content>
-        </Wrapper>
-      </Container>
+          <S.Content>{children}</S.Content>
+        </S.Wrapper>
+      </S.Container>
     </Modal>
   );
 }
-
-const Container = styled.div`
-  position: relative;
-  padding: 30px 14px 30px 30px;
-  max-width: 600px;
-  min-width: 320px;
-  width: 100%;
-  background: #f3f5f8;
-  border: 1px solid #9fa6b2;
-  border-radius: 24px;
-
-  @media ${DEVICE.mobile} {
-    padding: 0 10px 0 30px;
-    max-width: none;
-    border: none;
-    border-radius: 0;
-    height: 100%;
-  }
-
-  @media (max-width: 499px) {
-    padding: 0 30px;
-    overflow: auto;
-  }
-
-  @media ${DEVICE.mobile} and (hover: none) and (pointer: coarse) {
-    padding: 0 30px;
-    overflow: auto;
-  }
-`;
-
-const Wrapper = styled.div`
-  max-height: 80vh;
-  overflow: auto;
-  padding-right: 10px;
-
-  scrollbar-color: #5b5963 transparent;
-
-  @media ${DEVICE.mobile} {
-    max-height: none;
-    padding: 24px 14px 24px 0;
-    padding-top: 24px;
-    padding-right: 14px;
-    padding-bottom: 24px;
-    height: 100%;
-  }
-
-  @media (max-width: 499px) {
-    padding-right: 0;
-    height: auto;
-  }
-
-  @media ${DEVICE.mobile} and (hover: none) and (pointer: coarse) {
-    padding-right: 0;
-    height: auto;
-  }
-`;
-
-const Header = styled.div<{ $variant: HeaderVariant }>`
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  ${({ $variant }) =>
-    $variant === 'card' &&
-    `
-      padding-bottom: 24px;
-      border-bottom: 1px solid #D9D9D9;
-
-      @media ${DEVICE.mobile}{
-        padding-bottom: 20px;
-      }
-  `}
-`;
-
-const HeaderLeft = styled.div``;
-
-const Title = styled.h2`
-  width: 82%;
-  font-size: 24px;
-  font-weight: 600;
-  color: #333236;
-
-  @media ${DEVICE.mobile} {
-    font-size: 20px;
-  }
-`;
-
-const HeaderRight = styled.div`
-  position: absolute;
-  right: 0;
-  top: 0;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-`;
-
-const CloseButton = styled.button`
-  width: 24px;
-  height: 24px;
-
-  svg {
-    width: 100%;
-    height: 100%;
-  }
-
-  @media ${DEVICE.mobile} {
-    width: 20px;
-    height: 20px;
-  }
-`;
-
-const Content = styled.div``;

@@ -2,10 +2,9 @@
 
 import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import styled from 'styled-components';
 import { useScrollLock } from '@/src/hooks/useScrollLock';
 import { ModalProps } from './type';
-import type { ModalVariant } from './type';
+import * as S from './styles';
 
 const FOCUSABLE_SELECTORS =
   'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
@@ -14,7 +13,7 @@ export default function Modal({
   onClose,
   children,
   labelledById,
-  variant = 'default',
+  overlayVariant = 'default',
 }: ModalProps) {
   useScrollLock();
 
@@ -72,42 +71,16 @@ export default function Modal({
   };
 
   return createPortal(
-    <Overlay onClick={handleOverlayClick} $variant={variant}>
-      <DialogContainer
+    <S.Overlay onClick={handleOverlayClick} $overlayVariant={overlayVariant}>
+      <S.DialogContainer
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={labelledById}
       >
         {children}
-      </DialogContainer>
-    </Overlay>,
+      </S.DialogContainer>
+    </S.Overlay>,
     document.body
   );
 }
-
-const Overlay = styled.div<{ $overlayVariant: ModalVariant }>`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-  display: flex;
-  justify-content: center;
-
-  ${({ $overlayVariant }) =>
-    $overlayVariant === 'full'
-      ? `
-        align-items: flex-start;
-      `
-      : `
-        justify-content: center;
-        align-items: center;
-      `}
-`;
-
-const DialogContainer = styled.div`
-  display: contents;
-`;
