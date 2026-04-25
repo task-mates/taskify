@@ -29,15 +29,6 @@ const ERROR_MESSAGES = {
 
 const isValidEmail = (value: string) => EMAIL_REGEX.test(value);
 const isValidPassword = (value: string) => value.length >= MIN_PASSWORD_LENGTH;
-const isUserNotFoundMessage = (message: string) => {
-  const normalizedMessage = message.toLowerCase();
-  return (
-    normalizedMessage.includes('존재하지 않는') ||
-    normalizedMessage.includes('가입된 이메일이') ||
-    normalizedMessage.includes('not found') ||
-    (normalizedMessage.includes('user') && normalizedMessage.includes('not'))
-  );
-};
 
 export default function LoginPage() {
   const router = useRouter();
@@ -114,7 +105,7 @@ export default function LoginPage() {
             ? error.response.data.message
             : '';
 
-        if (isUserNotFoundMessage(errorMessage)) {
+        if (status === 404) {
           setErrors({
             email: ERROR_MESSAGES.userNotFound,
           });
