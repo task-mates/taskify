@@ -30,10 +30,10 @@ export default function DashboardCreateModal({
 
   return (
     // input button 공통 컴포넌트 개발시 대체
-    <Modal onClose={onClose}>
+    <Modal onClose={onClose} labelledById="dashboard-create-modal-title">
       <S.Container>
         <S.Header>
-          <S.Title>새 대시보드 생성</S.Title>
+          <S.Title id="dashboard-create-modal-title">새 대시보드 생성</S.Title>
           <S.CloseButton type="button" aria-label="모달 닫기" onClick={onClose}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -50,8 +50,9 @@ export default function DashboardCreateModal({
           </S.CloseButton>
         </S.Header>
 
-        <S.Label>대시보드 이름</S.Label>
+        <S.Label htmlFor="dashboard-title">대시보드 이름</S.Label>
         <input
+          id="dashboard-title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="새로운 대시보드"
