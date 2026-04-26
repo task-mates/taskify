@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
-import { ReactNode } from 'react';
 import StyledComponentsRegistry from './registry';
 import GlobalStyle from '@/src/styles/GlobalStyle';
-import AppShell from '@/src/components/layout/AppShell';
 
 export const metadata: Metadata = {
   title: 'Taskify',
@@ -11,15 +9,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: ReactNode;
-}>) {
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="ko">
       <body>
         <StyledComponentsRegistry>
           <GlobalStyle />
-          <AppShell>{children}</AppShell>
+          {children}
         </StyledComponentsRegistry>
       </body>
     </html>
