@@ -8,6 +8,9 @@ import type { Comment } from '@/src/apis/comments/type';
 import TodoBaseModal from '../common/TodoBaseModal';
 import { TodoCardModalProps } from './type';
 import * as S from './styles';
+import SendIcon from '@/src/components/icons/icon-send.svg';
+import EditIcon from '@/src/components/icons/icon-edit.svg';
+import DeleteIcon from '@/src/components/icons/icon-delete.svg';
 
 export default function TodoCardModal({
   onClose,
@@ -261,10 +264,14 @@ export default function TodoCardModal({
         <S.ActionButtonPopup>
           <S.ActionButtonList>
             <S.ActionButtonItem>
-              <S.ActionButton type="button">수정하기</S.ActionButton>
+              <S.ActionButton type="button">
+                <EditIcon />
+                수정하기
+              </S.ActionButton>
             </S.ActionButtonItem>
             <S.ActionButtonItem>
               <S.ActionButton type="button" $variant="delete">
+                <DeleteIcon />
                 삭제하기
               </S.ActionButton>
             </S.ActionButtonItem>
@@ -332,7 +339,9 @@ export default function TodoCardModal({
               onChange={handleCommentChange}
               onKeyDown={handleKeyDown}
             />
-            <S.SendButton type="submit">✈️</S.SendButton>
+            <S.SendButton type="submit">
+              <SendIcon />
+            </S.SendButton>
           </S.CommentTextareaBox>
         </form>
       </S.CommentTextareaWrapper>

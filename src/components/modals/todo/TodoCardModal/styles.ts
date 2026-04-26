@@ -101,41 +101,33 @@ export const ActionButtonItem = styled.li`
   & + & {
     margin-top: 5px;
     padding-top: 5px;
-    border-top: 1px solid #d6d5d9;
+    position: relative;
+  }
+  & + &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 93px;
+    height: 1px;
+    background: #d6d5d9;
   }
 `;
 
 export const ActionButton = styled.button<{ $variant?: 'default' | 'delete' }>`
   position: relative;
-  padding: 10px 12px 10px 41px;
+  padding: 10px 12px;
   font-size: 16px;
   font-weight: 500;
   border-radius: 6px;
   color: ${({ $variant }) => ($variant === 'delete' ? '#E73527' : '#333236')};
 
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
   transition: background 0.3s;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 10px;
-    left: 12px;
-    width: 20px;
-    height: 20px;
-
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
-
-    ${({ $variant }) =>
-      $variant === 'delete'
-        ? `
-          background-image: url('/images/dummy.png');
-        `
-        : `
-          background-image: url('/images/icon-logo.svg');
-      `}
-  }
 
   &:hover {
     background: rgba(243, 245, 248, 0.5);
