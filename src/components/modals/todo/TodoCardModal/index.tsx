@@ -28,6 +28,10 @@ export default function TodoCardModal({
   const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
   const actionMenuRef = useRef<HTMLDivElement | null>(null);
 
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [isTextareaExpanded, setIsTextareaExpanded] = useState(false);
+  const isSubmittingRef = useRef(false);
+
   useEffect(() => {
     const fetchCard = async () => {
       try {
@@ -40,23 +44,6 @@ export default function TodoCardModal({
 
     fetchCard();
   }, [cardId]);
-
-  // useEffect(() => {
-  //   const fetchComments = async () => {
-  //     try {
-  //       const data = await commentsApi.getList({
-  //         cardId,
-  //         size: 10,
-  //       });
-
-  //       setComments(data.comments);
-  //     } catch (e) {
-  //       console.error(e);
-  //     }
-  //   };
-
-  //   fetchComments();
-  // }, [cardId]);
 
   const fetchComments = async (nextCursorId?: number | null) => {
     if (isCommentLoading) return;
@@ -91,21 +78,27 @@ export default function TodoCardModal({
   useEffect(() => {
     if (!observerRef.current) return;
     if (!cursorId) return;
+    if (isCommentLoading) return;
 
-    const observer = new IntersectionObserver((entries) => {
-      const target = entries[0];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const target = entries[0];
 
-      if (target.isIntersecting) {
-        fetchComments(cursorId);
+        if (target.isIntersecting) {
+          fetchComments(cursorId);
+        }
+      },
+      {
+        threshold: 0.1,
       }
-    });
+    );
 
     observer.observe(observerRef.current);
 
     return () => {
       observer.disconnect();
     };
-  }, [cursorId, isCommentLoading]);
+  }, [cursorId, isCommentLoading, comments.length]);
 
   useEffect(() => {
     if (!card?.columnId || !dashboardId) return;
@@ -124,6 +117,22 @@ export default function TodoCardModal({
 
     fetchColumns();
   }, [card?.columnId, dashboardId]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (!actionMenuRef.current) return;
+
+      if (!actionMenuRef.current.contains(e.target as Node)) {
+        setIsActionMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -144,8 +153,6 @@ export default function TodoCardModal({
       hour12: true,
     });
   };
-
-  const isSubmittingRef = useRef(false);
 
   const submitComment = async () => {
     if (isSubmittingRef.current) return;
@@ -193,8 +200,6 @@ export default function TodoCardModal({
     }
   };
 
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [isTextareaExpanded, setIsTextareaExpanded] = useState(false);
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const textarea = e.target;
 
@@ -208,26 +213,9 @@ export default function TodoCardModal({
     textarea.style.overflowY =
       textarea.scrollHeight > maxHeight ? 'auto' : 'hidden';
 
-    // setIsTextareaExpanded(textarea.scrollHeight > minHeight);
     const isExpanded = textarea.value.includes('\n');
     setIsTextareaExpanded(isExpanded);
   };
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (!actionMenuRef.current) return;
-
-      if (!actionMenuRef.current.contains(e.target as Node)) {
-        setIsActionMenuOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   const badgeGroup = (
     <S.BadgeGroup>
@@ -246,7 +234,6 @@ export default function TodoCardModal({
         type="button"
         onClick={() => setIsActionMenuOpen((prev) => !prev)}
       >
-        {/* 추후에 아이콘 컴포넌트로 변경 예정 */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="28"
@@ -260,6 +247,7 @@ export default function TodoCardModal({
           />
         </svg>
       </S.ActionMenuButton>
+
       {isActionMenuOpen && (
         <S.ActionButtonPopup>
           <S.ActionButtonList>
@@ -301,6 +289,7 @@ export default function TodoCardModal({
             {card?.assignee?.nickname ?? ''}
           </S.TaskInfoValue>
         </S.TaskInfoItem>
+
         <S.TaskInfoItem>
           <S.TaskInfoLabel>마감일</S.TaskInfoLabel>
           <S.TaskInfoValue>
@@ -357,7 +346,6 @@ export default function TodoCardModal({
 
                 <S.CommentCreated>
                   <S.CommentDate>{formatDate(comment.createdAt)}</S.CommentDate>
-
                   <S.CommentTime>{formatTime(comment.createdAt)}</S.CommentTime>
                 </S.CommentCreated>
               </S.CommentInfo>
@@ -366,7 +354,8 @@ export default function TodoCardModal({
             </S.CommentContent>
           </S.CommentItem>
         ))}
-        <div ref={observerRef} />
+
+        <div ref={observerRef} style={{ height: '1px' }} />
       </S.CommentList>
     </TodoBaseModal>
   );
