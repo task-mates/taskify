@@ -8,4 +8,16 @@ const instance: AxiosInstance = axios.create({
 // instance.interceptors.request.use();
 // instance.interceptors.response.use();
 
+instance.interceptors.request.use((config) => {
+  if (typeof window === 'undefined') return config;
+
+  const token = localStorage.getItem('accessToken');
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
 export default instance;
