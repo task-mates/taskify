@@ -22,6 +22,9 @@ export default function TodoCardModal({
   const [isCommentLoading, setIsCommentLoading] = useState(false);
   const observerRef = useRef<HTMLDivElement | null>(null);
 
+  const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
+  const actionMenuRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     const fetchCard = async () => {
       try {
@@ -207,6 +210,22 @@ export default function TodoCardModal({
     setIsTextareaExpanded(isExpanded);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (!actionMenuRef.current) return;
+
+      if (!actionMenuRef.current.contains(e.target as Node)) {
+        setIsActionMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const badgeGroup = (
     <S.BadgeGroup>
       <S.ColumnBadge>{columnName}</S.ColumnBadge>
@@ -219,8 +238,11 @@ export default function TodoCardModal({
   );
 
   const actionMenu = (
-    <S.ActionMenuBox>
-      <S.ActionMenuButton type="button">
+    <S.ActionMenuBox ref={actionMenuRef}>
+      <S.ActionMenuButton
+        type="button"
+        onClick={() => setIsActionMenuOpen((prev) => !prev)}
+      >
         {/* 추후에 아이콘 컴포넌트로 변경 예정 */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -235,18 +257,20 @@ export default function TodoCardModal({
           />
         </svg>
       </S.ActionMenuButton>
-      <S.ActionButtonPopup>
-        <S.ActionButtonList>
-          <S.ActionButtonItem>
-            <S.ActionButton type="button">수정하기</S.ActionButton>
-          </S.ActionButtonItem>
-          <S.ActionButtonItem>
-            <S.ActionButton type="button" $variant="delete">
-              삭제하기
-            </S.ActionButton>
-          </S.ActionButtonItem>
-        </S.ActionButtonList>
-      </S.ActionButtonPopup>
+      {isActionMenuOpen && (
+        <S.ActionButtonPopup>
+          <S.ActionButtonList>
+            <S.ActionButtonItem>
+              <S.ActionButton type="button">수정하기</S.ActionButton>
+            </S.ActionButtonItem>
+            <S.ActionButtonItem>
+              <S.ActionButton type="button" $variant="delete">
+                삭제하기
+              </S.ActionButton>
+            </S.ActionButtonItem>
+          </S.ActionButtonList>
+        </S.ActionButtonPopup>
+      )}
     </S.ActionMenuBox>
   );
 

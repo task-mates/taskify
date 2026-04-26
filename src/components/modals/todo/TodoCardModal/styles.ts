@@ -85,7 +85,6 @@ export const ActionMenuButton = styled.button`
 `;
 
 export const ActionButtonPopup = styled.div`
-  display: none;
   position: absolute;
   top: calc(100% + 20px);
   right: 0;
@@ -111,7 +110,10 @@ export const ActionButton = styled.button<{ $variant?: 'default' | 'delete' }>`
   padding: 10px 12px 10px 41px;
   font-size: 16px;
   font-weight: 500;
+  border-radius: 6px;
   color: ${({ $variant }) => ($variant === 'delete' ? '#E73527' : '#333236')};
+
+  transition: background 0.3s;
 
   &::before {
     content: '';
@@ -133,6 +135,10 @@ export const ActionButton = styled.button<{ $variant?: 'default' | 'delete' }>`
         : `
           background-image: url('/images/icon-logo.svg');
       `}
+  }
+
+  &:hover {
+    background: rgba(243, 245, 248, 0.5);
   }
 `;
 
