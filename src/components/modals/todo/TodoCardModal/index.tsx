@@ -1,28 +1,9 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import TodoBaseModal from '../common/TodoBaseModal';
 import { TodoCardModalProps } from './type';
 import * as S from './styles';
 
 export default function TodoCardModal({ onClose }: TodoCardModalProps) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const MAX_HEIGHT = 144;
-
-  const handleInput = () => {
-    const el = textareaRef.current;
-    if (!el) return;
-
-    el.style.height = '40px';
-
-    const isMultiLine = el.scrollHeight > 40;
-
-    el.style.lineHeight = isMultiLine ? '20px' : '40px';
-    el.style.padding = isMultiLine ? '10px 20px' : '0 20px';
-
-    const nextHeight = Math.min(el.scrollHeight, MAX_HEIGHT);
-    el.style.height = `${nextHeight}px`;
-    el.style.overflowY = el.scrollHeight > MAX_HEIGHT ? 'auto' : 'hidden';
-  };
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -34,15 +15,28 @@ export default function TodoCardModal({ onClose }: TodoCardModalProps) {
     if (!comment) return;
 
     console.log('댓글 전송:', comment);
+  };
 
-    // TODO: 나중에 댓글 생성 API 연결
-    // await createComment(comment);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-    textarea.value = '';
-    textarea.style.height = '40px';
-    textarea.style.lineHeight = '40px';
-    textarea.style.padding = '0 48px 0 20px';
-    textarea.style.overflowY = 'hidden';
+  const [isTextareaExpanded, setIsTextareaExpanded] = useState(false);
+
+  const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const textarea = e.target;
+
+    const lineHeight = 24;
+    const maxRows = 6;
+    const minHeight = 40;
+    const maxHeight = lineHeight * maxRows;
+
+    textarea.style.height = `${minHeight}px`;
+    textarea.style.height = `${Math.min(textarea.scrollHeight, maxHeight)}px`;
+    textarea.style.overflowY =
+      textarea.scrollHeight > maxHeight ? 'auto' : 'hidden';
+
+    // setIsTextareaExpanded(textarea.scrollHeight > minHeight);
+    const isExpanded = textarea.value.includes('\n');
+    setIsTextareaExpanded(isExpanded);
   };
 
   const badgeGroup = (
@@ -121,17 +115,17 @@ export default function TodoCardModal({ onClose }: TodoCardModalProps) {
 
       <S.Divider />
 
-      <S.CommentTextareaWrapper>
-        <S.CommentBadge>정은</S.CommentBadge>
+      <S.CommentTextareaWrapper $expanded={isTextareaExpanded}>
+        {!isTextareaExpanded && <S.CommentBadge>정은</S.CommentBadge>}
+
         <form onSubmit={handleSubmit}>
-          <S.CommentTextareaBox>
+          <S.CommentTextareaBox $expanded={isTextareaExpanded}>
             <S.CommentTextarea
               ref={textareaRef}
-              onInput={handleInput}
               name="comment"
               placeholder="댓글을 남겨보세요"
+              onChange={handleCommentChange}
             />
-            {/* 전송 아이콘은 추후에 변경 예정 */}
             <S.SendButton type="submit">✈️</S.SendButton>
           </S.CommentTextareaBox>
         </form>

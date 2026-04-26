@@ -201,11 +201,10 @@ export const Divider = styled.hr`
   border-top: 1px solid #d9d9d9;
 `;
 
-export const CommentTextareaWrapper = styled.div`
+export const CommentTextareaWrapper = styled.div<{ $expanded: boolean }>`
   display: flex;
-  align-items: center;
+  align-items: ${({ $expanded }) => ($expanded ? 'stretch' : 'center')};
   gap: 12px;
-  scrollbar-color: #5b5963 transparent;
 `;
 
 export const CommentBadge = styled.span`
@@ -222,37 +221,64 @@ export const CommentBadge = styled.span`
   border-radius: 50%;
 `;
 
-export const CommentTextareaBox = styled.div`
+export const CommentTextareaBox = styled.div<{ $expanded: boolean }>`
   position: relative;
   display: flex;
-  flex: 1;
+  width: 100%;
+
+  padding: ${({ $expanded }) =>
+    $expanded ? '8px 30px 38px 20px' : '0 20px 0 20px'};
+  background: #fff;
+  border: 1px solid #a39fb2;
+  border-radius: 12px;
 `;
 
 export const CommentTextarea = styled.textarea`
   width: 100%;
   height: 40px;
-  min-height: 40px;
-  line-height: 40px;
-  max-height: 144px;
+  line-height: 24px;
+  padding: 8px 0;
 
-  padding: 0 48px 0 20px;
   font-weight: 500;
   color: #333236;
-  background: #fff;
-  border: 1px solid #a39fb2;
-  border-radius: 12px;
 
   resize: none;
   overflow-y: hidden;
 
+  border: none;
+
+  &:focus,
+  &:focus-visible,
+  &:active {
+    border: none;
+    outline: none;
+  }
+
   &::placeholder {
     color: #9fa6b2;
+  }
+
+  &::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #0000001a;
+    border-radius: 999px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #0003;
   }
 `;
 
 export const SendButton = styled.button`
   position: absolute;
-  right: 12px;
+  right: 6px;
   bottom: 8px;
 
   width: 24px;

@@ -18,11 +18,11 @@ export const Container = styled.div`
   }
 
   @media ${DEVICE.mobile} {
-    padding: 0 10px 0 30px;
     max-width: none;
     border: none;
     border-radius: 0;
     height: 100%;
+    padding: 0 30px;
   }
 
   @media (max-width: 499px),
@@ -35,14 +35,9 @@ export const Container = styled.div`
 export const Wrapper = styled.div`
   height: 100%;
 
-  scrollbar-color: #5b5963 transparent;
-
   @media ${DEVICE.mobile} {
-    max-height: none;
-    padding: 24px 14px 24px 0;
     padding-top: 24px;
-    padding-right: 14px;
-    padding-bottom: 24px;
+    max-height: none;
     height: 100%;
   }
 
@@ -120,8 +115,26 @@ export const Content = styled.div`
   height: calc(100% - 90px);
   overflow: auto;
 
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #0000001a;
+    border-radius: 999px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #0003;
+  }
+
   @media ${DEVICE.mobile} {
     padding-top: 20px;
+    padding-bottom: 30px;
     height: calc(100% - 80px);
   }
 
