@@ -33,21 +33,23 @@ const GlobalStyle = createGlobalStyle`
     cursor: pointer;
   }
 
-  ul, li{
+  form {
+    width: 100%;
+  }
+
+  ul, ol{
     list-style: none;
+    margin: 0;
+    padding: 0;
   }
 
   a {
     text-decoration: none;
   }
 
-  img, picture, video, svg {
+  img, picture, video{
     display: block;
     max-width: 100%;
-  }
-
-  form {
-    width: 100%;
   }
 `;
 
