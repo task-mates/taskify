@@ -162,6 +162,9 @@ export const TaskInfoLabel = styled.span`
 `;
 
 export const TaskInfoValue = styled.span`
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 16px;
   font-weight: 500;
   color: #333236;
@@ -169,6 +172,22 @@ export const TaskInfoValue = styled.span`
   @media ${DEVICE.mobile} {
     font-size: 14px;
   }
+`;
+
+export const TaskInfoNameBadge = styled.span`
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #1458bc;
+  color: #fff;
+  border-radius: 50%;
+  white-space: nowrap;
+  overflow: hidden;
 `;
 
 export const DetailContent = styled.div`
@@ -219,6 +238,8 @@ export const CommentBadge = styled.span`
   background: #1458bc;
   color: #fff;
   border-radius: 50%;
+  white-space: nowrap;
+  overflow: hidden;
 `;
 
 export const CommentTextareaBox = styled.div<{ $expanded: boolean }>`
@@ -314,6 +335,7 @@ export const CommentContent = styled.div`
 
 export const CommentInfo = styled.div`
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 4px;
 `;
@@ -342,4 +364,5 @@ export const CommentText = styled.p`
   line-height: 1.6;
   font-weight: 500;
   color: #333236;
+  white-space: pre-wrap;
 `;

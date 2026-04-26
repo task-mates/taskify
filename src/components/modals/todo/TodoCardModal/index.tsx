@@ -1,26 +1,194 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
+import Image from 'next/image';
+import { cardsApi } from '@/src/apis/cards';
+import { commentsApi } from '@/src/apis/comments';
+import { columnsApi } from '@/src/apis/columns';
+import type { Card } from '@/src/apis/cards/type';
+import type { Comment } from '@/src/apis/comments/type';
 import TodoBaseModal from '../common/TodoBaseModal';
 import { TodoCardModalProps } from './type';
 import * as S from './styles';
 
-export default function TodoCardModal({ onClose }: TodoCardModalProps) {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+export default function TodoCardModal({
+  onClose,
+  cardId,
+  dashboardId,
+}: TodoCardModalProps) {
+  const [card, setCard] = useState<Card | null>(null);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [columnName, setColumnName] = useState('');
+
+  const [cursorId, setCursorId] = useState<number | null>(null);
+  const [isCommentLoading, setIsCommentLoading] = useState(false);
+  const observerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const fetchCard = async () => {
+      try {
+        const data = await cardsApi.getById(cardId);
+        setCard(data);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
+    fetchCard();
+  }, [cardId]);
+
+  // useEffect(() => {
+  //   const fetchComments = async () => {
+  //     try {
+  //       const data = await commentsApi.getList({
+  //         cardId,
+  //         size: 10,
+  //       });
+
+  //       setComments(data.comments);
+  //     } catch (e) {
+  //       console.error(e);
+  //     }
+  //   };
+
+  //   fetchComments();
+  // }, [cardId]);
+
+  const fetchComments = async (nextCursorId?: number | null) => {
+    if (isCommentLoading) return;
+
+    try {
+      setIsCommentLoading(true);
+
+      const data = await commentsApi.getList({
+        cardId,
+        size: 10,
+        cursorId: nextCursorId ?? undefined,
+      });
+
+      setComments((prevComments) =>
+        nextCursorId ? [...prevComments, ...data.comments] : data.comments
+      );
+
+      setCursorId(data.cursorId);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsCommentLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    setComments([]);
+    setCursorId(null);
+    fetchComments(null);
+  }, [cardId]);
+
+  useEffect(() => {
+    if (!observerRef.current) return;
+    if (!cursorId) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      const target = entries[0];
+
+      if (target.isIntersecting) {
+        fetchComments(cursorId);
+      }
+    });
+
+    observer.observe(observerRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [cursorId, isCommentLoading]);
+
+  useEffect(() => {
+    if (!card?.columnId || !dashboardId) return;
+
+    const fetchColumns = async () => {
+      try {
+        const data = await columnsApi.getList(dashboardId);
+
+        const column = data.data.find((col) => col.id === card.columnId);
+
+        setColumnName(column?.title ?? '');
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
+    fetchColumns();
+  }, [card?.columnId, dashboardId]);
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+
+    return date.toLocaleDateString('ko-KR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
+  const formatTime = (dateString: string) => {
+    const date = new Date(dateString);
+
+    return date.toLocaleTimeString('ko-KR', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+  };
+
+  const isSubmittingRef = useRef(false);
+
+  const submitComment = async () => {
+    if (isSubmittingRef.current) return;
 
     const textarea = textareaRef.current;
-    if (!textarea) return;
+    if (!textarea || !card) return;
 
-    const comment = textarea.value.trim();
+    const content = textarea.value.trim();
+    if (!content) return;
 
-    if (!comment) return;
+    try {
+      isSubmittingRef.current = true;
 
-    console.log('댓글 전송:', comment);
+      const newComment = await commentsApi.create({
+        content,
+        cardId,
+        columnId: card.columnId,
+        dashboardId,
+      });
+
+      setComments((prevComments) => [newComment, ...prevComments]);
+
+      textarea.value = '';
+      textarea.style.height = '40px';
+      textarea.style.overflowY = 'hidden';
+      setIsTextareaExpanded(false);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      isSubmittingRef.current = false;
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await submitComment();
+  };
+
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.nativeEvent.isComposing) return;
+
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      await submitComment();
+    }
   };
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
   const [isTextareaExpanded, setIsTextareaExpanded] = useState(false);
-
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const textarea = e.target;
 
@@ -41,11 +209,11 @@ export default function TodoCardModal({ onClose }: TodoCardModalProps) {
 
   const badgeGroup = (
     <S.BadgeGroup>
-      <S.ColumnBadge>To Do</S.ColumnBadge>
+      <S.ColumnBadge>{columnName}</S.ColumnBadge>
       <S.TagBadgeArea>
-        <S.TagBadge>프로젝트</S.TagBadge>
-        <S.TagBadge>프론트엔드</S.TagBadge>
-        <S.TagBadge>상</S.TagBadge>
+        {card?.tags?.map((tag) => (
+          <S.TagBadge key={tag}>{tag}</S.TagBadge>
+        ))}
       </S.TagBadgeArea>
     </S.BadgeGroup>
   );
@@ -84,7 +252,7 @@ export default function TodoCardModal({ onClose }: TodoCardModalProps) {
 
   return (
     <TodoBaseModal
-      title="와이어프레임 만들기"
+      title={card?.title ?? ''}
       labelId="할 일 카드 모달"
       onClose={onClose}
       badgeGroup={badgeGroup}
@@ -95,28 +263,41 @@ export default function TodoCardModal({ onClose }: TodoCardModalProps) {
       <S.TaskInfo>
         <S.TaskInfoItem>
           <S.TaskInfoLabel>담당자</S.TaskInfoLabel>
-          <S.TaskInfoValue>박민영</S.TaskInfoValue>
+          <S.TaskInfoValue>
+            <S.TaskInfoNameBadge>
+              {card?.assignee?.nickname ?? ''}
+            </S.TaskInfoNameBadge>
+            {card?.assignee?.nickname ?? ''}
+          </S.TaskInfoValue>
         </S.TaskInfoItem>
         <S.TaskInfoItem>
           <S.TaskInfoLabel>마감일</S.TaskInfoLabel>
-          <S.TaskInfoValue>2025년 7월 17일</S.TaskInfoValue>
+          <S.TaskInfoValue>
+            {card?.dueDate ? formatDate(card.dueDate) : ''}
+          </S.TaskInfoValue>
         </S.TaskInfoItem>
       </S.TaskInfo>
 
       <S.DetailContent>
-        <S.Thumbnail>
-          <img src="/images/dummy.png" alt="썸네일 이미지" />
+        <S.Thumbnail
+          style={{ position: 'relative', width: '100%', height: '220px' }}
+        >
+          <Image
+            src={card?.imageUrl ?? '/images/dummy.png'}
+            alt="썸네일"
+            fill
+            style={{ objectFit: 'cover' }}
+          />
         </S.Thumbnail>
-        <S.Description>
-          먼저 전체 플로우를 개괄적으로 파악하고, 주요 화면 구성을 나열 초기
-          와이어프레임은 빠르게 그리고, 이후 단계에서 세부 요소를 보완합니다.
-        </S.Description>
+        <S.Description>{card?.description ?? ''}</S.Description>
       </S.DetailContent>
 
       <S.Divider />
 
       <S.CommentTextareaWrapper $expanded={isTextareaExpanded}>
-        {!isTextareaExpanded && <S.CommentBadge>정은</S.CommentBadge>}
+        {!isTextareaExpanded && (
+          <S.CommentBadge>{card?.assignee?.nickname ?? ''}</S.CommentBadge>
+        )}
 
         <form onSubmit={handleSubmit}>
           <S.CommentTextareaBox $expanded={isTextareaExpanded}>
@@ -125,6 +306,7 @@ export default function TodoCardModal({ onClose }: TodoCardModalProps) {
               name="comment"
               placeholder="댓글을 남겨보세요"
               onChange={handleCommentChange}
+              onKeyDown={handleKeyDown}
             />
             <S.SendButton type="submit">✈️</S.SendButton>
           </S.CommentTextareaBox>
@@ -132,47 +314,26 @@ export default function TodoCardModal({ onClose }: TodoCardModalProps) {
       </S.CommentTextareaWrapper>
 
       <S.CommentList>
-        <S.CommentItem>
-          <S.CommentBadge>정은</S.CommentBadge>
-          <S.CommentContent>
-            <S.CommentInfo>
-              <S.CommentName>김정은</S.CommentName>
-              <S.CommentCreated>
-                <S.CommentDate>2025년 7월 18일</S.CommentDate>{' '}
-                <S.CommentTime>오전 9:00</S.CommentTime>
-              </S.CommentCreated>
-            </S.CommentInfo>
-            <S.CommentText>빠르게 하는 게 가장 중요하나요?</S.CommentText>
-          </S.CommentContent>
-        </S.CommentItem>
+        {comments.map((comment) => (
+          <S.CommentItem key={comment.id}>
+            <S.CommentBadge>{comment.author.nickname}</S.CommentBadge>
 
-        <S.CommentItem>
-          <S.CommentBadge>정은</S.CommentBadge>
-          <S.CommentContent>
-            <S.CommentInfo>
-              <S.CommentName>김정은</S.CommentName>
-              <S.CommentCreated>
-                <S.CommentDate>2025년 7월 18일</S.CommentDate>{' '}
-                <S.CommentTime>오전 9:00</S.CommentTime>
-              </S.CommentCreated>
-            </S.CommentInfo>
-            <S.CommentText>빠르게 하는 게 가장 중요하나요?</S.CommentText>
-          </S.CommentContent>
-        </S.CommentItem>
+            <S.CommentContent>
+              <S.CommentInfo>
+                <S.CommentName>{comment.author.nickname}</S.CommentName>
 
-        <S.CommentItem>
-          <S.CommentBadge>정은</S.CommentBadge>
-          <S.CommentContent>
-            <S.CommentInfo>
-              <S.CommentName>김정은</S.CommentName>
-              <S.CommentCreated>
-                <S.CommentDate>2025년 7월 18일</S.CommentDate>{' '}
-                <S.CommentTime>오전 9:00</S.CommentTime>
-              </S.CommentCreated>
-            </S.CommentInfo>
-            <S.CommentText>빠르게 하는 게 가장 중요하나요?</S.CommentText>
-          </S.CommentContent>
-        </S.CommentItem>
+                <S.CommentCreated>
+                  <S.CommentDate>{formatDate(comment.createdAt)}</S.CommentDate>
+
+                  <S.CommentTime>{formatTime(comment.createdAt)}</S.CommentTime>
+                </S.CommentCreated>
+              </S.CommentInfo>
+
+              <S.CommentText>{comment.content}</S.CommentText>
+            </S.CommentContent>
+          </S.CommentItem>
+        ))}
+        <div ref={observerRef} />
       </S.CommentList>
     </TodoBaseModal>
   );
