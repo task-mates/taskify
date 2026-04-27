@@ -2,24 +2,23 @@ import { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
 import { cardsApi } from '@/src/apis/cards';
 import { commentsApi } from '@/src/apis/comments';
-import { columnsApi } from '@/src/apis/columns';
-import type { Card } from '@/src/apis/cards/type';
-import type { Comment } from '@/src/apis/comments/type';
-import TodoBaseModal from '../common/TodoBaseModal';
-import { TodoCardModalProps } from './type';
-import * as S from './styles';
 import SendIcon from '@/src/components/icons/icon-send.svg';
 import EditIcon from '@/src/components/icons/icon-edit.svg';
 import DeleteIcon from '@/src/components/icons/icon-delete.svg';
+import type { Card } from '@/src/apis/cards/type';
+import type { Comment } from '@/src/apis/comments/type';
+import type { TodoCardModalProps } from './type';
+import TodoBaseModal from '../common/TodoBaseModal';
+import * as S from './styles';
 
 export default function TodoCardModal({
   onClose,
   cardId,
   dashboardId,
+  columnTitle,
 }: TodoCardModalProps) {
   const [card, setCard] = useState<Card | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
-  const [columnName, setColumnName] = useState('');
 
   const [cursorId, setCursorId] = useState<number | null>(null);
   const [isCommentLoading, setIsCommentLoading] = useState(false);
@@ -99,24 +98,6 @@ export default function TodoCardModal({
       observer.disconnect();
     };
   }, [cursorId, isCommentLoading, comments.length]);
-
-  useEffect(() => {
-    if (!card?.columnId || !dashboardId) return;
-
-    const fetchColumns = async () => {
-      try {
-        const data = await columnsApi.getList(dashboardId);
-
-        const column = data.data.find((col) => col.id === card.columnId);
-
-        setColumnName(column?.title ?? '');
-      } catch (e) {
-        console.error(e);
-      }
-    };
-
-    fetchColumns();
-  }, [card?.columnId, dashboardId]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -219,7 +200,7 @@ export default function TodoCardModal({
 
   const badgeGroup = (
     <S.BadgeGroup>
-      <S.ColumnBadge>{columnName}</S.ColumnBadge>
+      {columnTitle && <S.ColumnBadge>{columnTitle}</S.ColumnBadge>}
       <S.TagBadgeArea>
         {card?.tags?.map((tag) => (
           <S.TagBadge key={tag}>{tag}</S.TagBadge>
