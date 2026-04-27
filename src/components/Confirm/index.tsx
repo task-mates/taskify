@@ -21,7 +21,13 @@ export default function Confirm({
           <S.CancelButton type="button" onClick={onClose}>
             {cancelText}
           </S.CancelButton>
-          <S.ConfirmButton type="button" onClick={onConfirm}>
+          <S.ConfirmButton
+            type="button"
+            onClick={() => {
+              onConfirm();
+              onClose();
+            }}
+          >
             {confirmText}
           </S.ConfirmButton>
         </S.ButtonGroup>
