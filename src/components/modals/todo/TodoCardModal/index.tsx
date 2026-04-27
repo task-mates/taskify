@@ -34,6 +34,7 @@ export default function TodoCardModal({
   const assigneeNickname = card?.assignee?.nickname?.trim();
   const assigneeProfileImage = card?.assignee?.profileImageUrl;
   const dueDate = card?.dueDate;
+  const cardCoverImage = card?.imageUrl;
 
   useEffect(() => {
     const fetchCard = async () => {
@@ -299,16 +300,16 @@ export default function TodoCardModal({
       </S.TaskInfo>
 
       <S.DetailContent>
-        <S.Thumbnail
-          style={{ position: 'relative', width: '100%', height: '220px' }}
-        >
-          <Image
-            src={card?.imageUrl ?? '/images/dummy.png'}
-            alt="썸네일"
-            fill
-            style={{ objectFit: 'cover' }}
-          />
-        </S.Thumbnail>
+        {cardCoverImage && (
+          <S.Thumbnail>
+            <Image
+              src={cardCoverImage}
+              alt="썸네일"
+              fill
+              style={{ objectFit: 'cover' }}
+            />
+          </S.Thumbnail>
+        )}
         <S.Description>{card?.description ?? ''}</S.Description>
       </S.DetailContent>
 

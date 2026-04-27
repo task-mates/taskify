@@ -194,6 +194,9 @@ export const DetailContent = styled.div`
 
 export const Thumbnail = styled.div`
   margin-bottom: 30px;
+  position: relative;
+  width: 100%;
+  height: 220px;
 
   img {
     max-width: 360px;
@@ -203,6 +206,10 @@ export const Thumbnail = styled.div`
   @media ${DEVICE.mobile} {
     margin-bottom: 20px;
   }
+`;
+
+export const ThumbnailImage = styled(Image)`
+  object-fit: cover;
 `;
 
 export const Description = styled.p`
