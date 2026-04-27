@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Modal from '@/src/components/Modal';
-import ModalActionButtons from './ModalActionButtons';
+import ModalActionButtons from '../common/ModalActionButtons';
 import type { TodoCreateModalProps } from './type';
 import { DEVICE } from '@/src/styles/Breakpoints';
 
@@ -154,7 +154,7 @@ const Form = styled.form`
   margin-top: 28px;
   min-height: 0;
   overflow-y: auto;
-  scrollbar-color: rgba(131, 198, 229, 0.3) transparent;
+  scrollbar-color: #5b5963 transparent;
 
   @media ${DEVICE.heightMd} {
     max-height: 460px;
