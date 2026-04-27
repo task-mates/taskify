@@ -198,14 +198,17 @@ export default function TodoCardModal({
     setIsTextareaExpanded(isExpanded);
   };
 
+  const tags = (card?.tags ?? []).filter((tag) => tag.trim());
   const badgeGroup = (
     <S.BadgeGroup>
       {columnTitle && <S.ColumnBadge>{columnTitle}</S.ColumnBadge>}
-      <S.TagBadgeArea>
-        {card?.tags?.map((tag) => (
-          <S.TagBadge key={tag}>{tag}</S.TagBadge>
-        ))}
-      </S.TagBadgeArea>
+      {tags.length > 0 && (
+        <S.TagBadgeArea>
+          {tags.map((tag) => (
+            <S.TagBadge key={tag}>{tag}</S.TagBadge>
+          ))}
+        </S.TagBadgeArea>
+      )}
     </S.BadgeGroup>
   );
 
