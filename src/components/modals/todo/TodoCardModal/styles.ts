@@ -75,7 +75,6 @@ export const ActionMenuButton = styled.button`
   svg {
     width: 100%;
     height: 100%;
-    transform: rotate(90deg);
   }
 
   @media ${DEVICE.mobile} {
