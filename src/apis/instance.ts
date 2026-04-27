@@ -16,16 +16,4 @@ instance.interceptors.request.use((config) => {
   return config;
 });
 
-instance.interceptors.request.use((config) => {
-  if (typeof window === 'undefined') return config;
-
-  const token = localStorage.getItem('accessToken');
-
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-
-  return config;
-});
-
 export default instance;
