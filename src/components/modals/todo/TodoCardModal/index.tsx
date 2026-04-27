@@ -122,6 +122,73 @@ export default function TodoCardModal({
     fetchCurrentUser();
   }, []);
 
+  const submitComment = async () => {
+    if (isSubmittingRef.current) return;
+
+    const textarea = textareaRef.current;
+    if (!textarea || !card) return;
+
+    const content = textarea.value.trim();
+    if (!content) return;
+
+    try {
+      isSubmittingRef.current = true;
+
+      const newComment = await commentsApi.create({
+        content,
+        cardId,
+        columnId: card.columnId,
+        dashboardId,
+      });
+
+      setComments((prevComments) => [newComment, ...prevComments]);
+
+      textarea.value = '';
+      textarea.style.height = `${COMMENT_TEXTAREA_MIN_HEIGHT}px`;
+      textarea.style.overflowY = 'hidden';
+      setIsTextareaExpanded(false);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      isSubmittingRef.current = false;
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await submitComment();
+  };
+
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.nativeEvent.isComposing) return;
+
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      await submitComment();
+    }
+  };
+
+  const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const textarea = e.target;
+
+    setIsTyping(textarea.value.trim().length > 0);
+
+    textarea.style.height = `${COMMENT_TEXTAREA_MIN_HEIGHT}px`;
+
+    textarea.style.height = `${Math.min(
+      textarea.scrollHeight,
+      COMMENT_TEXTAREA_MAX_HEIGHT
+    )}px`;
+
+    textarea.style.overflowY =
+      textarea.scrollHeight > COMMENT_TEXTAREA_MAX_HEIGHT ? 'auto' : 'hidden';
+
+    const isExpanded =
+      textarea.value.includes('\n') ||
+      textarea.scrollHeight > COMMENT_TEXTAREA_MIN_HEIGHT;
+    setIsTextareaExpanded(isExpanded);
+  };
+
   const fetchComments = async (nextCursorId?: number | null) => {
     if (isCommentLoading) return;
 
@@ -211,73 +278,6 @@ export default function TodoCardModal({
       minute: '2-digit',
       hour12: true,
     });
-  };
-
-  const submitComment = async () => {
-    if (isSubmittingRef.current) return;
-
-    const textarea = textareaRef.current;
-    if (!textarea || !card) return;
-
-    const content = textarea.value.trim();
-    if (!content) return;
-
-    try {
-      isSubmittingRef.current = true;
-
-      const newComment = await commentsApi.create({
-        content,
-        cardId,
-        columnId: card.columnId,
-        dashboardId,
-      });
-
-      setComments((prevComments) => [newComment, ...prevComments]);
-
-      textarea.value = '';
-      textarea.style.height = '40px';
-      textarea.style.overflowY = 'hidden';
-      setIsTextareaExpanded(false);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      isSubmittingRef.current = false;
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    await submitComment();
-  };
-
-  const handleKeyDown = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.nativeEvent.isComposing) return;
-
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      await submitComment();
-    }
-  };
-
-  const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const textarea = e.target;
-
-    setIsTyping(textarea.value.trim().length > 0);
-
-    textarea.style.height = `${COMMENT_TEXTAREA_MIN_HEIGHT}px`;
-
-    textarea.style.height = `${Math.min(
-      textarea.scrollHeight,
-      COMMENT_TEXTAREA_MAX_HEIGHT
-    )}px`;
-
-    textarea.style.overflowY =
-      textarea.scrollHeight > COMMENT_TEXTAREA_MAX_HEIGHT ? 'auto' : 'hidden';
-
-    const isExpanded =
-      textarea.value.includes('\n') ||
-      textarea.scrollHeight > COMMENT_TEXTAREA_MIN_HEIGHT;
-    setIsTextareaExpanded(isExpanded);
   };
 
   return (
