@@ -59,6 +59,20 @@ export default function TodoCardModal({
   const currentUserNickname = currentUser?.nickname?.trim();
   const currentUserImage = currentUser?.profileImageUrl;
 
+  const handleDeleteCard = async () => {
+    const isConfirmed = window.confirm('카드를 삭제하시겠습니까?');
+
+    if (!isConfirmed) return;
+
+    try {
+      await cardsApi.remove(cardId);
+
+      onClose();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const tags = (card?.tags ?? []).filter((tag) => tag.trim());
   const badgeGroup = (
     <S.BadgeGroup>
@@ -92,7 +106,11 @@ export default function TodoCardModal({
               </S.ActionButton>
             </S.ActionButtonItem>
             <S.ActionButtonItem>
-              <S.ActionButton type="button" $variant="delete">
+              <S.ActionButton
+                type="button"
+                $variant="delete"
+                onClick={handleDeleteCard}
+              >
                 <DeleteIcon />
                 삭제하기
               </S.ActionButton>
