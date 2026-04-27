@@ -297,9 +297,9 @@ export const CommentTextarea = styled.textarea`
   }
 `;
 
-export const SendButton = styled.button`
+export const SendButton = styled.button<{ $active: boolean }>`
   position: absolute;
-  right: 6px;
+  right: 12px;
   bottom: 8px;
 
   width: 24px;
@@ -312,6 +312,10 @@ export const SendButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
+
+  svg path {
+    stroke: ${({ $active }) => ($active ? '#333236' : '#9fa6b2')};
+  }
 `;
 
 export const CommentList = styled.div`

@@ -39,6 +39,7 @@ export default function TodoCardModal({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isTextareaExpanded, setIsTextareaExpanded] = useState(false);
   const isSubmittingRef = useRef(false);
+  const [isTyping, setIsTyping] = useState(false);
 
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
@@ -261,6 +262,8 @@ export default function TodoCardModal({
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const textarea = e.target;
 
+    setIsTyping(textarea.value.trim().length > 0);
+
     textarea.style.height = `${COMMENT_TEXTAREA_MIN_HEIGHT}px`;
 
     textarea.style.height = `${Math.min(
@@ -359,7 +362,11 @@ export default function TodoCardModal({
               onChange={handleCommentChange}
               onKeyDown={handleKeyDown}
             />
-            <S.SendButton type="submit" aria-label="댓글 등록">
+            <S.SendButton
+              $active={isTyping}
+              type="submit"
+              aria-label="댓글 등록"
+            >
               <SendIcon />
             </S.SendButton>
           </S.CommentTextareaBox>
