@@ -33,6 +33,7 @@ export default function TodoCardModal({
 
   const assigneeNickname = card?.assignee?.nickname?.trim();
   const assigneeProfileImage = card?.assignee?.profileImageUrl;
+  const dueDate = card?.dueDate;
 
   useEffect(() => {
     const fetchCard = async () => {
@@ -289,12 +290,12 @@ export default function TodoCardModal({
           </S.TaskInfoItem>
         )}
 
-        <S.TaskInfoItem>
-          <S.TaskInfoLabel>마감일</S.TaskInfoLabel>
-          <S.TaskInfoValue>
-            {card?.dueDate ? formatDate(card.dueDate) : ''}
-          </S.TaskInfoValue>
-        </S.TaskInfoItem>
+        {dueDate && (
+          <S.TaskInfoItem>
+            <S.TaskInfoLabel>마감일</S.TaskInfoLabel>
+            <S.TaskInfoValue>{formatDate(dueDate)}</S.TaskInfoValue>
+          </S.TaskInfoItem>
+        )}
       </S.TaskInfo>
 
       <S.DetailContent>
