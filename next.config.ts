@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
     styledComponents: true,
   },
 
+  turbopack: {},
+
   webpack(config) {
     const fileLoaderRule = config.module.rules.find((rule: RuleSetRule|'...') =>
        rule !== '...' && (rule.test as RegExp)?.test?.('.svg')
