@@ -372,32 +372,23 @@ export default function TodoCardModal({
       </S.CommentTextareaWrapper>
 
       <S.CommentList>
-        {comments.map((comment) => {
-          console.log(comment.createdAt);
-          console.log(new Date(comment.createdAt));
-          console.log(new Date(comment.createdAt).getTimezoneOffset());
-          return (
-            <S.CommentItem key={comment.id}>
-              <S.CommentBadge>{comment.author.nickname}</S.CommentBadge>
-              <S.CommentContent>
-                <S.CommentInfo>
-                  <S.CommentName>{comment.author.nickname}</S.CommentName>
+        {comments.map((comment) => (
+          <S.CommentItem key={comment.id}>
+            <S.CommentBadge>{comment.author.nickname}</S.CommentBadge>
+            <S.CommentContent>
+              <S.CommentInfo>
+                <S.CommentName>{comment.author.nickname}</S.CommentName>
 
-                  <S.CommentCreated>
-                    <S.CommentDate>
-                      {formatDate(comment.createdAt)}
-                    </S.CommentDate>
-                    <S.CommentTime>
-                      {formatTime(comment.createdAt)}
-                    </S.CommentTime>
-                  </S.CommentCreated>
-                </S.CommentInfo>
+                <S.CommentCreated>
+                  <S.CommentDate>{formatDate(comment.createdAt)}</S.CommentDate>
+                  <S.CommentTime>{formatTime(comment.createdAt)}</S.CommentTime>
+                </S.CommentCreated>
+              </S.CommentInfo>
 
-                <S.CommentText>{comment.content}</S.CommentText>
-              </S.CommentContent>
-            </S.CommentItem>
-          );
-        })}
+              <S.CommentText>{comment.content}</S.CommentText>
+            </S.CommentContent>
+          </S.CommentItem>
+        ))}
 
         <div ref={observerRef} style={{ height: '1px' }} />
       </S.CommentList>
