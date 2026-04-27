@@ -18,18 +18,20 @@ export default function Card({ card }: CardProps) {
 
         <S.DueDate>{card.dueDate ?? '지정된 마감일 없음'}</S.DueDate>
 
-        <S.Assignee>
-          {card.assignee?.profileImageUrl ? (
-            <S.ProfileImage
-              src={card.assignee.profileImageUrl}
-              alt={card.assignee.nickname}
-            />
-          ) : (
-            <S.ProfileFallback>
-              {(card.assignee?.nickname ?? '없음').slice(0, 2)}
-            </S.ProfileFallback>
-          )}
-        </S.Assignee>
+        {card.assignee && (
+          <S.Assignee>
+            {card.assignee.profileImageUrl ? (
+              <S.ProfileImage
+                src={card.assignee.profileImageUrl}
+                alt={card.assignee.nickname}
+              />
+            ) : (
+              <S.ProfileFallback>
+                {card.assignee.nickname.slice(0, 2)}
+              </S.ProfileFallback>
+            )}
+          </S.Assignee>
+        )}
       </S.Content>
     </S.Card>
   );

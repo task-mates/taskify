@@ -1,5 +1,4 @@
 import Card from './components/Card';
-import { columnsApi } from '@/src/apis/columns';
 import { cardsApi } from '@/src/apis/cards';
 import { Card as CardInfo } from '@/src/apis/cards/type';
 
@@ -8,11 +7,8 @@ type PageProps = {
 };
 
 export default async function DashboardPage({ params }: PageProps) {
-  const { id } = await params;
-  const dashboardId = Number(id);
-
   const getCardsResponse = await cardsApi.getList({
-    columnId: 60868,
+    columnId: 60868, //테스트용 컬럼id 지정
     size: 20,
   });
 
@@ -21,7 +17,17 @@ export default async function DashboardPage({ params }: PageProps) {
   }
 
   return (
-    <main style={{ padding: '24px', maxWidth: 400 }}>
+    //TODO: 테스트용 inline-style 지정하였고 레이아웃 작업 시 변경 예정
+    <main
+      style={{
+        padding: '24px',
+        maxWidth: 320,
+        backgroundColor: '#E1EAF1',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '10px',
+      }}
+    >
       {getCardsResponse.cards.map((card: CardInfo) => (
         <Card key={card.id} card={card} />
       ))}
