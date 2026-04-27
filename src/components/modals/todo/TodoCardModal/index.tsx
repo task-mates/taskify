@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
+import dayjs from 'dayjs';
 import Image from 'next/image';
 import { cardsApi } from '@/src/apis/cards';
 import { commentsApi } from '@/src/apis/comments';
@@ -13,13 +14,6 @@ import SendIcon from '@/src/components/icons/icon-send.svg';
 import MeatballIcon from '@/src/components/icons/icon-meatball.svg';
 import EditIcon from '@/src/components/icons/icon-edit.svg';
 import DeleteIcon from '@/src/components/icons/icon-delete.svg';
-
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 const COMMENT_TEXTAREA_MIN_HEIGHT = 40;
 const COMMENT_TEXTAREA_LINE_HEIGHT = 24;
