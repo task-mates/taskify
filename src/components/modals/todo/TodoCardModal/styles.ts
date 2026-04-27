@@ -208,10 +208,6 @@ export const Thumbnail = styled.div`
   }
 `;
 
-export const ThumbnailImage = styled(Image)`
-  object-fit: cover;
-`;
-
 export const Description = styled.p`
   font-size: 16px;
   line-height: 1.6;
