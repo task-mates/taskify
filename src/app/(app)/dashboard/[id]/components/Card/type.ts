@@ -1,19 +1,5 @@
-type Assignee = {
-  profileImageUrl: string;
-  nickname: string;
-  id: number;
-};
-
-export type CardData = {
-  id: number;
-  title: string;
-  description: string;
-  tags: string[];
-  dueDate: string;
-  assignee: Assignee;
-  imageUrl: string;
-};
+import type { Card as CardInfo } from '@/src/apis/cards/type';
 
 export type CardProps = {
-  card: CardData;
+  card: CardInfo;
 };

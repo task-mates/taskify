@@ -15,17 +15,18 @@ export default function Card({ card }: CardProps) {
             <S.Tag key={tag}>{tag}</S.Tag>
           ))}
         </S.TagList>
-        <S.DueDate>{card.dueDate}</S.DueDate>
+
+        <S.DueDate>{card.dueDate ?? '지정된 마감일 없음'}</S.DueDate>
 
         <S.Assignee>
-          {card.assignee.profileImageUrl ? (
+          {card.assignee?.profileImageUrl ? (
             <S.ProfileImage
               src={card.assignee.profileImageUrl}
               alt={card.assignee.nickname}
             />
           ) : (
             <S.ProfileFallback>
-              {card.assignee.nickname.slice(0, 2)}
+              {(card.assignee?.nickname ?? '없음').slice(0, 2)}
             </S.ProfileFallback>
           )}
         </S.Assignee>
