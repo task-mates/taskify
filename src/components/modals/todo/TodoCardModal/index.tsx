@@ -14,6 +14,13 @@ import MeatballIcon from '@/src/components/icons/icon-meatball.svg';
 import EditIcon from '@/src/components/icons/icon-edit.svg';
 import DeleteIcon from '@/src/components/icons/icon-delete.svg';
 
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 const COMMENT_TEXTAREA_MIN_HEIGHT = 40;
 const COMMENT_TEXTAREA_LINE_HEIGHT = 24;
 const COMMENT_TEXTAREA_MAX_ROWS = 6;
@@ -262,23 +269,13 @@ export default function TodoCardModal({
   }, [cursorId, isCommentLoading, comments.length]);
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-
-    return date.toLocaleDateString('ko-KR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
+    return dayjs(dateString.replace('Z', '')).format('YYYY년 M월 D일');
   };
 
   const formatTime = (dateString: string) => {
-    const date = new Date(dateString);
+    const time = dayjs(dateString.replace('Z', ''));
 
-    return date.toLocaleTimeString('ko-KR', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-    });
+    return `${time.hour() < 12 ? '오전' : '오후'} ${time.format('h:mm')}`;
   };
 
   return (
@@ -375,24 +372,32 @@ export default function TodoCardModal({
       </S.CommentTextareaWrapper>
 
       <S.CommentList>
-        {comments.map((comment) => (
-          <S.CommentItem key={comment.id}>
-            <S.CommentBadge>{comment.author.nickname}</S.CommentBadge>
+        {comments.map((comment) => {
+          console.log(comment.createdAt);
+          console.log(new Date(comment.createdAt));
+          console.log(new Date(comment.createdAt).getTimezoneOffset());
+          return (
+            <S.CommentItem key={comment.id}>
+              <S.CommentBadge>{comment.author.nickname}</S.CommentBadge>
+              <S.CommentContent>
+                <S.CommentInfo>
+                  <S.CommentName>{comment.author.nickname}</S.CommentName>
 
-            <S.CommentContent>
-              <S.CommentInfo>
-                <S.CommentName>{comment.author.nickname}</S.CommentName>
+                  <S.CommentCreated>
+                    <S.CommentDate>
+                      {formatDate(comment.createdAt)}
+                    </S.CommentDate>
+                    <S.CommentTime>
+                      {formatTime(comment.createdAt)}
+                    </S.CommentTime>
+                  </S.CommentCreated>
+                </S.CommentInfo>
 
-                <S.CommentCreated>
-                  <S.CommentDate>{formatDate(comment.createdAt)}</S.CommentDate>
-                  <S.CommentTime>{formatTime(comment.createdAt)}</S.CommentTime>
-                </S.CommentCreated>
-              </S.CommentInfo>
-
-              <S.CommentText>{comment.content}</S.CommentText>
-            </S.CommentContent>
-          </S.CommentItem>
-        ))}
+                <S.CommentText>{comment.content}</S.CommentText>
+              </S.CommentContent>
+            </S.CommentItem>
+          );
+        })}
 
         <div ref={observerRef} style={{ height: '1px' }} />
       </S.CommentList>
