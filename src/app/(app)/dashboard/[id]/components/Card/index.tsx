@@ -12,7 +12,7 @@ export default function Card({ card }: CardProps) {
       <S.Content>
         <S.Title>{card.title}</S.Title>
         <S.TagList>
-          {card.tags.map((tag) => (
+          {card.tags?.map((tag) => (
             <S.Tag key={tag}>{tag}</S.Tag>
           ))}
         </S.TagList>
