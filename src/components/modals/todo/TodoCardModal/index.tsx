@@ -97,6 +97,22 @@ export default function TodoCardModal({
   );
 
   useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (!actionMenuRef.current) return;
+
+      if (!actionMenuRef.current.contains(e.target as Node)) {
+        setIsActionMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
     const fetchCard = async () => {
       try {
         const data = await cardsApi.getById(cardId);
@@ -147,6 +163,7 @@ export default function TodoCardModal({
       textarea.style.height = `${COMMENT_TEXTAREA_MIN_HEIGHT}px`;
       textarea.style.overflowY = 'hidden';
       setIsTextareaExpanded(false);
+      setIsTyping(false);
     } catch (e) {
       console.error(e);
     } finally {
@@ -243,22 +260,6 @@ export default function TodoCardModal({
       observer.disconnect();
     };
   }, [cursorId, isCommentLoading, comments.length]);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (!actionMenuRef.current) return;
-
-      if (!actionMenuRef.current.contains(e.target as Node)) {
-        setIsActionMenuOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
