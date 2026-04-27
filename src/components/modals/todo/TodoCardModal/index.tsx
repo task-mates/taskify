@@ -2,14 +2,16 @@ import { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
 import { cardsApi } from '@/src/apis/cards';
 import { commentsApi } from '@/src/apis/comments';
-import SendIcon from '@/src/components/icons/icon-send.svg';
-import EditIcon from '@/src/components/icons/icon-edit.svg';
-import DeleteIcon from '@/src/components/icons/icon-delete.svg';
+import { usersApi } from '@/src/apis/users';
 import type { Card } from '@/src/apis/cards/type';
 import type { Comment } from '@/src/apis/comments/type';
+import type { User } from '@/src/apis/users/type';
 import type { TodoCardModalProps } from './type';
 import TodoBaseModal from '../common/TodoBaseModal';
 import * as S from './styles';
+import SendIcon from '@/src/components/icons/icon-send.svg';
+import EditIcon from '@/src/components/icons/icon-edit.svg';
+import DeleteIcon from '@/src/components/icons/icon-delete.svg';
 
 export default function TodoCardModal({
   onClose,
@@ -31,11 +33,16 @@ export default function TodoCardModal({
   const [isTextareaExpanded, setIsTextareaExpanded] = useState(false);
   const isSubmittingRef = useRef(false);
 
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+
   const assigneeNickname = card?.assignee?.nickname?.trim();
   const assigneeProfileImage = card?.assignee?.profileImageUrl;
   const dueDate = card?.dueDate;
   const cardCoverImage = card?.imageUrl;
   const cardDescription = card?.description;
+
+  const currentUserNickname = currentUser?.nickname?.trim();
+  const currentUserImage = currentUser?.profileImageUrl;
 
   const tags = (card?.tags ?? []).filter((tag) => tag.trim());
   const badgeGroup = (
@@ -104,6 +111,19 @@ export default function TodoCardModal({
 
     fetchCard();
   }, [cardId]);
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const user = await usersApi.getMe();
+        setCurrentUser(user);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
 
   const fetchComments = async (nextCursorId?: number | null) => {
     if (isCommentLoading) return;
@@ -317,8 +337,19 @@ export default function TodoCardModal({
       <S.Divider />
 
       <S.CommentTextareaWrapper $expanded={isTextareaExpanded}>
-        {!isTextareaExpanded && (
-          <S.CommentBadge>{card?.assignee?.nickname ?? ''}</S.CommentBadge>
+        {!isTextareaExpanded && currentUserNickname && (
+          <S.CommentBadge>
+            {currentUserImage ? (
+              <Image
+                src={currentUserImage}
+                alt={currentUserNickname}
+                fill
+                style={{ objectFit: 'cover' }}
+              />
+            ) : (
+              currentUserNickname
+            )}
+          </S.CommentBadge>
         )}
 
         <form onSubmit={handleSubmit}>
