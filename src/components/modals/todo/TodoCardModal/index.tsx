@@ -66,10 +66,10 @@ export default function TodoCardModal({
 
     try {
       await cardsApi.remove(cardId);
-
       onClose();
     } catch (e) {
       console.error(e);
+      alert('카드 삭제에 실패했습니다.');
     }
   };
 
