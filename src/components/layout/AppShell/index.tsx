@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Sidebar from '@/src/components/layout/Sidebar';
+import Header from '@/src/components/layout/Header';
 import { DEVICE } from '@/src/styles/Breakpoints';
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
@@ -32,7 +33,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           isOpen={isSidebarOpen}
           onClose={() => setIsSidebarOpen(false)}
         />
-        <Content>{children}</Content>
+        <Content>
+          <Header />
+          {children}
+        </Content>
       </Layout>
     </>
   );
