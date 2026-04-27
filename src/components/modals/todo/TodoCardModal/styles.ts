@@ -249,7 +249,7 @@ export const CommentTextareaBox = styled.div<{ $expanded: boolean }>`
   width: 100%;
 
   padding: ${({ $expanded }) =>
-    $expanded ? '8px 30px 38px 20px' : '0 20px 0 20px'};
+    $expanded ? '8px 30px 38px 20px' : '0 30px 0 20px'};
   background: #fff;
   border: 1px solid #a39fb2;
   border-radius: 12px;
