@@ -31,6 +31,9 @@ export default function TodoCardModal({
   const [isTextareaExpanded, setIsTextareaExpanded] = useState(false);
   const isSubmittingRef = useRef(false);
 
+  const assigneeNickname = card?.assignee?.nickname?.trim();
+  const assigneeProfileImage = card?.assignee?.profileImageUrl;
+
   useEffect(() => {
     const fetchCard = async () => {
       try {
@@ -264,15 +267,27 @@ export default function TodoCardModal({
       overlayVariant="full"
     >
       <S.TaskInfo>
-        <S.TaskInfoItem>
-          <S.TaskInfoLabel>담당자</S.TaskInfoLabel>
-          <S.TaskInfoValue>
-            <S.TaskInfoNameBadge>
-              {card?.assignee?.nickname ?? ''}
-            </S.TaskInfoNameBadge>
-            {card?.assignee?.nickname ?? ''}
-          </S.TaskInfoValue>
-        </S.TaskInfoItem>
+        {assigneeNickname && (
+          <S.TaskInfoItem>
+            <S.TaskInfoLabel>담당자</S.TaskInfoLabel>
+            <S.TaskInfoValue>
+              <S.TaskInfoNameBadge>
+                {' '}
+                {assigneeProfileImage ? (
+                  <Image
+                    src={assigneeProfileImage}
+                    alt={assigneeNickname}
+                    fill
+                    style={{ objectFit: 'cover' }}
+                  />
+                ) : (
+                  assigneeNickname
+                )}
+              </S.TaskInfoNameBadge>
+              {assigneeNickname}
+            </S.TaskInfoValue>
+          </S.TaskInfoItem>
+        )}
 
         <S.TaskInfoItem>
           <S.TaskInfoLabel>마감일</S.TaskInfoLabel>
