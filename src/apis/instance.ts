@@ -5,7 +5,15 @@ const instance: AxiosInstance = axios.create({
   timeout: 5000,
 });
 
-// instance.interceptors.request.use();
-// instance.interceptors.response.use();
+instance.interceptors.request.use((config) => {
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('accessToken');
+    // 액세스토큰 관리 로직 머지되면 변경
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+  }
+  return config;
+});
 
 export default instance;
