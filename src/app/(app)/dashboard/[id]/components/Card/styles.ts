@@ -12,9 +12,8 @@ export const Card = styled.article`
 
 export const Thumbnail = styled.img`
   width: 100%;
-  height: 274px;
-  margin-bottom: 20px;
-  border-radius: 20px;
+  margin-bottom: 10px;
+  border-radius: 16px;
   object-fit: cover;
 `;
 

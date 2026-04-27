@@ -6,8 +6,9 @@ import type { CardProps } from './type';
 export default function Card({ card }: CardProps) {
   return (
     <S.Card>
-      {card.imageUrl && <S.Thumbnail src={card.imageUrl} alt={card.title} />}
+      {/* {card.imageUrl && <S.Thumbnail src={card.imageUrl} alt={card.title} />} */}
 
+      <S.Thumbnail src="/images/dummy.png" alt={card.title} />
       <S.Content>
         <S.Title>{card.title}</S.Title>
         <S.TagList>
