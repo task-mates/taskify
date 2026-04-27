@@ -1,3 +1,10 @@
+import Header from '@/src/components/layout/Header';
+
 export default function Home() {
-  return <>landing</>;
+  return (
+    <>
+      <Header />
+      <main>landing</main>
+    </>
+  );
 }
