@@ -1,6 +1,5 @@
 import Card from './components/Card';
 import { cardsApi } from '@/src/apis/cards';
-import { Card as CardInfo } from '@/src/apis/cards/type';
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -28,7 +27,7 @@ export default async function DashboardPage({ params }: PageProps) {
         gap: '10px',
       }}
     >
-      {getCardsResponse.cards.map((card: CardInfo) => (
+      {getCardsResponse.cards.map((card) => (
         <Card key={card.id} card={card} />
       ))}
     </main>
