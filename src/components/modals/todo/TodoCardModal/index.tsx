@@ -13,6 +13,12 @@ import SendIcon from '@/src/components/icons/icon-send.svg';
 import EditIcon from '@/src/components/icons/icon-edit.svg';
 import DeleteIcon from '@/src/components/icons/icon-delete.svg';
 
+const COMMENT_TEXTAREA_MIN_HEIGHT = 40;
+const COMMENT_TEXTAREA_LINE_HEIGHT = 24;
+const COMMENT_TEXTAREA_MAX_ROWS = 6;
+const COMMENT_TEXTAREA_MAX_HEIGHT =
+  COMMENT_TEXTAREA_LINE_HEIGHT * COMMENT_TEXTAREA_MAX_ROWS;
+
 export default function TodoCardModal({
   onClose,
   cardId,
@@ -265,17 +271,19 @@ export default function TodoCardModal({
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const textarea = e.target;
 
-    const lineHeight = 24;
-    const maxRows = 6;
-    const minHeight = 40;
-    const maxHeight = lineHeight * maxRows;
+    textarea.style.height = `${COMMENT_TEXTAREA_MIN_HEIGHT}px`;
 
-    textarea.style.height = `${minHeight}px`;
-    textarea.style.height = `${Math.min(textarea.scrollHeight, maxHeight)}px`;
+    textarea.style.height = `${Math.min(
+      textarea.scrollHeight,
+      COMMENT_TEXTAREA_MAX_HEIGHT
+    )}px`;
+
     textarea.style.overflowY =
-      textarea.scrollHeight > maxHeight ? 'auto' : 'hidden';
+      textarea.scrollHeight > COMMENT_TEXTAREA_MAX_HEIGHT ? 'auto' : 'hidden';
 
-    const isExpanded = textarea.value.includes('\n');
+    const isExpanded =
+      textarea.value.includes('\n') ||
+      textarea.scrollHeight > COMMENT_TEXTAREA_MIN_HEIGHT;
     setIsTextareaExpanded(isExpanded);
   };
 
@@ -361,7 +369,7 @@ export default function TodoCardModal({
               onChange={handleCommentChange}
               onKeyDown={handleKeyDown}
             />
-            <S.SendButton type="submit">
+            <S.SendButton type="submit" aria-label="댓글 등록">
               <SendIcon />
             </S.SendButton>
           </S.CommentTextareaBox>
