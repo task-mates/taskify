@@ -1,0 +1,25 @@
+export interface UpdateColumnRequest {
+  title: string;
+}
+
+export interface CreateColumnRequest {
+  title: string;
+  dashboardId: number;
+}
+
+export interface Column {
+  id: number;
+  title: string;
+  teamId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UploadCardImageResponse {
+  imageUrl: string;
+}
+
+export interface GetColumnListResponse {
+  result: "SUCCESS";
+  data: Column[];
+}
