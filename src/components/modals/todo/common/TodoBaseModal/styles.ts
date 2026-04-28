@@ -4,7 +4,7 @@ import { HeaderVariant } from './type';
 
 export const Container = styled.div`
   position: relative;
-  padding: 30px;
+  padding: 30px 0;
   max-width: 600px;
   min-width: 320px;
   width: 100%;
@@ -19,17 +19,12 @@ export const Container = styled.div`
   }
 
   @media ${DEVICE.mobile} {
+    padding: 24px 0 0;
     max-width: none;
+    max-height: none;
     border: none;
     border-radius: 0;
     height: 100%;
-    padding: 0 30px;
-  }
-
-  @media (max-width: 499px),
-    ${DEVICE.mobile} and (hover: none) and (pointer: coarse) {
-    padding: 0;
-    overflow: auto;
   }
 `;
 
@@ -39,13 +34,7 @@ export const Wrapper = styled.div`
   flex-direction: column;
 
   @media ${DEVICE.mobile} {
-    padding-top: 24px;
     max-height: none;
-  }
-
-  @media (max-width: 499px),
-    ${DEVICE.mobile} and (hover: none) and (pointer: coarse) {
-    padding-right: 0;
   }
 `;
 
@@ -54,6 +43,7 @@ export const Header = styled.div<{ $variant: HeaderVariant }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin: 0 30px;
 
   ${({ $variant }) =>
     $variant === 'card' &&
@@ -113,7 +103,7 @@ export const CloseButton = styled.button`
 `;
 
 export const Content = styled.div`
-  padding-top: 30px;
+  padding: 30px 30px 0;
   flex: 1;
   overflow: auto;
 
@@ -136,7 +126,7 @@ export const Content = styled.div`
 
   @media ${DEVICE.mobile} {
     padding-top: 20px;
-    padding-bottom: 30px;
+    padding-bottom: 14px;
   }
 
   @media (max-width: 499px),
