@@ -18,7 +18,9 @@ type FormErrors = {
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_PASSWORD_LENGTH = 8;
 const ERROR_MESSAGES = {
+  emailRequired: '이메일을 입력해 주세요.',
   email: '이메일 형식이 올바르지 않아요.',
+  passwordRequired: '비밀번호를 입력해 주세요.',
   password: `비밀번호를 ${MIN_PASSWORD_LENGTH}자 이상 작성해 주세요.`,
   loginFailed: '이메일 또는 비밀번호를 확인해 주세요.',
   userNotFound: '가입된 이메일이 아닙니다.',
@@ -46,7 +48,12 @@ export default function LoginPage() {
     setEmailTouched(true);
     setErrors((prev) => ({
       ...prev,
-      email: isValidEmail(email) ? undefined : ERROR_MESSAGES.email,
+      email:
+        email.trim().length === 0
+          ? ERROR_MESSAGES.emailRequired
+          : isValidEmail(email)
+            ? undefined
+            : ERROR_MESSAGES.email,
     }));
   };
 
@@ -54,7 +61,12 @@ export default function LoginPage() {
     setPasswordTouched(true);
     setErrors((prev) => ({
       ...prev,
-      password: isValidPassword(password) ? undefined : ERROR_MESSAGES.password,
+      password:
+        password.length === 0
+          ? ERROR_MESSAGES.passwordRequired
+          : isValidPassword(password)
+            ? undefined
+            : ERROR_MESSAGES.password,
     }));
   };
 
@@ -62,11 +74,15 @@ export default function LoginPage() {
   const validate = () => {
     const nextErrors: FormErrors = {};
 
-    if (!isValidEmail(email)) {
+    if (email.trim().length === 0) {
+      nextErrors.email = ERROR_MESSAGES.emailRequired;
+    } else if (!isValidEmail(email)) {
       nextErrors.email = ERROR_MESSAGES.email;
     }
 
-    if (!isValidPassword(password)) {
+    if (password.length === 0) {
+      nextErrors.password = ERROR_MESSAGES.passwordRequired;
+    } else if (!isValidPassword(password)) {
       nextErrors.password = ERROR_MESSAGES.password;
     }
 
@@ -88,6 +104,7 @@ export default function LoginPage() {
       const data = await postLogin({ email, password });
       setAccessToken(data.accessToken);
 
+      router.replace('/');
       router.push('/mydashboard');
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -167,16 +184,19 @@ export default function LoginPage() {
               if (emailTouched) {
                 setErrors((prev) => ({
                   ...prev,
-                  email: isValidEmail(nextEmail)
-                    ? undefined
-                    : ERROR_MESSAGES.email,
+                  email:
+                    nextEmail.trim().length === 0
+                      ? ERROR_MESSAGES.emailRequired
+                      : isValidEmail(nextEmail)
+                        ? undefined
+                        : ERROR_MESSAGES.email,
                 }));
               }
             }}
             onBlur={handleEmailBlur}
             placeholder="이메일을 입력해주세요"
           />
-          {errors.email && <S.ErrorText>{errors.email}</S.ErrorText>}
+          <S.ErrorText>{errors.email || ' '}</S.ErrorText>
 
           <S.Label htmlFor="password">비밀번호</S.Label>
           <S.PasswordField>
@@ -193,9 +213,12 @@ export default function LoginPage() {
                 if (passwordTouched) {
                   setErrors((prev) => ({
                     ...prev,
-                    password: isValidPassword(nextPassword)
-                      ? undefined
-                      : ERROR_MESSAGES.password,
+                    password:
+                      nextPassword.length === 0
+                        ? ERROR_MESSAGES.passwordRequired
+                        : isValidPassword(nextPassword)
+                          ? undefined
+                          : ERROR_MESSAGES.password,
                   }));
                 }
               }}
@@ -222,7 +245,7 @@ export default function LoginPage() {
               />
             </S.TogglePasswordButton>
           </S.PasswordField>
-          {errors.password && <S.ErrorText>{errors.password}</S.ErrorText>}
+          <S.ErrorText>{errors.password || ' '}</S.ErrorText>
 
           {errors.common && <S.ErrorText>{errors.common}</S.ErrorText>}
 
@@ -237,15 +260,6 @@ export default function LoginPage() {
           <S.SignupLink href="/signup">회원가입하기</S.SignupLink>
         </S.SignupRow>
       </S.FormSection>
-
-      <S.DesktopImageWrapper>
-        <Image
-          src="/images/login-pc-img.png"
-          alt="Taskify 미리보기 이미지"
-          fill
-          priority
-        />
-      </S.DesktopImageWrapper>
     </S.Container>
   );
 }
