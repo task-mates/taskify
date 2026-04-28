@@ -8,18 +8,9 @@ import axios from 'axios';
 import Modal from '@/src/components/Modal';
 import { usersApi } from '@/src/apis/users';
 import * as S from './styles';
-
-type ModalType = 'success' | 'duplicate' | 'error' | null;
+import type { ModalType, SignupDraft } from './type';
 // 회원가입 입력값 임시저장을 위한 키
 const SIGNUP_DRAFT_KEY = 'taskify-signup-draft';
-
-type SignupDraft = {
-  email: string;
-  name: string;
-  password: string;
-  passwordCheck: string;
-  isTermsChecked: boolean;
-};
 
 const isDuplicateEmailError = (status?: number, message?: string) => {
   const normalizedMessage = (message ?? '').toLowerCase();
