@@ -1,22 +1,24 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import Card from './components/Card';
 import { cardsApi } from '@/src/apis/cards';
+import type { Card as CardType } from '@/src/apis/cards/type';
 
-type PageProps = {
-  params: Promise<{ id: string }>;
-};
+export default function DashboardPage() {
+  const [cards, setCards] = useState<CardType[]>([]);
 
-export default async function DashboardPage({ params }: PageProps) {
-  const getCardsResponse = await cardsApi.getList({
-    columnId: 60868, //테스트용 컬럼id 지정
-    size: 20,
-  });
+  useEffect(() => {
+    cardsApi.getList({ columnId: 60868, size: 20 }).then((res) => {
+      setCards(res.cards);
+    });
+  }, []);
 
-  if (getCardsResponse.totalCount === 0) {
+  if (cards.length === 0) {
     return <main style={{ padding: '24px' }}>카드가 없습니다.</main>;
   }
 
   return (
-    //TODO: 테스트용 inline-style 지정하였고 레이아웃 작업 시 변경 예정
     <main
       style={{
         padding: '24px',
@@ -27,7 +29,7 @@ export default async function DashboardPage({ params }: PageProps) {
         gap: '10px',
       }}
     >
-      {getCardsResponse.cards.map((card) => (
+      {cards.map((card) => (
         <Card key={card.id} card={card} />
       ))}
     </main>
