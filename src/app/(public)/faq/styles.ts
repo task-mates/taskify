@@ -71,11 +71,6 @@ export const LeftToggleIcon = styled.span`
   line-height: 1;
 `;
 
-export const RightToggleIcon = styled.span`
-  font-size: 20px;
-  color: #83c6e5;
-`;
-
 export const Answer = styled.p<{ $isOpen: boolean }>`
   display: ${({ $isOpen }) => ($isOpen ? 'block' : 'none')};
   margin-top: 16px;

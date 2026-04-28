@@ -86,9 +86,6 @@ export default function FaqPage() {
                     </S.LeftToggleIcon>
                     {faq.question}
                   </S.QuestionText>
-                  <S.RightToggleIcon>
-                    {openQuestions.includes(faq.id) ? '−' : '+'}
-                  </S.RightToggleIcon>
                 </S.ToggleButton>
               </S.QuestionTitle>
               <S.Answer
