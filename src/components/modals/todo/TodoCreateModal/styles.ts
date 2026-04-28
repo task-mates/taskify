@@ -5,11 +5,19 @@ export const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 30px;
+
+  @media ${DEVICE.mobile} {
+    gap: 20px;
+  }
 `;
 
 export const Row = styled.div`
   display: flex;
   gap: 20px;
+
+  @media ${DEVICE.mobile} {
+    flex-direction: column;
+  }
 `;
 
 export const Field = styled.div`
@@ -31,6 +39,11 @@ export const Label = styled.label<{ $required?: boolean }>`
       color: #00A7F5;
     }
   `}
+
+  @media ${DEVICE.mobile} {
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
 `;
 
 export const Input = styled.input`
@@ -46,6 +59,11 @@ export const Input = styled.input`
 
   &::placeholder {
     color: #a39fb2;
+  }
+
+  @media ${DEVICE.mobile} {
+    height: 48px;
+    border-radius: 12px;
   }
 `;
 
@@ -94,6 +112,11 @@ export const Textarea = styled.textarea`
   &::placeholder {
     color: #a39fb2;
   }
+
+  @media ${DEVICE.mobile} {
+    height: 120px;
+    border-radius: 12px;
+  }
 `;
 
 export const SelectBox = styled.div`
@@ -132,22 +155,38 @@ export const SelectButton = styled.button<{
     transform: ${({ $open }) =>
       $open ? 'translateY(-50%) rotate(180deg)' : 'translateY(-50%)'};
   }
+
+  @media ${DEVICE.mobile} {
+    height: 48px;
+    border-radius: 12px;
+  }
 `;
 
 export const SelectedAssignee = styled.span`
   display: inline-flex;
   align-items: center;
   gap: 10px;
+
+  @media ${DEVICE.mobile} {
+    gap: 6px;
+  }
 `;
 
 export const SelectWrapper = styled.div`
+  z-index: 1;
   position: absolute;
-  top: calc(100% + 3px);
+  top: calc(100% + 8px);
   padding: 10px 16px 10px 4px;
   width: 100%;
   background: #fff;
   border: 1px solid #d6d5d9;
   border-radius: 14px;
+
+  @media ${DEVICE.mobile} {
+    top: calc(100% + 4px);
+    padding: 3px 16px 3px 4px;
+    border-radius: 12px;
+  }
 `;
 export const SelectList = styled.ul`
   display: flex;
@@ -173,6 +212,10 @@ export const SelectList = styled.ul`
   &::-webkit-scrollbar-thumb:hover {
     background-color: #0003;
   }
+
+  @media ${DEVICE.mobile} {
+    gap: 6px;
+  }
 `;
 export const OptionItem = styled.li``;
 export const OptionButton = styled.button`
@@ -185,6 +228,10 @@ export const OptionButton = styled.button`
 
   &:hover {
     background: rgba(159, 166, 178, 0.1);
+  }
+
+  @media ${DEVICE.mobile} {
+    padding: 10px 5px;
   }
 `;
 export const AssigneeAvatar = styled.span<{ $imageUrl: string | null }>`
@@ -229,6 +276,10 @@ export const TagOptionBox = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+
+  @media ${DEVICE.mobile} {
+    top: calc(100% + 4px);
+  }
 `;
 
 export const TagOptionTitle = styled.p`
