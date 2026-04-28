@@ -30,8 +30,7 @@ const nextConfig: NextConfig = {
     return config;
   },
 
-    experimental: {
-    turbo: {
+    turbopack: {
       rules: {
         '.svg': {
           loaders: ['@svgr/webpack'],
@@ -39,7 +38,6 @@ const nextConfig: NextConfig = {
         },
       },
     },
-  },
-};
+  };
 
 export default nextConfig;
