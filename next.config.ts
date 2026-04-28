@@ -7,9 +7,11 @@ const nextConfig: NextConfig = {
   },
 
   webpack(config) {
-    const fileLoaderRule = config.module.rules.find((rule: RuleSetRule | '...') =>
-      rule !== '...' && (rule.test as RegExp)?.test?.('.svg')
+    const fileLoaderRule = config.module.rules.find(
+      (rule: RuleSetRule | '...') => 
+        rule !== '...' && (rule.test as RegExp)?.test?.('.svg')
     );
+
 
     config.module.rules.push(
       {
