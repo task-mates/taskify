@@ -52,6 +52,36 @@ export const Input = styled.input`
   }
 `;
 
+export const DatePickerWrapper = styled.div`
+  .react-datepicker-wrapper {
+    width: 100%;
+  }
+
+  .react-datepicker__input-container {
+    &::before {
+      z-index: 1;
+      content: '';
+      position: absolute;
+      left: 20px;
+      top: calc(50% - 2px);
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      background-image: url('/images/icon-datepicker.svg');
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
+      pointer-events: none;
+    }
+  }
+`;
+export const DateInput = styled(Input)`
+  position: relative;
+  padding-left: 46px;
+  cursor: pointer;
+  caret-color: transparent;
+`;
+
 export const Textarea = styled.textarea`
   padding: 20px;
   width: 100%;

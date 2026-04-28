@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import { cardsApi } from '@/src/apis/cards';
 import ModalActionButtons from '../common/ModalActionButtons';
 import type { TodoCreateModalProps } from './type';
@@ -16,6 +18,7 @@ export default function TodoCreateModal({
 }: TodoCreateModalProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [dueDate, setDueDate] = useState<Date | null>(null);
 
   const footerGroup = (
     <ModalActionButtons
@@ -34,6 +37,7 @@ export default function TodoCreateModal({
         columnId,
         title,
         description,
+        dueDate: dueDate ? dueDate.toISOString() : undefined,
         tags: [],
       });
 
@@ -42,6 +46,10 @@ export default function TodoCreateModal({
       console.error('카드 생성 실패:', error);
       alert('카드 생성에 실패했습니다.');
     }
+  };
+
+  const handleDateChange = (date: Date | null) => {
+    setDueDate(date);
   };
 
   return (
@@ -82,11 +90,19 @@ export default function TodoCreateModal({
         <S.Row>
           <S.Field>
             <S.Label htmlFor="dueDate">마감일</S.Label>
-            <S.Input
-              id="dueDate"
-              type="text"
-              placeholder="날짜를 입력해 주세요"
-            />
+            <S.DatePickerWrapper>
+              <DatePicker
+                id="dueDate"
+                selected={dueDate}
+                onChange={handleDateChange}
+                showTimeSelect
+                timeFormat="HH:mm"
+                timeIntervals={30}
+                dateFormat="yyyy. MM. dd HH:mm"
+                placeholderText="날짜를 입력해 주세요"
+                customInput={<S.DateInput />}
+              />
+            </S.DatePickerWrapper>
           </S.Field>
 
           <S.Field>
