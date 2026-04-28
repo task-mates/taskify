@@ -5,9 +5,6 @@ export const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 30px;
-  min-height: 0;
-  overflow-y: auto;
-  scrollbar-color: #5b5963 transparent;
 `;
 
 export const Row = styled.div`
@@ -20,7 +17,7 @@ export const Field = styled.div`
 `;
 
 export const Label = styled.label<{ $required?: boolean }>`
-  display: block;
+  display: inline-flex;
   margin-bottom: 12px;
   font-size: 16px;
   font-weight: 600;
@@ -98,8 +95,14 @@ export const Textarea = styled.textarea`
   }
 `;
 
-export const SelectBox = styled.div``;
-export const SelectButton = styled.button`
+export const SelectBox = styled.div`
+  position: relative;
+`;
+export const SelectButton = styled.button<{
+  $selected: boolean;
+  $open: boolean;
+}>`
+  position: relative;
   width: 100%;
   padding: 6px 20px;
   height: 54px;
@@ -108,13 +111,106 @@ export const SelectButton = styled.button`
   background: #fff;
   font-size: 16px;
   font-weight: 500;
-  color: #a39fb2;
   text-align: left;
+  color: ${({ $selected }) => ($selected ? '#333236' : '#a39fb2')};
+
+  &::after {
+    z-index: 1;
+    content: '';
+    position: absolute;
+    right: 20px;
+    top: calc(50% - 2px);
+    width: 18px;
+    height: 18px;
+    background-image: url('/images/icon-chevron-dropdown.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    pointer-events: none;
+
+    transform: ${({ $open }) =>
+      $open ? 'translateY(-50%) rotate(180deg)' : 'translateY(-50%)'};
+  }
+`;
+
+export const SelectedAssignee = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+export const SelectWrapper = styled.div`
+  position: absolute;
+  top: calc(100% + 3px);
+  padding: 10px 16px 10px 4px;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #d6d5d9;
+  border-radius: 14px;
 `;
 export const SelectList = styled.ul`
-  display: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 232px;
+  overflow-y: auto;
+  padding: 0 10px;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #0000001a;
+    border-radius: 999px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #0003;
+  }
 `;
-export const SelectItem = styled.li``;
+export const OptionItem = styled.li``;
+export const OptionButton = styled.button`
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  border-radius: 8px;
+
+  &:hover {
+    background: rgba(159, 166, 178, 0.1);
+  }
+`;
+export const AssigneeAvatar = styled.span<{ $imageUrl: string | null }>`
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #2f9d6a;
+  background-image: ${({ $imageUrl }) =>
+    $imageUrl ? `url(${$imageUrl})` : 'none'};
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  font-size: 8px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+`;
+
+export const AssigneeName = styled.span`
+  font-size: 16px;
+  font-weight: 500;
+  color: #333236;
+`;
 export const UploadLabel = styled.label``;
 export const UploadBox = styled.div``;
 export const UploadText = styled.div``;

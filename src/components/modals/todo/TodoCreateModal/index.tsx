@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { cardsApi } from '@/src/apis/cards';
+import { membersApi } from '@/src/apis/members';
+import type { Member } from '@/src/apis/members/type';
 import ModalActionButtons from '../common/ModalActionButtons';
 import type { TodoCreateModalProps } from './type';
 import TodoBaseModal from '../common/TodoBaseModal';
@@ -19,6 +21,11 @@ export default function TodoCreateModal({
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState<Date | null>(null);
+
+  const [members, setMembers] = useState<Member[]>([]);
+  const [isAssigneeOpen, setIsAssigneeOpen] = useState(false);
+  const [selectedAssignee, setSelectedAssignee] = useState<Member | null>(null);
+  const selectBoxRef = useRef<HTMLDivElement | null>(null);
 
   const footerGroup = (
     <ModalActionButtons
@@ -38,6 +45,7 @@ export default function TodoCreateModal({
         title,
         description,
         dueDate: dueDate ? dueDate.toISOString() : undefined,
+        assigneeUserId: selectedAssignee?.userId,
         tags: [],
       });
 
@@ -51,6 +59,33 @@ export default function TodoCreateModal({
   const handleDateChange = (date: Date | null) => {
     setDueDate(date);
   };
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const data = await membersApi.getList(dashboardId);
+        setMembers(data.members);
+      } catch (error) {
+        console.error('멤버 목록 조회 실패:', error);
+      }
+    };
+    fetchMembers();
+  }, [dashboardId]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        selectBoxRef.current &&
+        !selectBoxRef.current.contains(e.target as Node)
+      ) {
+        setIsAssigneeOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <TodoBaseModal
@@ -107,17 +142,54 @@ export default function TodoCreateModal({
 
           <S.Field>
             <S.Label htmlFor="assignee">담당자</S.Label>
-            <S.SelectBox>
-              <S.SelectButton id="assignee" type="button">
-                담당자 선택
+            <S.SelectBox ref={selectBoxRef}>
+              <S.SelectButton
+                id="assignee"
+                type="button"
+                onClick={() => setIsAssigneeOpen((prev) => !prev)}
+                $selected={!!selectedAssignee}
+                $open={isAssigneeOpen}
+              >
+                {/* {selectedAssignee ? selectedAssignee.nickname : '담당자 선택'} */}
+                {selectedAssignee ? (
+                  <S.SelectedAssignee>
+                    <S.AssigneeAvatar
+                      $imageUrl={selectedAssignee.profileImageUrl}
+                    >
+                      {!selectedAssignee.profileImageUrl &&
+                        selectedAssignee.nickname.slice(0, 2)}
+                    </S.AssigneeAvatar>
+                    <S.AssigneeName>{selectedAssignee.nickname}</S.AssigneeName>
+                  </S.SelectedAssignee>
+                ) : (
+                  '담당자 선택'
+                )}
               </S.SelectButton>
-              <S.SelectList role="listbox">
-                <S.SelectItem role="option">담당자1</S.SelectItem>
-                <S.SelectItem role="option">담당자2</S.SelectItem>
-                <S.SelectItem role="option">담당자3</S.SelectItem>
-                <S.SelectItem role="option">담당자4</S.SelectItem>
-                <S.SelectItem role="option">담당자5</S.SelectItem>
-              </S.SelectList>
+
+              {isAssigneeOpen && (
+                <S.SelectWrapper>
+                  <S.SelectList role="listbox">
+                    {members.map((member) => (
+                      <S.OptionItem key={member.id}>
+                        <S.OptionButton
+                          type="button"
+                          role="option"
+                          onClick={() => {
+                            setSelectedAssignee(member);
+                            setIsAssigneeOpen(false);
+                          }}
+                        >
+                          {/* {member.nickname} */}
+                          <S.AssigneeAvatar $imageUrl={member.profileImageUrl}>
+                            {!member.profileImageUrl && member.nickname}
+                          </S.AssigneeAvatar>
+                          <S.AssigneeName>{member.nickname}</S.AssigneeName>
+                        </S.OptionButton>
+                      </S.OptionItem>
+                    ))}
+                  </S.SelectList>
+                </S.SelectWrapper>
+              )}
             </S.SelectBox>
           </S.Field>
         </S.Row>
