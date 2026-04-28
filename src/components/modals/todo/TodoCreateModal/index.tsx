@@ -116,12 +116,21 @@ export default function TodoCreateModal({
 
     if (!file) return;
 
+    if (previewImageUrl) {
+      URL.revokeObjectURL(previewImageUrl);
+    }
+
     const imageUrl = URL.createObjectURL(file);
     setPreviewImageUrl(imageUrl);
   };
 
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const handleRemoveImage = () => {
     setPreviewImageUrl(null);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   return (
@@ -306,6 +315,7 @@ export default function TodoCreateModal({
           )}
 
           <S.HiddenInput
+            ref={fileInputRef}
             id="uploadfile"
             type="file"
             accept="image/*"
