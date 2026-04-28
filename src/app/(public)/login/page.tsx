@@ -6,6 +6,11 @@ import { FormEvent, useState } from 'react';
 import axios from 'axios';
 import { postLogin } from '@/src/apis/auth';
 import { setAccessToken } from '@/src/utils/authTokenStorage';
+import {
+  AUTH_VALIDATION_MESSAGES,
+  isValidEmail,
+  isValidPassword,
+} from '@/src/utils/authValidation';
 import * as S from './styles';
 import Link from 'next/link';
 
@@ -15,22 +20,17 @@ type FormErrors = {
   common?: string;
 };
 
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const MIN_PASSWORD_LENGTH = 8;
 const ERROR_MESSAGES = {
   emailRequired: '이메일을 입력해 주세요.',
-  email: '이메일 형식이 올바르지 않아요.',
+  email: AUTH_VALIDATION_MESSAGES.emailInvalid,
   passwordRequired: '비밀번호를 입력해 주세요.',
-  password: `비밀번호를 ${MIN_PASSWORD_LENGTH}자 이상 작성해 주세요.`,
+  password: AUTH_VALIDATION_MESSAGES.passwordInvalid,
   loginFailed: '이메일 또는 비밀번호를 확인해 주세요.',
   userNotFound: '가입된 이메일이 아닙니다.',
   network: '네트워크 오류가 발생했어요.',
   temporary: '일시적인 오류가 발생했어요. 잠시 후 다시 시도해 주세요.',
   unknown: '알 수 없는 오류가 발생했어요.',
 } as const;
-
-const isValidEmail = (value: string) => EMAIL_REGEX.test(value);
-const isValidPassword = (value: string) => value.length >= MIN_PASSWORD_LENGTH;
 
 export default function LoginPage() {
   const router = useRouter();
