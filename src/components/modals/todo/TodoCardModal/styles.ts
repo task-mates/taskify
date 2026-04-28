@@ -75,7 +75,6 @@ export const ActionMenuButton = styled.button`
   svg {
     width: 100%;
     height: 100%;
-    transform: rotate(90deg);
   }
 
   @media ${DEVICE.mobile} {
@@ -85,7 +84,6 @@ export const ActionMenuButton = styled.button`
 `;
 
 export const ActionButtonPopup = styled.div`
-  display: none;
   position: absolute;
   top: calc(100% + 20px);
   right: 0;
@@ -102,37 +100,36 @@ export const ActionButtonItem = styled.li`
   & + & {
     margin-top: 5px;
     padding-top: 5px;
-    border-top: 1px solid #d6d5d9;
+    position: relative;
+  }
+  & + &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 93px;
+    height: 1px;
+    background: #d6d5d9;
   }
 `;
 
 export const ActionButton = styled.button<{ $variant?: 'default' | 'delete' }>`
   position: relative;
-  padding: 10px 12px 10px 41px;
+  padding: 10px 12px;
   font-size: 16px;
   font-weight: 500;
+  border-radius: 6px;
   color: ${({ $variant }) => ($variant === 'delete' ? '#E73527' : '#333236')};
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 10px;
-    left: 12px;
-    width: 20px;
-    height: 20px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
 
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
+  transition: background 0.3s;
 
-    ${({ $variant }) =>
-      $variant === 'delete'
-        ? `
-          background-image: url('/images/dummy.png');
-        `
-        : `
-          background-image: url('/images/icon-logo.svg');
-      `}
+  &:hover {
+    background: rgba(243, 245, 248, 0.5);
   }
 `;
 
@@ -162,6 +159,9 @@ export const TaskInfoLabel = styled.span`
 `;
 
 export const TaskInfoValue = styled.span`
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 16px;
   font-weight: 500;
   color: #333236;
@@ -171,12 +171,31 @@ export const TaskInfoValue = styled.span`
   }
 `;
 
+export const TaskInfoNameBadge = styled.span`
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #1458bc;
+  color: #fff;
+  border-radius: 50%;
+  white-space: nowrap;
+  overflow: hidden;
+`;
+
 export const DetailContent = styled.div`
   margin-top: 18px;
 `;
 
 export const Thumbnail = styled.div`
   margin-bottom: 30px;
+  position: relative;
+  width: 100%;
+  height: 220px;
 
   img {
     max-width: 360px;
@@ -219,6 +238,8 @@ export const CommentBadge = styled.span`
   background: #1458bc;
   color: #fff;
   border-radius: 50%;
+  white-space: nowrap;
+  overflow: hidden;
 `;
 
 export const CommentTextareaBox = styled.div<{ $expanded: boolean }>`
@@ -227,7 +248,7 @@ export const CommentTextareaBox = styled.div<{ $expanded: boolean }>`
   width: 100%;
 
   padding: ${({ $expanded }) =>
-    $expanded ? '8px 30px 38px 20px' : '0 20px 0 20px'};
+    $expanded ? '8px 30px 38px 20px' : '0 30px 0 20px'};
   background: #fff;
   border: 1px solid #a39fb2;
   border-radius: 12px;
@@ -276,9 +297,9 @@ export const CommentTextarea = styled.textarea`
   }
 `;
 
-export const SendButton = styled.button`
+export const SendButton = styled.button<{ $active: boolean }>`
   position: absolute;
-  right: 6px;
+  right: 12px;
   bottom: 8px;
 
   width: 24px;
@@ -291,6 +312,10 @@ export const SendButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
+
+  svg path {
+    stroke: ${({ $active }) => ($active ? '#333236' : '#9fa6b2')};
+  }
 `;
 
 export const CommentList = styled.div`
@@ -314,6 +339,7 @@ export const CommentContent = styled.div`
 
 export const CommentInfo = styled.div`
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 4px;
 `;
@@ -342,4 +368,5 @@ export const CommentText = styled.p`
   line-height: 1.6;
   font-weight: 500;
   color: #333236;
+  white-space: pre-wrap;
 `;

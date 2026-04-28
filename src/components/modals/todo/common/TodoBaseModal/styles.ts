@@ -34,11 +34,12 @@ export const Container = styled.div`
 
 export const Wrapper = styled.div`
   height: 100%;
+  display: flex;
+  flex-direction: column;
 
   @media ${DEVICE.mobile} {
     padding-top: 24px;
     max-height: none;
-    height: 100%;
   }
 
   @media (max-width: 499px),
@@ -112,7 +113,7 @@ export const CloseButton = styled.button`
 
 export const Content = styled.div`
   padding-top: 30px;
-  height: calc(100% - 90px);
+  flex: 1;
   overflow: auto;
 
   &::-webkit-scrollbar {
@@ -135,7 +136,6 @@ export const Content = styled.div`
   @media ${DEVICE.mobile} {
     padding-top: 20px;
     padding-bottom: 30px;
-    height: calc(100% - 80px);
   }
 
   @media (max-width: 499px),

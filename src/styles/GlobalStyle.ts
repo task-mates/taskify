@@ -140,6 +140,7 @@ const GlobalStyle = createGlobalStyle`
     --2xl-24px-bold: 700 24px/normal Pretendard;
     --3xl-32px-semibold: 600 32px/normal Pretendard;
     --3xl-32px-bold: 700 32px/normal Pretendard;
+  }
 
   *, *::before, *::after {
     box-sizing: border-box;
