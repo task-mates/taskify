@@ -1,35 +1,110 @@
-import Card from './components/Card';
+import styled from 'styled-components';
+import ColumnSection from './components/ColumnSection';
+import { dashboardsApi } from '@/src/apis/dashboards';
+import { columnsApi } from '@/src/apis/columns';
 import { cardsApi } from '@/src/apis/cards';
+import type { Card as CardInfo } from '@/src/apis/cards/type';
+import PlusIcon from '@/src/components/icons/icon-plus.svg';
 
 type PageProps = {
   params: Promise<{ id: string }>;
 };
 
-export default async function DashboardPage({ params }: PageProps) {
-  const getCardsResponse = await cardsApi.getList({
-    columnId: 60868, //테스트용 컬럼id 지정
-    size: 20,
-  });
+type ColumnWithCards = {
+  columnId: number;
+  title: string;
+  totalCount: number;
+  cards: CardInfo[];
+};
 
-  if (getCardsResponse.totalCount === 0) {
-    return <main style={{ padding: '24px' }}>카드가 없습니다.</main>;
-  }
+export default async function DashboardPage({ params }: PageProps) {
+  const { id } = await params;
+  const dashboardId = Number(id);
+
+  const dashboard = await dashboardsApi.getById(dashboardId);
+  const columnsResponse = await columnsApi.getList(dashboardId);
+
+  const columnsWithCards: ColumnWithCards[] = await Promise.all(
+    columnsResponse.data.map(async (column) => {
+      const cardsResponse = await cardsApi.getList({
+        columnId: column.id,
+        size: 20,
+      });
+      return {
+        columnId: column.id,
+        title: column.title,
+        totalCount: cardsResponse.totalCount,
+        cards: cardsResponse.cards,
+      };
+    })
+  );
 
   return (
-    //TODO: 테스트용 inline-style 지정하였고 레이아웃 작업 시 변경 예정
     <main
       style={{
         padding: '24px',
-        maxWidth: 320,
-        backgroundColor: '#E1EAF1',
+        height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        gap: '10px',
+        overflowY: 'hidden',
       }}
     >
-      {getCardsResponse.cards.map((card) => (
-        <Card key={card.id} card={card} />
-      ))}
+      <h1
+        style={{
+          margin: '0 0 20px 0',
+          fontSize: '28px',
+          fontWeight: 700,
+          color: '#333236',
+        }}
+      >
+        {dashboard.title}
+      </h1>
+      <div
+        style={{
+          display: 'flex',
+          gap: '16px',
+          flex: 1,
+          minHeight: 0,
+          overflowX: 'auto',
+          overflowY: 'hidden',
+        }}
+      >
+        {columnsWithCards.map((column) => (
+          <ColumnSection
+            key={column.columnId}
+            title={column.title}
+            totalCount={column.totalCount}
+            cards={column.cards}
+          />
+        ))}
+        <AddButton>
+          <IconContainer>
+            <PlusIcon aria-hidden="true" />
+          </IconContainer>
+        </AddButton>
+      </div>
     </main>
   );
 }
+
+export const AddButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  padding: 10px 20px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  background-color: #ffffff;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+`;
+
+export const IconContainer = styled.div`
+  background-color: #e1eaf1;
+  padding: 1px 6px;
+  border-radius: 4px;
+`;
