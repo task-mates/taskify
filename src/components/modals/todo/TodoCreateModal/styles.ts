@@ -263,7 +263,85 @@ export const TagBadge = styled.span`
   background: #2563eb;
 `;
 
-export const UploadLabel = styled.label``;
-export const UploadBox = styled.div``;
-export const UploadText = styled.div``;
-export const HiddenInput = styled.input``;
+export const PreviewImageBox = styled.div`
+  position: relative;
+  width: 230px;
+  height: 140px;
+`;
+
+export const PreviewImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid #a39fb2;
+`;
+
+export const RemoveImageButton = styled.button`
+  position: absolute;
+  top: -8px;
+  right: -8px;
+
+  width: 28px;
+  height: 28px;
+  border: 1px solid #fff;
+  background-color: #524f5b;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+
+    width: 12px;
+    height: 2px;
+    background-color: #fff;
+  }
+  &::before {
+    transform: rotate(45deg);
+  }
+  &::after {
+    transform: rotate(-45deg);
+  }
+`;
+
+export const UploadLabel = styled.label`
+  display: block;
+  width: 100%;
+  cursor: pointer;
+`;
+
+export const UploadBox = styled.div`
+  width: 100%;
+  height: 140px;
+  border: 2px dashed #524f5b;
+  border-radius: 14px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+
+  background-color: #fff;
+  color: #9fa0b0;
+
+  svg {
+    width: 32px;
+    height: 32px;
+  }
+`;
+
+export const UploadText = styled.span`
+  font-size: 16px;
+  font-weight: 700;
+  color: #a39fb2;
+`;
+
+export const HiddenInput = styled.input`
+  display: none;
+`;

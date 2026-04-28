@@ -10,6 +10,7 @@ import ModalActionButtons from '../common/ModalActionButtons';
 import type { TodoCreateModalProps } from './type';
 import TodoBaseModal from '../common/TodoBaseModal';
 import * as S from './styles';
+import UploadImage from '@/src/components/icons/icon-uploadimg.svg';
 
 const TODO_CREATE_FORM_ID = 'todo-create-form';
 
@@ -29,6 +30,8 @@ export default function TodoCreateModal({
 
   const [tagInput, setTagInput] = useState('');
   const [tags, setTags] = useState<string[]>([]);
+
+  const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
 
   const footerGroup = (
     <ModalActionButtons
@@ -106,6 +109,19 @@ export default function TodoCreateModal({
 
     e.preventDefault();
     handleAddTag();
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    const imageUrl = URL.createObjectURL(file);
+    setPreviewImageUrl(imageUrl);
+  };
+
+  const handleRemoveImage = () => {
+    setPreviewImageUrl(null);
   };
 
   return (
@@ -268,13 +284,33 @@ export default function TodoCreateModal({
         </S.Field>
 
         <S.Field>
-          <S.Label>이미지</S.Label>
-          <S.UploadLabel htmlFor="uploadfile">
-            <S.UploadBox>
-              <S.UploadText>+ image upload</S.UploadText>
-            </S.UploadBox>
-          </S.UploadLabel>
-          <S.HiddenInput id="uploadfile" type="file" />
+          <S.Label as="span">이미지</S.Label>
+          {previewImageUrl ? (
+            <S.PreviewImageBox>
+              <S.PreviewImage
+                src={previewImageUrl}
+                alt="업로드 이미지 미리보기"
+              />
+              <S.RemoveImageButton
+                type="button"
+                onClick={handleRemoveImage}
+              ></S.RemoveImageButton>
+            </S.PreviewImageBox>
+          ) : (
+            <S.UploadLabel htmlFor="uploadfile">
+              <S.UploadBox>
+                <UploadImage />
+                <S.UploadText>+ image upload</S.UploadText>
+              </S.UploadBox>
+            </S.UploadLabel>
+          )}
+
+          <S.HiddenInput
+            id="uploadfile"
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+          />
         </S.Field>
       </S.Form>
     </TodoBaseModal>
