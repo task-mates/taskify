@@ -5,11 +5,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useEffect, useState } from 'react';
 import axios from 'axios';
-import Modal from '@/src/components/common/Modal';
+import Modal from '@/src/components/Modal';
 import { usersApi } from '@/src/apis/users';
 import * as S from './styles';
 
 type ModalType = 'success' | 'duplicate' | 'error' | null;
+// 회원가입 입력값 임시저장을 위한 키
 const SIGNUP_DRAFT_KEY = 'taskify-signup-draft';
 
 type SignupDraft = {
