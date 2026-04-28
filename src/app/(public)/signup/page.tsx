@@ -27,13 +27,16 @@ const ERROR_MESSAGES = {
   passwordMismatch: '비밀번호가 일치하지 않습니다.',
 } as const;
 
-const isDuplicateEmailError = (status?: number, message?: string) => {
-  const normalizedMessage = (message ?? '').toLowerCase();
+const DUPLICATE_EMAIL_ERROR_CODES = ['DUPLICATE_EMAIL', 'EMAIL_ALREADY_EXISTS'];
+
+const isDuplicateEmailError = (
+  status?: number,
+  errorCode?: string
+) => {
   return (
     status === 409 ||
-    normalizedMessage.includes('이미 사용') ||
-    normalizedMessage.includes('중복') ||
-    (normalizedMessage.includes('email') && normalizedMessage.includes('exist'))
+    (typeof errorCode === 'string' &&
+      DUPLICATE_EMAIL_ERROR_CODES.includes(errorCode))
   );
 };
 
@@ -55,7 +58,6 @@ export default function SignupPage() {
   const [hasPasswordMismatchError, setHasPasswordMismatchError] =
     useState(false);
   const [modalType, setModalType] = useState<ModalType>(null);
-  const [isDraftInitialized, setIsDraftInitialized] = useState(false);
   const isPasswordMatch = password === passwordCheck;
   const hasEmailRequiredError = emailTouched && email.trim().length === 0;
   const hasEmailFormatError =
@@ -95,51 +97,22 @@ export default function SignupPage() {
     try {
       const raw = sessionStorage.getItem(SIGNUP_DRAFT_KEY);
       if (!raw) {
-        setIsDraftInitialized(true);
         return;
       }
 
       const draft = JSON.parse(raw) as Partial<SignupDraft>;
       setEmail(draft.email ?? '');
       setName(draft.name ?? '');
-      setPassword(draft.password ?? '');
-      setPasswordCheck(draft.passwordCheck ?? '');
       setIsTermsChecked(Boolean(draft.isTermsChecked));
     } catch {
       sessionStorage.removeItem(SIGNUP_DRAFT_KEY);
-    } finally {
-      setIsDraftInitialized(true);
     }
   }, []);
-
-  useEffect(() => {
-    if (!isDraftInitialized) {
-      return;
-    }
-
-    const draft: SignupDraft = {
-      email,
-      name,
-      password,
-      passwordCheck,
-      isTermsChecked,
-    };
-    sessionStorage.setItem(SIGNUP_DRAFT_KEY, JSON.stringify(draft));
-  }, [
-    email,
-    name,
-    password,
-    passwordCheck,
-    isTermsChecked,
-    isDraftInitialized,
-  ]);
 
   const saveDraft = () => {
     const draft: SignupDraft = {
       email,
       name,
-      password,
-      passwordCheck,
       isTermsChecked,
     };
     sessionStorage.setItem(SIGNUP_DRAFT_KEY, JSON.stringify(draft));
@@ -175,15 +148,15 @@ export default function SignupPage() {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const status = error.response?.status;
-        const message =
+        const errorCode =
           typeof error.response?.data === 'object' &&
           error.response?.data !== null &&
-          'message' in error.response.data &&
-          typeof error.response.data.message === 'string'
-            ? error.response.data.message
+          'code' in error.response.data &&
+          typeof error.response.data.code === 'string'
+            ? error.response.data.code
             : undefined;
 
-        if (isDuplicateEmailError(status, message)) {
+        if (isDuplicateEmailError(status, errorCode)) {
           setHasEmailDuplicateError(true);
           setModalType('duplicate');
           return;

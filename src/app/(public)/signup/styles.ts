@@ -97,7 +97,7 @@ export const TermsCheckbox = styled.input`
   height: 16px;
   display: grid;
   place-content: center;
-  border: 1px solidrgb(180, 181, 181);
+  border: 1px solid rgb(180, 181, 181);
   border-radius: 999px;
   background-color: rgb(180, 181, 181);
   cursor: pointer;
