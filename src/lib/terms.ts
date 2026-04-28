@@ -1,8 +1,7 @@
-export const TERMS_LAST_UPDATED = "2026년 4월 20일";
+export const TERMS_FIRST_UPDATED = '2026년 4월 20일';
+export const TERMS_LAST_UPDATED = '2026년 4월 24일';
 
 export const TERMS_OF_SERVICE = `Taskify 서비스 이용약관
-
-최종 수정일: ${TERMS_LAST_UPDATED}
 
 제1조 (목적)
 
@@ -82,5 +81,5 @@ export const TERMS_OF_SERVICE = `Taskify 서비스 이용약관
 
 부칙
 
-이 약관은 2026년 4월 20일부터 시행합니다.
+이 약관은 ${TERMS_FIRST_UPDATED}부터 시행합니다.
 `;
