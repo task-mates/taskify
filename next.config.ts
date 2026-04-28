@@ -12,7 +12,6 @@ const nextConfig: NextConfig = {
         rule !== '...' && (rule.test as RegExp)?.test?.('.svg')
     );
 
-
     config.module.rules.push(
       {
         ...fileLoaderRule,
@@ -41,5 +40,5 @@ const nextConfig: NextConfig = {
       },
     },
   };
-
+  
 export default nextConfig;
