@@ -1,7 +1,6 @@
-import styled from 'styled-components';
 import Button from '../Button';
 import type { ModalActionButtonsProps } from './type';
-import { DEVICE } from '@/src/styles/Breakpoints';
+import * as S from './styles';
 
 export default function ModalActionButtons({
   submitText,
@@ -9,22 +8,13 @@ export default function ModalActionButtons({
   cancelText = '취소',
 }: ModalActionButtonsProps) {
   return (
-    <ButtonGroup>
+    <S.ButtonGroup>
       <Button type="button" variant="secondary" onClick={onCancel}>
         {cancelText}
       </Button>
       <Button type="submit" variant="primary">
         {submitText}
       </Button>
-    </ButtonGroup>
+    </S.ButtonGroup>
   );
 }
-
-const ButtonGroup = styled.div`
-  display: flex;
-  gap: 20px;
-
-  @media ${DEVICE.mobile} {
-    gap: 12px;
-  }
-`;

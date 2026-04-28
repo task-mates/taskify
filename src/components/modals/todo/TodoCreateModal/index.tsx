@@ -1,8 +1,7 @@
-import styled from 'styled-components';
 import ModalActionButtons from '../common/ModalActionButtons';
 import type { TodoCreateModalProps } from './type';
-import { DEVICE } from '@/src/styles/Breakpoints';
 import TodoBaseModal from '../common/TodoBaseModal';
+import * as S from './styles';
 
 export default function TodoCreateModal({ onClose }: TodoCreateModalProps) {
   const footerGroup = (
@@ -16,161 +15,72 @@ export default function TodoCreateModal({ onClose }: TodoCreateModalProps) {
       labelId="할 일 생성 모달"
       footerGroup={footerGroup}
     >
-      <Form>
-        <Field>
-          <Label htmlFor="title" $required>
+      <S.Form>
+        <S.Field>
+          <S.Label htmlFor="title" $required>
             제목
-          </Label>
-          <Input
+          </S.Label>
+          <S.Input
             id="title"
             type="text"
             placeholder="제목을 입력해주세요"
             required
           />
-        </Field>
+        </S.Field>
 
-        <Field>
-          <Label htmlFor="description" $required>
+        <S.Field>
+          <S.Label htmlFor="description" $required>
             설명
-          </Label>
-          <Textarea
+          </S.Label>
+          <S.Textarea
             id="description"
             placeholder="설명을 입력해주세요"
             required
           />
-        </Field>
+        </S.Field>
 
-        <Row>
-          <Field>
-            <Label htmlFor="dueDate">마감일</Label>
-            <Input
+        <S.Row>
+          <S.Field>
+            <S.Label htmlFor="dueDate">마감일</S.Label>
+            <S.Input
               id="dueDate"
               type="text"
               placeholder="날짜를 입력해 주세요"
             />
-          </Field>
+          </S.Field>
 
-          <Field>
-            <Label htmlFor="assignee">담당자</Label>
-            <SelectBox>
-              <SelectButton id="assignee" type="button">
+          <S.Field>
+            <S.Label htmlFor="assignee">담당자</S.Label>
+            <S.SelectBox>
+              <S.SelectButton id="assignee" type="button">
                 담당자 선택
-              </SelectButton>
-              <SelectList role="listbox">
-                <SelectItem role="option">권다은</SelectItem>
-                <SelectItem role="option">김유민</SelectItem>
-                <SelectItem role="option">박현우</SelectItem>
-                <SelectItem role="option">양채원</SelectItem>
-                <SelectItem role="option">이차현</SelectItem>
-              </SelectList>
-            </SelectBox>
-          </Field>
-        </Row>
+              </S.SelectButton>
+              <S.SelectList role="listbox">
+                <S.SelectItem role="option">권다은</S.SelectItem>
+                <S.SelectItem role="option">김유민</S.SelectItem>
+                <S.SelectItem role="option">박현우</S.SelectItem>
+                <S.SelectItem role="option">양채원</S.SelectItem>
+                <S.SelectItem role="option">이차현</S.SelectItem>
+              </S.SelectList>
+            </S.SelectBox>
+          </S.Field>
+        </S.Row>
 
-        <Field>
-          <Label htmlFor="tag">태그</Label>
-          <Input id="tag" type="text" placeholder="태그를 입력해주세요" />
-        </Field>
+        <S.Field>
+          <S.Label htmlFor="tag">태그</S.Label>
+          <S.Input id="tag" type="text" placeholder="태그를 입력해주세요" />
+        </S.Field>
 
-        <Field>
-          <Label>이미지</Label>
-          <UploadLabel htmlFor="uploadfile">
-            <UploadBox>
-              <UploadText>+ image upload</UploadText>
-            </UploadBox>
-          </UploadLabel>
-          <HiddenInput id="uploadfile" type="file" />
-        </Field>
-      </Form>
+        <S.Field>
+          <S.Label>이미지</S.Label>
+          <S.UploadLabel htmlFor="uploadfile">
+            <S.UploadBox>
+              <S.UploadText>+ image upload</S.UploadText>
+            </S.UploadBox>
+          </S.UploadLabel>
+          <S.HiddenInput id="uploadfile" type="file" />
+        </S.Field>
+      </S.Form>
     </TodoBaseModal>
   );
 }
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  min-height: 0;
-  overflow-y: auto;
-  scrollbar-color: #5b5963 transparent;
-`;
-
-const Row = styled.div`
-  display: flex;
-  gap: 20px;
-`;
-
-const Field = styled.div`
-  flex: 1;
-`;
-
-const Label = styled.label<{ $required?: boolean }>`
-  display: block;
-  margin-bottom: 12px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-
-  ${({ $required }) =>
-    $required &&
-    `
-    &::after {
-      content: '*';
-      color: #00A7F5;
-    }
-  `}
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 6px 20px;
-  height: 54px;
-  border-radius: 14px;
-  border: 1px solid #d6d5d9;
-  background: #fff;
-  font-size: 16px;
-  font-weight: 500;
-  color: #333;
-
-  &::placeholder {
-    color: #a39fb2;
-  }
-`;
-
-const Textarea = styled.textarea`
-  padding: 20px;
-  width: 100%;
-  height: 160px;
-  border-radius: 14px;
-  border: 1px solid #d6d5d9;
-  background: #fff;
-  font-size: 16px;
-  font-weight: 500;
-  color: #333;
-
-  &::placeholder {
-    color: #a39fb2;
-  }
-`;
-
-const SelectBox = styled.div``;
-const SelectButton = styled.button`
-  width: 100%;
-  padding: 6px 20px;
-  height: 54px;
-  border-radius: 14px;
-  border: 1px solid #d6d5d9;
-  background: #fff;
-  font-size: 16px;
-  font-weight: 500;
-  color: #a39fb2;
-  text-align: left;
-`;
-const SelectList = styled.ul`
-  display: none;
-`;
-const SelectItem = styled.li``;
-const UploadLabel = styled.label``;
-const UploadBox = styled.div``;
-const UploadText = styled.div``;
-const HiddenInput = styled.input``;
