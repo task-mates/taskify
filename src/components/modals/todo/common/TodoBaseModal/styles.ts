@@ -9,6 +9,7 @@ export const Container = styled.div`
   min-width: 320px;
   width: 100%;
   height: 80vh;
+  max-height: 944px;
   background: #f3f5f8;
   border: 1px solid #9fa6b2;
   border-radius: 24px;
