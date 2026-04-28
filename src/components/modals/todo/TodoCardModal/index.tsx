@@ -299,6 +299,7 @@ export default function TodoCardModal({
       actionMenu={actionMenu}
       headerVariant="card"
       overlayVariant="full"
+      layoutVariant="card"
     >
       <S.TaskInfo>
         {assigneeNickname && (

@@ -9,8 +9,10 @@ export default function TodoBaseModal({
   badgeGroup,
   actionMenu,
   children,
+  footerGroup,
   headerVariant = 'default',
   overlayVariant = 'default',
+  layoutVariant = 'default',
 }: TodoBaseModalProps) {
   return (
     <Modal
@@ -18,7 +20,7 @@ export default function TodoBaseModal({
       labelledById={labelId}
       overlayVariant={overlayVariant}
     >
-      <S.Container>
+      <S.Container $variant={layoutVariant}>
         <S.Wrapper>
           <S.Header $variant={headerVariant}>
             <S.HeaderLeft>
@@ -50,7 +52,9 @@ export default function TodoBaseModal({
             </S.HeaderRight>
           </S.Header>
 
-          <S.Content>{children}</S.Content>
+          <S.Content $variant={layoutVariant}>{children}</S.Content>
+
+          {footerGroup && <S.Footer>{footerGroup}</S.Footer>}
         </S.Wrapper>
       </S.Container>
     </Modal>
