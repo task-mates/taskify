@@ -15,7 +15,6 @@ export const Container = styled.main`
   gap: clamp(48px, 8vw, 120px);
 
   @media ${DEVICE.tablet} {
-    max-width: 360px;
     padding: 80px 16px;
   }
 `;
@@ -121,7 +120,7 @@ export const SignupLink = styled(Link)`
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
-  text-decoration: none;
+  text-decoration: underline;
 `;
 
 export const DesktopImageWrapper = styled.div`

@@ -20,15 +20,15 @@ const MIN_PASSWORD_LENGTH = 8;
 const ERROR_MESSAGES = {
   email: '이메일 형식이 올바르지 않아요.',
   password: `비밀번호를 ${MIN_PASSWORD_LENGTH}자 이상 작성해 주세요.`,
-  loginFailed: '이메일 또는 비밀번호가 일치하지 않아요.',
+  loginFailed: '이메일 또는 비밀번호를 확인해 주세요.',
+  userNotFound: '가입된 이메일이 아닙니다.',
   network: '네트워크 오류가 발생했어요.',
   temporary: '일시적인 오류가 발생했어요. 잠시 후 다시 시도해 주세요.',
   unknown: '알 수 없는 오류가 발생했어요.',
 } as const;
 
 const isValidEmail = (value: string) => EMAIL_REGEX.test(value);
-const isValidPassword = (value: string) =>
-  value.length >= MIN_PASSWORD_LENGTH;
+const isValidPassword = (value: string) => value.length >= MIN_PASSWORD_LENGTH;
 
 export default function LoginPage() {
   const router = useRouter();
@@ -39,6 +39,8 @@ export default function LoginPage() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
+  const isLoginButtonDisabled =
+    isLoading || email.trim().length === 0 || password.trim().length === 0;
 
   const handleEmailBlur = () => {
     setEmailTouched(true);
@@ -89,17 +91,38 @@ export default function LoginPage() {
       router.push('/mydashboard');
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        const status = error.response?.status;
+        if (error.code === 'ECONNABORTED' || !error.response) {
+          setErrors({ common: ERROR_MESSAGES.network });
+          return;
+        }
 
-        if (status === 401 || status === 400) {
+        const status = error.response?.status;
+        const errorMessage =
+          typeof error.response?.data === 'object' &&
+          error.response?.data !== null &&
+          'message' in error.response.data &&
+          typeof error.response.data.message === 'string'
+            ? error.response.data.message
+            : '';
+
+        if (status === 404) {
           setErrors({
-            common: ERROR_MESSAGES.loginFailed,
+            email: ERROR_MESSAGES.userNotFound,
           });
           return;
         }
 
-        if (error.code === 'ECONNABORTED' || !error.response) {
-          setErrors({ common: ERROR_MESSAGES.network });
+        if (status === 400 || status === 401 || status === 403) {
+          setErrors({
+            password: ERROR_MESSAGES.loginFailed,
+          });
+          return;
+        }
+
+        if (typeof status === 'number' && status >= 400 && status < 500) {
+          setErrors({
+            common: errorMessage || ERROR_MESSAGES.temporary,
+          });
           return;
         }
 
@@ -204,14 +227,14 @@ export default function LoginPage() {
           {errors.common && <S.ErrorText>{errors.common}</S.ErrorText>}
 
           {/* 버튼 공통 컴포넌트 사용 예정 */}
-          <S.LoginButton type="submit" disabled={isLoading}>
+          <S.LoginButton type="submit" disabled={isLoginButtonDisabled}>
             {isLoading ? '로그인 중' : '로그인'}
           </S.LoginButton>
         </S.LoginForm>
 
         <S.SignupRow>
           <S.HelperText>아직 회원이 아니신가요?</S.HelperText>
-          <S.SignupLink href="/signup">회원가입</S.SignupLink>
+          <S.SignupLink href="/signup">회원가입하기</S.SignupLink>
         </S.SignupRow>
       </S.FormSection>
 
