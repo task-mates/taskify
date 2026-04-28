@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import LogoIcon from '@/public/images/icon-logo.svg';
 import PlusIcon from '@/src/components/icons/icon-plus.svg';
@@ -44,7 +43,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       <S.Header>
         <S.TopRow>
           <S.Logo>
-            <Image src={LogoIcon} alt="Taskify 로고" />
+            <LogoIcon aria-label="Taskify 로고" />
           </S.Logo>
           {/* 논의 후 아이콘으로 변경 예정 */}
           <S.CloseButton
@@ -59,7 +58,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           <S.AddButton>
             <span>대시보드 추가</span>
             <S.IconContainer>
-              <Image src={PlusIcon} alt="" />
+              <PlusIcon aria-hidden="true" />
             </S.IconContainer>
           </S.AddButton>
         </S.AddSection>
@@ -79,7 +78,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 <Link href={`/dashboard/${board.id}`}>
                   <S.ColorDot $color={board.color} />
                   <S.Title>{board.title}</S.Title>
-                  {board.createdByMe && <Image src={CrownIcon} alt="" />}
+                  {board.createdByMe && <CrownIcon aria-hidden="true" />}
                 </Link>
               </S.DashboardItem>
             ))}

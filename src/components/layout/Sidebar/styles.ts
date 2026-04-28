@@ -83,7 +83,7 @@ export const AddButton = styled.button`
 
 export const IconContainer = styled.div`
   background-color: #e1eaf1;
-  padding: 5px 5px;
+  padding: 1px 6px;
   border-radius: 4px;
 `;
 
