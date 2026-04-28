@@ -15,6 +15,8 @@ const nextConfig: NextConfig = {
     ],
   },
 
+  turbopack: {},
+
   webpack(config) {
     const fileLoaderRule = config.module.rules.find(
       (rule: RuleSetRule | '...') =>
