@@ -136,6 +136,8 @@ export const TermsLink = styled(Link)`
 `;
 
 export const ErrorText = styled.p`
+  min-height: 18px;
+  margin: 0;
   color: #e5484d;
   font-size: 13px;
 `;

@@ -7,10 +7,25 @@ import { FormEvent, useEffect, useState } from 'react';
 import axios from 'axios';
 import Modal from '@/src/components/Modal';
 import { usersApi } from '@/src/apis/users';
+import {
+  AUTH_VALIDATION_MESSAGES,
+  isValidEmail,
+  isValidPassword,
+} from '@/src/utils/authValidation';
 import * as S from './styles';
 import type { ModalType, SignupDraft } from './type';
 // 회원가입 입력값 임시저장을 위한 키
 const SIGNUP_DRAFT_KEY = 'taskify-signup-draft';
+const ERROR_MESSAGES = {
+  emailRequired: '이메일을 입력해 주세요.',
+  emailInvalid: AUTH_VALIDATION_MESSAGES.emailInvalid,
+  emailDuplicate: '이미 사용중인 이메일입니다.',
+  nameRequired: '이름을 입력해 주세요.',
+  passwordRequired: '비밀번호를 입력해 주세요.',
+  passwordInvalid: AUTH_VALIDATION_MESSAGES.passwordInvalid,
+  passwordCheckRequired: '비밀번호 확인을 입력해 주세요.',
+  passwordMismatch: '비밀번호가 일치하지 않습니다.',
+} as const;
 
 const isDuplicateEmailError = (status?: number, message?: string) => {
   const normalizedMessage = (message ?? '').toLowerCase();
@@ -30,6 +45,10 @@ export default function SignupPage() {
   const [passwordCheck, setPasswordCheck] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isPasswordCheckVisible, setIsPasswordCheckVisible] = useState(false);
+  const [emailTouched, setEmailTouched] = useState(false);
+  const [nameTouched, setNameTouched] = useState(false);
+  const [passwordTouched, setPasswordTouched] = useState(false);
+  const [passwordCheckTouched, setPasswordCheckTouched] = useState(false);
   const [isTermsChecked, setIsTermsChecked] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasEmailDuplicateError, setHasEmailDuplicateError] = useState(false);
@@ -38,6 +57,33 @@ export default function SignupPage() {
   const [modalType, setModalType] = useState<ModalType>(null);
   const [isDraftInitialized, setIsDraftInitialized] = useState(false);
   const isPasswordMatch = password === passwordCheck;
+  const hasEmailRequiredError = emailTouched && email.trim().length === 0;
+  const hasEmailFormatError =
+    emailTouched && email.trim().length > 0 && !isValidEmail(email);
+  const hasNameRequiredError = nameTouched && name.trim().length === 0;
+  const hasPasswordRequiredError = passwordTouched && password.length === 0;
+  const hasPasswordFormatError =
+    passwordTouched && password.length > 0 && !isValidPassword(password);
+  const hasPasswordCheckRequiredError =
+    passwordCheckTouched && passwordCheck.length === 0;
+  const emailErrorMessage = hasEmailDuplicateError
+    ? ERROR_MESSAGES.emailDuplicate
+    : hasEmailRequiredError
+      ? ERROR_MESSAGES.emailRequired
+    : hasEmailFormatError
+      ? ERROR_MESSAGES.emailInvalid
+      : '';
+  const nameErrorMessage = hasNameRequiredError ? ERROR_MESSAGES.nameRequired : '';
+  const passwordErrorMessage = hasPasswordRequiredError
+    ? ERROR_MESSAGES.passwordRequired
+    : hasPasswordFormatError
+      ? ERROR_MESSAGES.passwordInvalid
+      : '';
+  const passwordCheckErrorMessage = hasPasswordCheckRequiredError
+    ? ERROR_MESSAGES.passwordCheckRequired
+    : hasPasswordMismatchError
+      ? ERROR_MESSAGES.passwordMismatch
+      : '';
   const isFormComplete =
     email.trim().length > 0 &&
     name.trim().length > 0 &&
@@ -101,6 +147,10 @@ export default function SignupPage() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setEmailTouched(true);
+    setNameTouched(true);
+    setPasswordTouched(true);
+    setPasswordCheckTouched(true);
 
     if (isSubmitting || !isFormComplete) {
       return;
@@ -174,7 +224,7 @@ export default function SignupPage() {
           <S.TextInput
             id="email"
             type="email"
-            $hasError={hasEmailDuplicateError}
+            $hasError={Boolean(emailErrorMessage)}
             value={email}
             onChange={(e) => {
               setEmail(e.target.value);
@@ -182,32 +232,41 @@ export default function SignupPage() {
                 setHasEmailDuplicateError(false);
               }
             }}
+            onBlur={() => setEmailTouched(true)}
             placeholder="이메일을 입력해주세요"
           />
-          {hasEmailDuplicateError && (
-            <S.ErrorText>이미 사용중인 이메일입니다.</S.ErrorText>
-          )}
+          <S.ErrorText>{emailErrorMessage || ' '}</S.ErrorText>
 
           <S.Label htmlFor="name">이름</S.Label>
           <S.TextInput
             id="name"
             type="text"
+            $hasError={Boolean(nameErrorMessage)}
             value={name}
             onChange={(e) => setName(e.target.value)}
+            onBlur={() => setNameTouched(true)}
             placeholder="이름을 입력해주세요"
           />
+          <S.ErrorText>{nameErrorMessage || ' '}</S.ErrorText>
 
           <S.Label htmlFor="password">비밀번호</S.Label>
           <S.PasswordField>
             <S.PasswordInput
               id="password"
               type={isPasswordVisible ? 'text' : 'password'}
+              $hasError={Boolean(passwordErrorMessage)}
               value={password}
               onChange={(e) => {
                 const nextPassword = e.target.value;
                 setPassword(nextPassword);
                 if (hasPasswordMismatchError) {
                   setHasPasswordMismatchError(nextPassword !== passwordCheck);
+                }
+              }}
+              onBlur={() => {
+                setPasswordTouched(true);
+                if (passwordCheck.length > 0) {
+                  setHasPasswordMismatchError(password !== passwordCheck);
                 }
               }}
               placeholder="비밀번호를 입력해주세요"
@@ -231,19 +290,26 @@ export default function SignupPage() {
               />
             </S.TogglePasswordButton>
           </S.PasswordField>
+          <S.ErrorText>{passwordErrorMessage || ' '}</S.ErrorText>
 
           <S.Label htmlFor="passwordCheck">비밀번호 확인</S.Label>
           <S.PasswordField>
             <S.PasswordInput
               id="passwordCheck"
               type={isPasswordCheckVisible ? 'text' : 'password'}
-              $hasError={hasPasswordMismatchError}
+              $hasError={Boolean(passwordCheckErrorMessage)}
               value={passwordCheck}
               onChange={(e) => {
                 const nextPasswordCheck = e.target.value;
                 setPasswordCheck(nextPasswordCheck);
                 if (hasPasswordMismatchError) {
                   setHasPasswordMismatchError(password !== nextPasswordCheck);
+                }
+              }}
+              onBlur={() => {
+                setPasswordCheckTouched(true);
+                if (password.length > 0 && passwordCheck.length > 0) {
+                  setHasPasswordMismatchError(password !== passwordCheck);
                 }
               }}
               placeholder="비밀번호를 다시 입력해주세요"
@@ -269,9 +335,7 @@ export default function SignupPage() {
               />
             </S.TogglePasswordButton>
           </S.PasswordField>
-          {hasPasswordMismatchError && (
-            <S.ErrorText>비밀번호가 일치하지 않습니다.</S.ErrorText>
-          )}
+          <S.ErrorText>{passwordCheckErrorMessage || ' '}</S.ErrorText>
 
           <S.TermsLabel htmlFor="terms">
             <S.TermsCheckbox
