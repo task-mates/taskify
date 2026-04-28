@@ -2,7 +2,7 @@
 
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useParams } from 'next/navigation';
 import Sidebar from '@/src/components/layout/Sidebar';
 import AppHeader from '@/src/components/layout/AppHeader';
 import { dashboardsApi } from '@/src/apis/dashboards';
@@ -13,7 +13,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const [dashboards, setDashboards] = useState<Dashboard[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+
   const pathname = usePathname();
+  const params = useParams();
+  const dashboardId = params?.id ? Number(params.id) : null;
+  const createdByMe =
+    dashboards.find((d) => d.id === dashboardId)?.createdByMe ?? false;
 
   useEffect(() => {
     setIsSidebarOpen(false);
@@ -49,7 +54,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         isError={isError}
       />
       <Content>
-        <AppHeader onSidebarOpen={() => setIsSidebarOpen(true)} />
+        <AppHeader
+          onSidebarOpen={() => setIsSidebarOpen(true)}
+          dashboardId={dashboardId}
+          createdByMe={createdByMe}
+        />
         {children}
       </Content>
     </Layout>

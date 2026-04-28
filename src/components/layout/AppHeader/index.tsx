@@ -1,12 +1,20 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import * as S from './styles';
+import type { AppHeaderProps } from '@/src/components/layout/AppHeader/type';
 
-interface AppHeaderProps {
-  onSidebarOpen: () => void;
-}
+export default function AppHeader({
+  onSidebarOpen,
+  dashboardId,
+  createdByMe,
+}: AppHeaderProps) {
+  const pathname = usePathname();
 
-export default function AppHeader({ onSidebarOpen }: AppHeaderProps) {
+  const isMyDashboard = pathname === '/mydashboard';
+  const isOwnedDashboard = !!dashboardId && createdByMe;
+  const isInvitedDashboard = !!dashboardId && !createdByMe;
+
   return (
     <S.Wrapper>
       <S.HamburgerButton
@@ -16,6 +24,10 @@ export default function AppHeader({ onSidebarOpen }: AppHeaderProps) {
       >
         ☰
       </S.HamburgerButton>
+
+      {isMyDashboard && <>{/* TODO: 마이 대시보드 헤더 콘텐츠 */}</>}
+      {isOwnedDashboard && <>{/* TODO: 내가 만든 대시보드 헤더 콘텐츠 */}</>}
+      {isInvitedDashboard && <>{/* TODO: 초대받은 대시보드 헤더 콘텐츠 */}</>}
     </S.Wrapper>
   );
 }
