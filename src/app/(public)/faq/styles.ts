@@ -53,12 +53,15 @@ export const ToggleButton = styled.button`
 `;
 
 export const QuestionTitle = styled.h2`
+  margin-bottom: 0;
+`;
+
+export const QuestionText = styled.span`
   font-size: 18px;
   font-weight: 700;
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 0;
   color: #333236;
 `;
 
@@ -68,12 +71,8 @@ export const LeftToggleIcon = styled.span`
   line-height: 1;
 `;
 
-export const RightToggleIcon = styled.span`
-  font-size: 20px;
-  color: #83c6e5;
-`;
-
-export const Answer = styled.p`
+export const Answer = styled.p<{ $isOpen: boolean }>`
+  display: ${({ $isOpen }) => ($isOpen ? 'block' : 'none')};
   margin-top: 16px;
   padding-top: 14px;
   border-top: 1px solid #ebe9f4;
