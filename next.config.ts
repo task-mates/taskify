@@ -6,17 +6,6 @@ const nextConfig: NextConfig = {
     styledComponents: true,
   },
 
-  experimental: {
-    turbo: {
-      rules: {
-        '.svg': {
-          loaders: ['@svgr/webpack'],
-          as: 'js',
-        },
-      },
-    },
-  },
-
   webpack(config) {
     const fileLoaderRule = config.module.rules.find((rule: RuleSetRule | '...') =>
       rule !== '...' && (rule.test as RegExp)?.test?.('.svg')
@@ -39,6 +28,17 @@ const nextConfig: NextConfig = {
     fileLoaderRule.exclude = /\.svg$/i;
 
     return config;
+  },
+
+    experimental: {
+    turbo: {
+      rules: {
+        '.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '.js',
+        },
+      },
+    },
   },
 };
 
