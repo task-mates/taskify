@@ -1,14 +1,22 @@
 'use client';
 
+import { useState } from 'react';
+import { cardsApi } from '@/src/apis/cards';
 import ModalActionButtons from '../common/ModalActionButtons';
 import type { TodoCreateModalProps } from './type';
 import TodoBaseModal from '../common/TodoBaseModal';
 import * as S from './styles';
-import { useState } from 'react';
 
 const TODO_CREATE_FORM_ID = 'todo-create-form';
 
-export default function TodoCreateModal({ onClose }: TodoCreateModalProps) {
+export default function TodoCreateModal({
+  onClose,
+  dashboardId,
+  columnId,
+}: TodoCreateModalProps) {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+
   const footerGroup = (
     <ModalActionButtons
       onCancel={onClose}
@@ -17,17 +25,23 @@ export default function TodoCreateModal({ onClose }: TodoCreateModalProps) {
     />
   );
 
-  const [title, setTitle] = useState('');
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log('제목:', title);
+    try {
+      await cardsApi.create({
+        dashboardId,
+        columnId,
+        title,
+        description,
+        tags: [],
+      });
 
-    // TODO: API 연결
-    // await cardsApi.create({ title, ... })
-
-    onClose();
+      onClose();
+    } catch (error) {
+      console.error('카드 생성 실패:', error);
+      alert('카드 생성에 실패했습니다.');
+    }
   };
 
   return (
@@ -60,6 +74,8 @@ export default function TodoCreateModal({ onClose }: TodoCreateModalProps) {
             id="description"
             placeholder="설명을 입력해주세요"
             required
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
         </S.Field>
 
@@ -80,11 +96,11 @@ export default function TodoCreateModal({ onClose }: TodoCreateModalProps) {
                 담당자 선택
               </S.SelectButton>
               <S.SelectList role="listbox">
-                <S.SelectItem role="option">권다은</S.SelectItem>
-                <S.SelectItem role="option">김유민</S.SelectItem>
-                <S.SelectItem role="option">박현우</S.SelectItem>
-                <S.SelectItem role="option">양채원</S.SelectItem>
-                <S.SelectItem role="option">이차현</S.SelectItem>
+                <S.SelectItem role="option">담당자1</S.SelectItem>
+                <S.SelectItem role="option">담당자2</S.SelectItem>
+                <S.SelectItem role="option">담당자3</S.SelectItem>
+                <S.SelectItem role="option">담당자4</S.SelectItem>
+                <S.SelectItem role="option">담당자5</S.SelectItem>
               </S.SelectList>
             </S.SelectBox>
           </S.Field>
