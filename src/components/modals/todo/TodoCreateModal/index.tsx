@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { cardsApi } from '@/src/apis/cards';
+import { columnsApi } from '@/src/apis/columns';
 import { membersApi } from '@/src/apis/members';
 import type { Member } from '@/src/apis/members/type';
 import ModalActionButtons from '../common/ModalActionButtons';
@@ -32,6 +33,7 @@ export default function TodoCreateModal({
   const [tags, setTags] = useState<string[]>([]);
 
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
+  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
 
   const footerGroup = (
     <ModalActionButtons
@@ -45,6 +47,17 @@ export default function TodoCreateModal({
     e.preventDefault();
 
     try {
+      let imageUrl: string | undefined;
+
+      if (selectedImageFile) {
+        const uploadedImage = await columnsApi.uploadCardImage(
+          columnId,
+          selectedImageFile
+        );
+
+        imageUrl = uploadedImage.imageUrl;
+      }
+
       await cardsApi.create({
         dashboardId,
         columnId,
@@ -53,6 +66,7 @@ export default function TodoCreateModal({
         dueDate: dueDate ? dueDate.toISOString() : undefined,
         assigneeUserId: selectedAssignee?.userId,
         tags,
+        imageUrl,
       });
 
       onClose();
@@ -116,6 +130,8 @@ export default function TodoCreateModal({
 
     if (!file) return;
 
+    setSelectedImageFile(file);
+
     if (previewImageUrl) {
       URL.revokeObjectURL(previewImageUrl);
     }
@@ -126,7 +142,12 @@ export default function TodoCreateModal({
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const handleRemoveImage = () => {
+    if (previewImageUrl) {
+      URL.revokeObjectURL(previewImageUrl);
+    }
+
     setPreviewImageUrl(null);
+    setSelectedImageFile(null);
 
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
