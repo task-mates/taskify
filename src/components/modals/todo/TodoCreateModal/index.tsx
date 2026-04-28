@@ -1,12 +1,34 @@
+'use client';
+
 import ModalActionButtons from '../common/ModalActionButtons';
 import type { TodoCreateModalProps } from './type';
 import TodoBaseModal from '../common/TodoBaseModal';
 import * as S from './styles';
+import { useState } from 'react';
+
+const TODO_CREATE_FORM_ID = 'todo-create-form';
 
 export default function TodoCreateModal({ onClose }: TodoCreateModalProps) {
   const footerGroup = (
-    <ModalActionButtons onCancel={onClose} submitText="생성" />
+    <ModalActionButtons
+      onCancel={onClose}
+      submitText="생성"
+      formId={TODO_CREATE_FORM_ID}
+    />
   );
+
+  const [title, setTitle] = useState('');
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    console.log('제목:', title);
+
+    // TODO: API 연결
+    // await cardsApi.create({ title, ... })
+
+    onClose();
+  };
 
   return (
     <TodoBaseModal
@@ -15,7 +37,7 @@ export default function TodoCreateModal({ onClose }: TodoCreateModalProps) {
       labelId="할 일 생성 모달"
       footerGroup={footerGroup}
     >
-      <S.Form>
+      <S.Form id={TODO_CREATE_FORM_ID} onSubmit={handleSubmit}>
         <S.Field>
           <S.Label htmlFor="title" $required>
             제목
@@ -25,6 +47,8 @@ export default function TodoCreateModal({ onClose }: TodoCreateModalProps) {
             type="text"
             placeholder="제목을 입력해주세요"
             required
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
           />
         </S.Field>
 

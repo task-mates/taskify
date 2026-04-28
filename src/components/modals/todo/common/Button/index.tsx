@@ -4,11 +4,11 @@ import * as S from './styles';
 export default function Button({
   children,
   type = 'button',
-  onClick,
   variant = 'primary',
+  ...rest
 }: ButtonProps) {
   return (
-    <S.StyledButton type={type} onClick={onClick} $variant={variant}>
+    <S.StyledButton type={type} $variant={variant} {...rest}>
       {children}
     </S.StyledButton>
   );
