@@ -15,11 +15,9 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  turbopack: {},
-
   webpack(config) {
     const fileLoaderRule = config.module.rules.find(
-      (rule: RuleSetRule | '...') =>
+      (rule: RuleSetRule | '...') => 
         rule !== '...' && (rule.test as RegExp)?.test?.('.svg')
     );
 
@@ -42,6 +40,15 @@ const nextConfig: NextConfig = {
     fileLoaderRule.exclude = /\.svg$/i;
 
     return config;
+  },
+
+    turbopack: {
+      rules: {
+      '.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '.js',
+      },
+    },
   },
 };
 
