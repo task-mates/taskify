@@ -211,6 +211,58 @@ export const AssigneeName = styled.span`
   font-weight: 500;
   color: #333236;
 `;
+
+export const TagBox = styled.div`
+  position: relative;
+`;
+
+export const TagOptionBox = styled.div`
+  position: absolute;
+  top: calc(100% + 8px);
+  width: 100%;
+  padding: 16px 18px;
+  border-radius: 12px;
+  border: 1px solid #d6d5d9;
+  background: #fff;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+export const TagOptionTitle = styled.p`
+  font-size: 12px;
+  font-weight: 600;
+  color: #404040;
+`;
+
+export const TagCreateButton = styled.button`
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #404040;
+  font-weight: 600;
+`;
+
+export const TagList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+`;
+
+export const TagBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 6px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #cfe1fd;
+  background: #2563eb;
+`;
+
 export const UploadLabel = styled.label``;
 export const UploadBox = styled.div``;
 export const UploadText = styled.div``;
