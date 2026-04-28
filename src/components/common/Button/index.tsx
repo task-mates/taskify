@@ -1,6 +1,5 @@
 'use client';
 
-import { useRef } from 'react';
 import styled, { css } from 'styled-components';
 import type { ButtonProps, ButtonVariant } from './type';
 
@@ -9,24 +8,18 @@ export default function Button({
   variant = 'primary',
   leftIcon,
   onClick,
-  $width = '200px',
-  $height = '60px',
+  type = 'button',
+  width = '200px',
+  height = '60px',
   ...props
 }: ButtonProps) {
-  
-  const onClickRef = useRef(onClick);
-  onClickRef.current = onClick;
-
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    onClickRef.current?.(e);
-  };
-
   return (
     <StyledButton
       $variant={variant}
-      $width={$width}
-      $height={$height}
-      onClick={handleClick}
+      $width={width}
+      $height={height}
+      onClick={onClick}
+      type={type}
       {...props}
     >
       {leftIcon && <IconWrapper>{leftIcon}</IconWrapper>}
@@ -58,31 +51,30 @@ const StyledButton = styled.button<{
   
   cursor: pointer;
   border: none;
-  font-size: 16px;
-  font-weight: 600;
+  var(--lg-16px-semibold);
 
   ${({ $variant }) =>
     $variant === 'primary' &&
     css`
-      background-color: #83C6E5;
-      color: #ffffff;
-      &:hover { background-color: #6fb0cf; }
+      background-color: var(--color-brand-300);
+      color: var(--color-white);
+      &:hover { background-color: var(--color-brand-400); }
     `}
 
   ${({ $variant }) =>
     $variant === 'secondary' &&
     css`
-      background-color: #888787;
-      color: #ffffff;
-      &:hover { background-color: #757474; }
+      background-color: var(--color-gray-400);
+      color: var(--color-white);
+      &:hover { background-color: var(--color-gray-500); }
     `}
 
   ${({ $variant }) =>
     $variant === 'ghost' &&
     css`
       background-color: transparent;
-      color: #888787; 
-      &:hover { background-color: rgba(0, 0, 0, 0.05); }
+      color: var(--color-gray-400); 
+      &:hover, &focus-visible { background-color: rgba(0, 0, 0, 0.05); }
     `}
 
   &:disabled {
