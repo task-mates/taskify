@@ -99,9 +99,11 @@ export default function TodoCreateModal({
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (tagBoxRef.current && !tagBoxRef.current.contains(e.target as Node)) {
-        setIsTagOpen(false);
-        setOpenedTagMenu(null);
+      if (
+        selectBoxRef.current &&
+        !selectBoxRef.current.contains(e.target as Node)
+      ) {
+        setIsAssigneeOpen(false);
       }
     };
 
