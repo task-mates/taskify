@@ -14,6 +14,17 @@ import * as S from './styles';
 import UploadImage from '@/src/components/icons/icon-uploadimg.svg';
 import DeleteIcon from '@/src/components/icons/icon-delete.svg';
 
+type TagColor = {
+  backgroundColor: string;
+  color: string;
+};
+
+type Tag = {
+  name: string;
+  backgroundColor: string;
+  color: string;
+};
+
 const TAG_COLORS = [
   { backgroundColor: '#F2F2F2', color: '#666666' }, // 회색
   { backgroundColor: '#F4E3D7', color: '#8A4B2A' }, // 갈색
@@ -25,17 +36,6 @@ const TAG_COLORS = [
   { backgroundColor: '#F7DDE8', color: '#A33E68' }, // 분홍색
   { backgroundColor: '#F9D9D6', color: '#B84038' }, // 빨간색
 ];
-
-type TagColor = {
-  backgroundColor: string;
-  color: string;
-};
-
-type Tag = {
-  name: string;
-  backgroundColor: string;
-  color: string;
-};
 
 const TODO_CREATE_FORM_ID = 'todo-create-form';
 
@@ -130,6 +130,11 @@ export default function TodoCreateModal({
         !selectBoxRef.current.contains(e.target as Node)
       ) {
         setIsAssigneeOpen(false);
+      }
+
+      if (tagBoxRef.current && !tagBoxRef.current.contains(e.target as Node)) {
+        setIsTagOpen(false);
+        setOpenedTagMenu(null);
       }
     };
 

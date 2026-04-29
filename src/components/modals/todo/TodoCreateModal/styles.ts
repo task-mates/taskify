@@ -307,7 +307,6 @@ export const SelectedTagBadge = styled.span<{
   $color: string;
 }>`
   display: inline-flex;
-  flex-shrink: 0;
   align-items: center;
   gap: 4px;
 
@@ -318,6 +317,10 @@ export const SelectedTagBadge = styled.span<{
   font-weight: 600;
   color: ${({ $color }) => $color};
   background: ${({ $backgroundColor }) => $backgroundColor};
+
+  @media ${DEVICE.mobile} {
+    align-items: flex-start;
+  }
 `;
 
 export const TagRemoveButton = styled.button`
@@ -330,6 +333,7 @@ export const TagRemoveButton = styled.button`
 `;
 
 export const TagOptionBox = styled.div`
+  z-index: 1;
   position: absolute;
   top: calc(100% + 8px);
   width: 100%;
@@ -345,6 +349,7 @@ export const TagOptionBox = styled.div`
 
   @media ${DEVICE.mobile} {
     top: calc(100% + 4px);
+    max-height: 155px;
   }
 `;
 
@@ -379,6 +384,11 @@ export const TagMoreButton = styled.button`
 
   &:hover {
     background: rgba(159, 166, 178, 0.2);
+  }
+
+  @media ${DEVICE.mobile} {
+    opacity: 1;
+    visibility: visible;
   }
 `;
 
@@ -474,14 +484,6 @@ export const TagDeleteButton = styled.button`
 `;
 
 export const TagCreateButton = styled.button`
-  // margin-top: 8px;
-  // display: inline-flex;
-  // align-items: center;
-  // gap: 8px;
-  // font-size: 13px;
-  // color: #404040;
-  // font-weight: 600;
-
   margin-top: 8px;
 
   display: flex;
@@ -506,7 +508,6 @@ export const TagBadge = styled.span<{
   $color: string;
 }>`
   display: inline-flex;
-  flex-shrink: 0;
   align-items: center;
 
   padding: 4px 6px;
