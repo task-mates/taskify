@@ -132,6 +132,35 @@ const GlobalStyle = createGlobalStyle`
 
     --lh-normal: normal;
     --lh-relaxed: 1.5;
+
+    --xs-12px-medium: var(--fw-medium) var(--font-xs)/var(--lh-normal) var(--font-main);
+    --xs-12px-semibold: var(--fw-semibold) var(--font-xs)/var(--lh-normal) var(--font-main);
+
+    --sm-13px-medium: var(--fw-medium) var(--font-sm)/var(--lh-normal) var(--font-main);
+    --sm-13px-semibold: var(--fw-semibold) var(--font-sm)/var(--lh-normal) var(--font-main);
+
+    --md-14px-medium: var(--fw-medium) var(--font-md)/var(--lh-normal) var(--font-main);
+    --md-14px-medium-150%: var(--fw-medium) var(--font-md)/var(--lh-relaxed) var(--font-main);
+
+    --lg-16px-medium: var(--fw-medium) var(--font-lg)/var(--lh-normal) var(--font-main);
+    --lg-16px-semibold: var(--fw-semibold) var(--font-lg)/var(--lh-normal) var(--font-main);
+    --lg-16px-bold: var(--fw-bold) var(--font-lg)/var(--lh-normal) var(--font-main);
+    --lg-16px-medium-150%: var(--fw-medium) var(--font-lg)/var(--lh-relaxed) var(--font-main);
+
+    --2lg-18px-medium: var(--fw-medium) var(--font-2lg)/var(--lh-normal) var(--font-main);
+    --2lg-18px-semibold: var(--fw-semibold) var(--font-2lg)/var(--lh-normal) var(--font-main);
+    --2lg-18px-bold: var(--fw-bold) var(--font-2lg)/var(--lh-normal) var(--font-main);
+
+    --xl-20px-medium: var(--fw-medium) var(--font-xl)/var(--lh-normal) var(--font-main);
+    --xl-20px-semibold: var(--fw-semibold) var(--font-xl)/var(--lh-normal) var(--font-main);
+    --xl-20px-bold: var(--fw-bold) var(--font-xl)/var(--lh-normal) var(--font-main);
+
+    --2xl-24px-medium: var(--fw-medium) var(--font-2xl)/var(--lh-normal) var(--font-main);
+    --2xl-24px-semibold: var(--fw-semibold) var(--font-2xl)/var(--lh-normal) var(--font-main);
+    --2xl-24px-bold: var(--fw-bold) var(--font-2xl)/var(--lh-normal) var(--font-main);
+
+    --3xl-32px-semibold: var(--fw-semibold) var(--font-3xl)/var(--lh-normal) var(--font-main);
+    --3xl-32px-bold: var(--fw-bold) var(--font-3xl)/var(--lh-normal) var(--font-main);
   }
 
   *, *::before, *::after {
@@ -152,6 +181,7 @@ const GlobalStyle = createGlobalStyle`
     min-height: 100%;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-family: var(--font-main);
   }
 
   input, button, textarea {
