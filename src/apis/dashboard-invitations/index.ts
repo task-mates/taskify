@@ -17,7 +17,7 @@ export const createDashboardInvitation = async (
   return data;
 };
 
-export const getDashboardInviatationList = async (
+export const getDashboardInvitationList = async (
   dashboardId: number,
   params: GetInvitationListRequest
 ) => {
