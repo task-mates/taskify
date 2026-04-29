@@ -1,158 +1,40 @@
 'use client';
 
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { FormEvent, useState } from 'react';
-import axios from 'axios';
-import { postLogin } from '@/src/apis/auth';
-import { setAccessToken } from '@/src/utils/authTokenStorage';
-import {
-  AUTH_VALIDATION_MESSAGES,
-  isValidEmail,
-  isValidPassword,
-} from '../../../utils/authValidation';
-import * as S from './styles';
 import Link from 'next/link';
-
-type FormErrors = {
-  email?: string;
-  password?: string;
-  common?: string;
-};
-
-const ERROR_MESSAGES = {
-  emailRequired: '이메일을 입력해 주세요.',
-  email: AUTH_VALIDATION_MESSAGES.emailInvalid,
-  passwordRequired: '비밀번호를 입력해 주세요.',
-  password: AUTH_VALIDATION_MESSAGES.passwordInvalid,
-  loginFailed: '이메일 또는 비밀번호를 확인해 주세요.',
-  userNotFound: '가입된 이메일이 아닙니다.',
-  network: '네트워크 오류가 발생했어요.',
-  temporary: '일시적인 오류가 발생했어요. 잠시 후 다시 시도해 주세요.',
-  unknown: '알 수 없는 오류가 발생했어요.',
-} as const;
+import { FormEvent } from 'react';
+import { useLoginForm } from '@/src/hooks/useLoginForm';
+import { useLoginSubmit } from '@/src/hooks/useLoginSubmit';
+import * as S from './styles';
 
 export default function LoginPage() {
-  const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [emailTouched, setEmailTouched] = useState(false);
-  const [passwordTouched, setPasswordTouched] = useState(false);
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [isLoading, setIsLoading] = useState(false);
+  const {
+    email,
+    password,
+    errors,
+    isPasswordVisible,
+    setIsPasswordVisible,
+    setErrors,
+    setCommonError,
+    handleEmailChange,
+    handlePasswordChange,
+    handleEmailBlur,
+    handlePasswordBlur,
+    validate,
+  } = useLoginForm();
+  const { isLoading, submitLogin } = useLoginSubmit();
   const isLoginButtonDisabled =
     isLoading || email.trim().length === 0 || password.trim().length === 0;
 
-  const handleEmailBlur = () => {
-    setEmailTouched(true);
-    setErrors((prev) => ({
-      ...prev,
-      email:
-        email.trim().length === 0
-          ? ERROR_MESSAGES.emailRequired
-          : isValidEmail(email)
-            ? undefined
-            : ERROR_MESSAGES.email,
-    }));
-  };
-
-  const handlePasswordBlur = () => {
-    setPasswordTouched(true);
-    setErrors((prev) => ({
-      ...prev,
-      password:
-        password.length === 0
-          ? ERROR_MESSAGES.passwordRequired
-          : isValidPassword(password)
-            ? undefined
-            : ERROR_MESSAGES.password,
-    }));
-  };
-
-  // 이메일 및 비밀번호 형식 정규식 검사
-  const validate = () => {
-    const nextErrors: FormErrors = {};
-
-    if (email.trim().length === 0) {
-      nextErrors.email = ERROR_MESSAGES.emailRequired;
-    } else if (!isValidEmail(email)) {
-      nextErrors.email = ERROR_MESSAGES.email;
-    }
-
-    if (password.length === 0) {
-      nextErrors.password = ERROR_MESSAGES.passwordRequired;
-    } else if (!isValidPassword(password)) {
-      nextErrors.password = ERROR_MESSAGES.password;
-    }
-
-    setErrors(nextErrors);
-    return Object.keys(nextErrors).length === 0;
-  };
-
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setErrors({});
-
-    if (!validate()) {
-      return;
-    }
-
-    try {
-      setIsLoading(true);
-
-      const data = await postLogin({ email, password });
-      setAccessToken(data.accessToken);
-
-      router.replace('/');
-      router.push('/mydashboard');
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        if (error.code === 'ECONNABORTED' || !error.response) {
-          setErrors({ common: ERROR_MESSAGES.network });
-          return;
-        }
-
-        const status = error.response?.status;
-        const errorMessage =
-          typeof error.response?.data === 'object' &&
-          error.response?.data !== null &&
-          'message' in error.response.data &&
-          typeof error.response.data.message === 'string'
-            ? error.response.data.message
-            : '';
-
-        if (status === 404) {
-          setErrors({
-            email: ERROR_MESSAGES.userNotFound,
-          });
-          return;
-        }
-
-        if (status === 400 || status === 401 || status === 403) {
-          setErrors({
-            password: ERROR_MESSAGES.loginFailed,
-          });
-          return;
-        }
-
-        if (typeof status === 'number' && status >= 400 && status < 500) {
-          setErrors({
-            common: errorMessage || ERROR_MESSAGES.temporary,
-          });
-          return;
-        }
-
-        setErrors({
-          common: ERROR_MESSAGES.temporary,
-        });
-        return;
-      }
-
-      setErrors({ common: ERROR_MESSAGES.unknown });
-    } finally {
-      setIsLoading(false);
-    }
+    await submitLogin({
+      email,
+      password,
+      validate,
+      setErrors,
+      setCommonError,
+    });
   };
 
   return (
@@ -177,22 +59,7 @@ export default function LoginPage() {
             type='email'
             $hasError={Boolean(errors.email)}
             value={email}
-            onChange={(e) => {
-              const nextEmail = e.target.value;
-              setEmail(nextEmail);
-
-              if (emailTouched) {
-                setErrors((prev) => ({
-                  ...prev,
-                  email:
-                    nextEmail.trim().length === 0
-                      ? ERROR_MESSAGES.emailRequired
-                      : isValidEmail(nextEmail)
-                        ? undefined
-                        : ERROR_MESSAGES.email,
-                }));
-              }
-            }}
+            onChange={(e) => handleEmailChange(e.target.value)}
             onBlur={handleEmailBlur}
             placeholder='이메일을 입력해주세요'
           />
@@ -206,22 +73,7 @@ export default function LoginPage() {
               type={isPasswordVisible ? 'text' : 'password'}
               $hasError={Boolean(errors.password)}
               value={password}
-              onChange={(e) => {
-                const nextPassword = e.target.value;
-                setPassword(nextPassword);
-
-                if (passwordTouched) {
-                  setErrors((prev) => ({
-                    ...prev,
-                    password:
-                      nextPassword.length === 0
-                        ? ERROR_MESSAGES.passwordRequired
-                        : isValidPassword(nextPassword)
-                          ? undefined
-                          : ERROR_MESSAGES.password,
-                  }));
-                }
-              }}
+              onChange={(e) => handlePasswordChange(e.target.value)}
               onBlur={handlePasswordBlur}
               placeholder='비밀번호를 입력해주세요'
             />
