@@ -1,8 +1,8 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import dayjs from 'dayjs';
 import Image from 'next/image';
 import { cardsApi } from '@/src/apis/cards';
-import { commentsApi } from '@/src/apis/comments';
+import { createComment, getCommentList } from '@/src/apis/comments';
 import { usersApi } from '@/src/apis/users';
 import type { Card } from '@/src/apis/cards/type';
 import type { Comment } from '@/src/apis/comments/type';
@@ -29,10 +29,11 @@ export default function TodoCardModal({
 }: TodoCardModalProps) {
   const [card, setCard] = useState<Card | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
-
   const [cursorId, setCursorId] = useState<number | null>(null);
   const [isCommentLoading, setIsCommentLoading] = useState(false);
+
   const observerRef = useRef<HTMLDivElement | null>(null);
+  const isCommentLoadingRef = useRef(false);
 
   const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
   const actionMenuRef = useRef<HTMLDivElement | null>(null);
@@ -68,6 +69,7 @@ export default function TodoCardModal({
   };
 
   const tags = (card?.tags ?? []).filter((tag) => tag.trim());
+
   const badgeGroup = (
     <S.BadgeGroup>
       {columnTitle && <S.ColumnBadge>{columnTitle}</S.ColumnBadge>}
@@ -99,6 +101,7 @@ export default function TodoCardModal({
                 수정하기
               </S.ActionButton>
             </S.ActionButtonItem>
+
             <S.ActionButtonItem>
               <S.ActionButton
                 type="button"
@@ -157,6 +160,71 @@ export default function TodoCardModal({
     fetchCurrentUser();
   }, []);
 
+  // 댓글 목록 가져오는 함수 useCallback 처리
+  const fetchComments = useCallback(
+    async (nextCursorId?: number | null) => {
+      if (isCommentLoadingRef.current) return;
+
+      try {
+        isCommentLoadingRef.current = true;
+        setIsCommentLoading(true);
+
+        const data = await getCommentList({
+          cardId,
+          size: 10,
+          cursorId: nextCursorId ?? undefined,
+        });
+
+        setComments((prevComments) =>
+          nextCursorId ? [...prevComments, ...data.comments] : data.comments
+        );
+
+        setCursorId(data.cursorId);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        isCommentLoadingRef.current = false;
+        setIsCommentLoading(false);
+      }
+    },
+    [cardId]
+  );
+
+  // cardId 변경 시 초기 댓글 조회
+  useEffect(() => {
+    const initComments = async () => {
+      await fetchComments(null);
+    };
+
+    initComments();
+  }, [fetchComments]);
+
+  // 무한스크롤
+  useEffect(() => {
+    if (!observerRef.current) return;
+    if (!cursorId) return;
+    if (isCommentLoading) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const target = entries[0];
+
+        if (target.isIntersecting) {
+          fetchComments(cursorId);
+        }
+      },
+      {
+        threshold: 0.1,
+      }
+    );
+
+    observer.observe(observerRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [cursorId, isCommentLoading, fetchComments]);
+
   const submitComment = async () => {
     if (isSubmittingRef.current) return;
 
@@ -169,7 +237,7 @@ export default function TodoCardModal({
     try {
       isSubmittingRef.current = true;
 
-      const newComment = await commentsApi.create({
+      const newComment = await createComment({
         content,
         cardId,
         columnId: card.columnId,
@@ -222,63 +290,9 @@ export default function TodoCardModal({
     const isExpanded =
       textarea.value.includes('\n') ||
       textarea.scrollHeight > COMMENT_TEXTAREA_MIN_HEIGHT;
+
     setIsTextareaExpanded(isExpanded);
   };
-
-  const fetchComments = async (nextCursorId?: number | null) => {
-    if (isCommentLoading) return;
-
-    try {
-      setIsCommentLoading(true);
-
-      const data = await commentsApi.getList({
-        cardId,
-        size: 10,
-        cursorId: nextCursorId ?? undefined,
-      });
-
-      setComments((prevComments) =>
-        nextCursorId ? [...prevComments, ...data.comments] : data.comments
-      );
-
-      setCursorId(data.cursorId);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsCommentLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    setComments([]);
-    setCursorId(null);
-    fetchComments(null);
-  }, [cardId]);
-
-  useEffect(() => {
-    if (!observerRef.current) return;
-    if (!cursorId) return;
-    if (isCommentLoading) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const target = entries[0];
-
-        if (target.isIntersecting) {
-          fetchComments(cursorId);
-        }
-      },
-      {
-        threshold: 0.1,
-      }
-    );
-
-    observer.observe(observerRef.current);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [cursorId, isCommentLoading, comments.length]);
 
   const formatDate = (dateString: string) => {
     return dayjs(dateString.replace('Z', '')).format('YYYY년 M월 D일');
@@ -307,7 +321,6 @@ export default function TodoCardModal({
             <S.TaskInfoLabel>담당자</S.TaskInfoLabel>
             <S.TaskInfoValue>
               <S.TaskInfoNameBadge>
-                {' '}
                 {assigneeProfileImage ? (
                   <Image
                     src={assigneeProfileImage}
@@ -343,6 +356,7 @@ export default function TodoCardModal({
             />
           </S.Thumbnail>
         )}
+
         {cardDescription && <S.Description>{cardDescription}</S.Description>}
       </S.DetailContent>
 
@@ -373,6 +387,7 @@ export default function TodoCardModal({
               onChange={handleCommentChange}
               onKeyDown={handleKeyDown}
             />
+
             <S.SendButton
               $active={isTyping}
               type="submit"
@@ -388,6 +403,7 @@ export default function TodoCardModal({
         {comments.map((comment) => (
           <S.CommentItem key={comment.id}>
             <S.CommentBadge>{comment.author.nickname}</S.CommentBadge>
+
             <S.CommentContent>
               <S.CommentInfo>
                 <S.CommentName>{comment.author.nickname}</S.CommentName>
