@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import Image from 'next/image';
 import { cardsApi } from '@/src/apis/cards';
-import { commentsApi } from '@/src/apis/comments';
+import { createComment, getCommentList } from '@/src/apis/comments';
 import { usersApi } from '@/src/apis/users';
 import type { Card } from '@/src/apis/cards/type';
 import type { Comment } from '@/src/apis/comments/type';
@@ -169,7 +169,7 @@ export default function TodoCardModal({
     try {
       isSubmittingRef.current = true;
 
-      const newComment = await commentsApi.create({
+      const newComment = await createComment({
         content,
         cardId,
         columnId: card.columnId,
@@ -231,7 +231,7 @@ export default function TodoCardModal({
     try {
       setIsCommentLoading(true);
 
-      const data = await commentsApi.getList({
+      const data = await getCommentList({
         cardId,
         size: 10,
         cursorId: nextCursorId ?? undefined,
