@@ -181,11 +181,11 @@ export default function SignupPage() {
   return (
     <S.Container>
       <S.FormSection>
-        <Link href="/" aria-label="메인 페이지 이동">
+        <Link href='/' aria-label='메인 페이지 이동'>
           <S.LogoWrapper>
             <Image
-              src="/images/icon-logo.svg"
-              alt="Taskify 로고"
+              src='/images/icon-logo.svg'
+              alt='Taskify 로고'
               fill
               priority
             />
@@ -193,10 +193,10 @@ export default function SignupPage() {
         </Link>
 
         <S.SignupForm onSubmit={handleSubmit}>
-          <S.Label htmlFor="email">이메일</S.Label>
+          <S.Label htmlFor='email'>이메일</S.Label>
           <S.TextInput
-            id="email"
-            type="email"
+            id='email'
+            type='email'
             $hasError={Boolean(emailErrorMessage)}
             value={email}
             onChange={(e) => {
@@ -206,26 +206,26 @@ export default function SignupPage() {
               }
             }}
             onBlur={() => setEmailTouched(true)}
-            placeholder="이메일을 입력해주세요"
+            placeholder='이메일을 입력해주세요'
           />
           <S.ErrorText>{emailErrorMessage || ' '}</S.ErrorText>
 
-          <S.Label htmlFor="name">이름</S.Label>
+          <S.Label htmlFor='name'>이름</S.Label>
           <S.TextInput
-            id="name"
-            type="text"
+            id='name'
+            type='text'
             $hasError={Boolean(nameErrorMessage)}
             value={name}
             onChange={(e) => setName(e.target.value)}
             onBlur={() => setNameTouched(true)}
-            placeholder="이름을 입력해주세요"
+            placeholder='이름을 입력해주세요'
           />
           <S.ErrorText>{nameErrorMessage || ' '}</S.ErrorText>
 
-          <S.Label htmlFor="password">비밀번호</S.Label>
+          <S.Label htmlFor='password'>비밀번호</S.Label>
           <S.PasswordField>
             <S.PasswordInput
-              id="password"
+              id='password'
               type={isPasswordVisible ? 'text' : 'password'}
               $hasError={Boolean(passwordErrorMessage)}
               value={password}
@@ -242,10 +242,10 @@ export default function SignupPage() {
                   setHasPasswordMismatchError(password !== passwordCheck);
                 }
               }}
-              placeholder="비밀번호를 입력해주세요"
+              placeholder='비밀번호를 입력해주세요'
             />
             <S.TogglePasswordButton
-              type="button"
+              type='button'
               onClick={() => setIsPasswordVisible((prev) => !prev)}
               aria-label={
                 isPasswordVisible ? '비밀번호 숨기기' : '비밀번호 보기'
@@ -257,7 +257,7 @@ export default function SignupPage() {
                     ? '/images/password-eye-on.svg'
                     : '/images/password-eye-off.svg'
                 }
-                alt=""
+                alt=''
                 width={20}
                 height={20}
               />
@@ -265,10 +265,10 @@ export default function SignupPage() {
           </S.PasswordField>
           <S.ErrorText>{passwordErrorMessage || ' '}</S.ErrorText>
 
-          <S.Label htmlFor="passwordCheck">비밀번호 확인</S.Label>
+          <S.Label htmlFor='passwordCheck'>비밀번호 확인</S.Label>
           <S.PasswordField>
             <S.PasswordInput
-              id="passwordCheck"
+              id='passwordCheck'
               type={isPasswordCheckVisible ? 'text' : 'password'}
               $hasError={Boolean(passwordCheckErrorMessage)}
               value={passwordCheck}
@@ -285,10 +285,10 @@ export default function SignupPage() {
                   setHasPasswordMismatchError(password !== passwordCheck);
                 }
               }}
-              placeholder="비밀번호를 다시 입력해주세요"
+              placeholder='비밀번호를 다시 입력해주세요'
             />
             <S.TogglePasswordButton
-              type="button"
+              type='button'
               onClick={() => setIsPasswordCheckVisible((prev) => !prev)}
               aria-label={
                 isPasswordCheckVisible
@@ -302,7 +302,7 @@ export default function SignupPage() {
                     ? '/images/password-eye-on.svg'
                     : '/images/password-eye-off.svg'
                 }
-                alt=""
+                alt=''
                 width={20}
                 height={20}
               />
@@ -310,15 +310,15 @@ export default function SignupPage() {
           </S.PasswordField>
           <S.ErrorText>{passwordCheckErrorMessage || ' '}</S.ErrorText>
 
-          <S.TermsLabel htmlFor="terms">
+          <S.TermsLabel htmlFor='terms'>
             <S.TermsCheckbox
-              id="terms"
-              type="checkbox"
+              id='terms'
+              type='checkbox'
               checked={isTermsChecked}
               onChange={(e) => setIsTermsChecked(e.target.checked)}
             />
             <S.TermsText>
-              <S.TermsLink href="/terms?from=signup" onClick={saveDraft}>
+              <S.TermsLink href='/terms?from=signup' onClick={saveDraft}>
                 이용약관
               </S.TermsLink>
               에
@@ -327,7 +327,7 @@ export default function SignupPage() {
           </S.TermsLabel>
 
           <S.SignupButton
-            type="submit"
+            type='submit'
             disabled={isSubmitting || !isFormComplete}
           >
             {isSubmitting ? '가입 중' : '회원가입'}
@@ -336,7 +336,7 @@ export default function SignupPage() {
 
         <S.LoginRow>
           <S.HelperText>이미 회원이신가요?</S.HelperText>
-          <S.LoginLink href="/login">로그인하기</S.LoginLink>
+          <S.LoginLink href='/login'>로그인하기</S.LoginLink>
         </S.LoginRow>
       </S.FormSection>
 

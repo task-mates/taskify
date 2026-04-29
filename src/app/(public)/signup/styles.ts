@@ -1,6 +1,6 @@
-import styled from "styled-components";
-import { DEVICE } from "@/src/styles/Breakpoints";
-import Link from "next/link";
+import styled from 'styled-components';
+import { DEVICE } from '@/src/styles/Breakpoints';
+import Link from 'next/link';
 
 export const Container = styled.main`
   width: 100%;
