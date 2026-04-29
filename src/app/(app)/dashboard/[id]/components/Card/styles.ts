@@ -4,7 +4,6 @@ export const Card = styled.article`
   width: 100%;
   padding: 16px;
   border-radius: 20px;
-  border: 1px solid;
   background: #fff;
 
   display: flex;

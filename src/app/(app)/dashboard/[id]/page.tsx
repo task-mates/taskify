@@ -40,35 +40,12 @@ export default async function DashboardPage({ params }: PageProps) {
   );
 
   return (
-    <main
-      style={{
-        padding: '24px',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        overflowY: 'hidden',
-      }}
-    >
-      <h1
-        style={{
-          margin: '0 0 20px 0',
-          fontSize: '28px',
-          fontWeight: 700,
-          color: '#333236',
-        }}
-      >
+    <PageMain>
+      <PageTitle>
+        <ColorDot $color={dashboard.color} />
         {dashboard.title}
-      </h1>
-      <div
-        style={{
-          display: 'flex',
-          gap: '16px',
-          flex: 1,
-          minHeight: 0,
-          overflowX: 'auto',
-          overflowY: 'hidden',
-        }}
-      >
+      </PageTitle>
+      <ColumnList>
         {columnsWithCards.map((column) => (
           <ColumnSection
             key={column.columnId}
@@ -82,16 +59,57 @@ export default async function DashboardPage({ params }: PageProps) {
             <PlusIcon aria-hidden="true" />
           </IconContainer>
         </AddButton>
-      </div>
-    </main>
+      </ColumnList>
+    </PageMain>
   );
 }
+
+export const PageMain = styled.main`
+  padding: 24px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+  background: #e1eaf1;
+`;
+
+export const PageTitle = styled.h1`
+  margin: 0 0 20px 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: #333236;
+  display: flex;
+  align-items: center;
+`;
+
+export const ColorDot = styled.span<{ $color: string }>`
+  width: 18px;
+  height: 18px;
+  margin-right: 12px;
+  border-radius: 50%;
+  background-color: ${({ $color }) => $color};
+  flex-shrink: 0;
+  display: inline-block;
+`;
+
+export const ColumnList = styled.div`
+  display: flex;
+  gap: 16px;
+  flex: 1;
+  min-height: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+`;
 
 export const AddButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  align-self: center;
+
   width: 20px;
+  height: 200px;
   padding: 10px 20px;
   border: 1px solid #d9d9d9;
   border-radius: 8px;

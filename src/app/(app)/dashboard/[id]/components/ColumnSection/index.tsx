@@ -2,6 +2,7 @@ import * as S from '.';
 import Card from '../Card';
 import type { Card as CardInfo } from '@/src/apis/cards/type';
 import PlusIcon from '@/src/components/icons/icon-plus.svg';
+import SettingIcon from '@/src/components/icons/icon-setting.svg';
 
 type ColumnSectionProps = {
   title: string;
@@ -17,8 +18,13 @@ export default function ColumnSection({
   return (
     <S.Section>
       <S.Header>
-        <S.Title>{title}</S.Title>
-        <S.Count>{totalCount}</S.Count>
+        <S.TitleGroup>
+          <S.Title>{title}</S.Title>
+          <S.Count>{totalCount}</S.Count>
+        </S.TitleGroup>
+        <S.Setting>
+          <SettingIcon aria-hidden="true" />
+        </S.Setting>
       </S.Header>
 
       <S.AddButton>
@@ -45,8 +51,6 @@ export const Section = styled.section`
   height: 100%;
   padding: 16px;
   border-radius: 16px;
-  // background: #e1eaf1;
-  border: 1px solid;
 
   display: flex;
   flex-direction: column;
@@ -58,6 +62,13 @@ export const Section = styled.section`
 export const Header = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
+`;
+
+export const TitleGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
 `;
 
 export const Title = styled.h2`
@@ -78,6 +89,11 @@ export const Count = styled.span`
   align-items: center;
   justify-content: center;
   padding: 0 6px;
+`;
+
+export const Setting = styled.div`
+  cursor: pointer;
+  margin-top: 4px;
 `;
 
 export const CardList = styled.div`
