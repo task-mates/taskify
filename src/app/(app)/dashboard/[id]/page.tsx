@@ -25,18 +25,16 @@ export default async function DashboardPage({ params }: PageProps) {
   const columnsResponse = await columnsApi.getList(dashboardId);
 
   const columnsWithCards: ColumnWithCards[] = await Promise.all(
-    columnsResponse.data.map(async (column) => {
-      const cardsResponse = await cardsApi.getList({
-        columnId: column.id,
-        size: 20,
-      });
-      return {
-        columnId: column.id,
-        title: column.title,
-        totalCount: cardsResponse.totalCount,
-        cards: cardsResponse.cards,
-      };
-    })
+    columnsResponse.data.map((column) =>
+      cardsApi
+        .getList({ columnId: column.id, size: 20 })
+        .then((cardsResponse) => ({
+          columnId: column.id,
+          title: column.title,
+          totalCount: cardsResponse.totalCount,
+          cards: cardsResponse.cards,
+        }))
+    )
   );
 
   return (
