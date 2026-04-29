@@ -9,7 +9,7 @@ import CrownIcon from '@/src/components/icons/icon-crown.svg';
 import * as S from './styles';
 import type { SidebarProps } from '@/src/components/layout/Sidebar/type';
 import type { Dashboard } from '@/src/apis/dashboards/type';
-import { dashboardsApi } from '@/src/apis/dashboards';
+import { getDashboardList } from '@/src/apis/dashboards';
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
@@ -24,7 +24,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       setIsError(false);
 
       try {
-        const { dashboards } = await dashboardsApi.getList({ size: 20 }); //TODO 추후 무한 스크롤 구현을 위한 임의의 size 설정
+        const { dashboards } = await getDashboardList({ size: 20 }); //TODO 추후 무한 스크롤 구현을 위한 임의의 size 설정
         setDashboards(dashboards);
       } catch (e) {
         console.error(e);
