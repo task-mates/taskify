@@ -302,7 +302,10 @@ export const TagInput = styled.input`
   }
 `;
 
-export const SelectedTagBadge = styled.span`
+export const SelectedTagBadge = styled.span<{
+  $backgroundColor: string;
+  $color: string;
+}>`
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
@@ -313,8 +316,8 @@ export const SelectedTagBadge = styled.span`
 
   font-size: 13px;
   font-weight: 600;
-  color: #2f6f4e;
-  background: #e7f3ea;
+  color: ${({ $color }) => $color};
+  background: ${({ $backgroundColor }) => $backgroundColor};
 `;
 
 export const TagRemoveButton = styled.button`
@@ -498,16 +501,10 @@ export const TagCreateButton = styled.button`
   }
 `;
 
-export const TagBadge = styled.span`
-  // display: inline-flex;
-  // align-items: center;
-  // padding: 4px 6px;
-  // border-radius: 6px;
-  // font-size: 13px;
-  // font-weight: 600;
-  // color: #cfe1fd;
-  // background: #2563eb;
-
+export const TagBadge = styled.span<{
+  $backgroundColor: string;
+  $color: string;
+}>`
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
@@ -517,8 +514,8 @@ export const TagBadge = styled.span`
 
   font-size: 13px;
   font-weight: 600;
-  color: #2f6f4e;
-  background: #e7f3ea;
+  color: ${({ $color }) => $color};
+  background: ${({ $backgroundColor }) => $backgroundColor};
 `;
 
 export const PreviewImageBox = styled.div`

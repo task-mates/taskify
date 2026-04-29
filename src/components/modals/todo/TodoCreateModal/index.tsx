@@ -14,6 +14,29 @@ import * as S from './styles';
 import UploadImage from '@/src/components/icons/icon-uploadimg.svg';
 import DeleteIcon from '@/src/components/icons/icon-delete.svg';
 
+const TAG_COLORS = [
+  { backgroundColor: '#F2F2F2', color: '#666666' }, // 회색
+  { backgroundColor: '#F4E3D7', color: '#8A4B2A' }, // 갈색
+  { backgroundColor: '#FADFCB', color: '#B85C2E' }, // 주황색
+  { backgroundColor: '#F8E7B8', color: '#A36A00' }, // 노란색
+  { backgroundColor: '#DDEFE3', color: '#2F6F4E' }, // 초록색
+  { backgroundColor: '#D8ECFF', color: '#2D6FA3' }, // 파란색
+  { backgroundColor: '#E7DDF7', color: '#6E4BA3' }, // 보라색
+  { backgroundColor: '#F7DDE8', color: '#A33E68' }, // 분홍색
+  { backgroundColor: '#F9D9D6', color: '#B84038' }, // 빨간색
+];
+
+type TagColor = {
+  backgroundColor: string;
+  color: string;
+};
+
+type Tag = {
+  name: string;
+  backgroundColor: string;
+  color: string;
+};
+
 const TODO_CREATE_FORM_ID = 'todo-create-form';
 
 export default function TodoCreateModal({
@@ -31,11 +54,14 @@ export default function TodoCreateModal({
   const selectBoxRef = useRef<HTMLDivElement | null>(null);
 
   const [tagInput, setTagInput] = useState('');
-  const [tags, setTags] = useState<string[]>([]);
-  const [tagOptions, setTagOptions] = useState<string[]>([]);
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [tagOptions, setTagOptions] = useState<Tag[]>([]);
   const [isTagOpen, setIsTagOpen] = useState(false);
   const tagBoxRef = useRef<HTMLDivElement | null>(null);
   const [openedTagMenu, setOpenedTagMenu] = useState<string | null>(null);
+  const [previewTagColor, setPreviewTagColor] = useState<TagColor | null>(null);
+  const currentInputColorRef = useRef<TagColor | null>(null);
+  const lastTagColorRef = useRef<TagColor | null>(null);
 
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
@@ -70,7 +96,7 @@ export default function TodoCreateModal({
         description,
         dueDate: dueDate ? dueDate.toISOString() : undefined,
         assigneeUserId: selectedAssignee?.userId,
-        tags,
+        tags: tags.map((tag) => tag.name),
         imageUrl,
       });
 
@@ -114,25 +140,56 @@ export default function TodoCreateModal({
     };
   }, []);
 
+  const getRandomTagColor = (excludeColor?: TagColor | null) => {
+    const availableColors = excludeColor
+      ? TAG_COLORS.filter(
+          (tagColor) =>
+            tagColor.backgroundColor !== excludeColor.backgroundColor ||
+            tagColor.color !== excludeColor.color
+        )
+      : TAG_COLORS;
+
+    const randomIndex = Math.floor(Math.random() * availableColors.length);
+    return availableColors[randomIndex];
+  };
+
   const handleAddTag = (value = tagInput) => {
     const trimmedTag = value.trim();
 
     if (!trimmedTag) return;
 
+    const existingOption = tagOptions.find((tag) => tag.name === trimmedTag);
+
+    const tagColor =
+      currentInputColorRef.current ??
+      getRandomTagColor(lastTagColorRef.current);
+
+    const newTag = existingOption ?? {
+      name: trimmedTag,
+      ...tagColor,
+    };
+
     setTags((prev) =>
-      prev.includes(trimmedTag) ? prev : [...prev, trimmedTag]
+      prev.some((tag) => tag.name === trimmedTag) ? prev : [...prev, newTag]
     );
 
     setTagOptions((prev) =>
-      prev.includes(trimmedTag) ? prev : [...prev, trimmedTag]
+      prev.some((tag) => tag.name === trimmedTag) ? prev : [...prev, newTag]
     );
 
+    lastTagColorRef.current = {
+      backgroundColor: newTag.backgroundColor,
+      color: newTag.color,
+    };
+
+    currentInputColorRef.current = null;
+    setPreviewTagColor(null);
     setTagInput('');
     setIsTagOpen(true);
   };
 
   const handleRemoveTag = (targetTag: string) => {
-    setTags((prev) => prev.filter((tag) => tag !== targetTag));
+    setTags((prev) => prev.filter((tag) => tag.name !== targetTag));
   };
 
   const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -149,15 +206,15 @@ export default function TodoCreateModal({
   };
 
   const filteredTagOptions = tagInput.trim()
-    ? tagOptions.filter((tag) => tag.includes(tagInput.trim()))
+    ? tagOptions.filter((tag) => tag.name.includes(tagInput.trim()))
     : tagOptions;
 
   const shouldShowCreateOption =
-    tagInput.trim() && !tags.includes(tagInput.trim());
+    tagInput.trim() && !tagOptions.some((tag) => tag.name === tagInput.trim());
 
   const handleDeleteTagOption = (targetTag: string) => {
-    setTagOptions((prev) => prev.filter((tag) => tag !== targetTag));
-    setTags((prev) => prev.filter((tag) => tag !== targetTag));
+    setTagOptions((prev) => prev.filter((tag) => tag.name !== targetTag));
+    setTags((prev) => prev.filter((tag) => tag.name !== targetTag));
     setOpenedTagMenu(null);
   };
 
@@ -315,15 +372,18 @@ export default function TodoCreateModal({
               }}
             >
               {tags.map((tag) => (
-                <S.SelectedTagBadge key={tag}>
-                  {tag}
+                <S.SelectedTagBadge
+                  key={tag.name}
+                  $backgroundColor={tag.backgroundColor}
+                  $color={tag.color}
+                >
+                  {tag.name}
                   <S.TagRemoveButton
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleRemoveTag(tag);
+                      handleRemoveTag(tag.name);
                     }}
-                    aria-label={`${tag} 태그 삭제`}
                   >
                     ×
                   </S.TagRemoveButton>
@@ -337,7 +397,26 @@ export default function TodoCreateModal({
                 value={tagInput}
                 onFocus={() => setIsTagOpen(true)}
                 onChange={(e) => {
-                  setTagInput(e.target.value);
+                  const nextValue = e.target.value;
+
+                  if (!nextValue) {
+                    currentInputColorRef.current = null;
+                    setPreviewTagColor(null);
+                    setTagInput('');
+                    setIsTagOpen(true);
+                    return;
+                  }
+
+                  if (!currentInputColorRef.current) {
+                    const nextColor = getRandomTagColor(
+                      lastTagColorRef.current
+                    );
+
+                    currentInputColorRef.current = nextColor;
+                    setPreviewTagColor(nextColor);
+                  }
+
+                  setTagInput(nextValue);
                   setIsTagOpen(true);
                 }}
                 onKeyDown={handleTagKeyDown}
@@ -350,8 +429,8 @@ export default function TodoCreateModal({
 
                 {filteredTagOptions.map((tag) => (
                   <S.TagOptionItem
-                    key={tag}
-                    $isMenuOpen={openedTagMenu === tag}
+                    key={tag.name}
+                    $isMenuOpen={openedTagMenu === tag.name}
                     $hasOpenedMenu={!!openedTagMenu}
                     onClick={() => {
                       if (openedTagMenu) {
@@ -368,10 +447,15 @@ export default function TodoCreateModal({
                           return;
                         }
                         e.stopPropagation();
-                        handleAddTag(tag);
+                        handleAddTag(tag.name);
                       }}
                     >
-                      <S.TagBadge>{tag}</S.TagBadge>
+                      <S.TagBadge
+                        $backgroundColor={tag.backgroundColor}
+                        $color={tag.color}
+                      >
+                        {tag.name}
+                      </S.TagBadge>
                     </S.TagOptionButton>
 
                     <S.TagMoreButtonWrapper
@@ -383,19 +467,19 @@ export default function TodoCreateModal({
                         onClick={(e) => {
                           e.stopPropagation();
                           setOpenedTagMenu((prev) =>
-                            prev === tag ? null : tag
+                            prev === tag.name ? null : tag.name
                           );
                         }}
                       >
                         ⋯
                       </S.TagMoreButton>
 
-                      {openedTagMenu === tag && (
+                      {openedTagMenu === tag.name && (
                         <S.TagDeletePopup>
                           <S.TagDeleteButton
                             type="button"
                             onClick={() => {
-                              handleDeleteTagOption(tag);
+                              handleDeleteTagOption(tag.name);
                             }}
                           >
                             <DeleteIcon />
@@ -412,7 +496,16 @@ export default function TodoCreateModal({
                     type="button"
                     onClick={() => handleAddTag()}
                   >
-                    생성 <S.TagBadge>{tagInput}</S.TagBadge>
+                    생성{' '}
+                    <S.TagBadge
+                      $backgroundColor={
+                        previewTagColor?.backgroundColor ??
+                        TAG_COLORS[0].backgroundColor
+                      }
+                      $color={previewTagColor?.color ?? TAG_COLORS[0].color}
+                    >
+                      {tagInput}
+                    </S.TagBadge>
                   </S.TagCreateButton>
                 )}
               </S.TagOptionBox>
