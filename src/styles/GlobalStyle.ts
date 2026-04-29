@@ -140,12 +140,12 @@ const GlobalStyle = createGlobalStyle`
     --sm-13px-semibold: var(--fw-semibold) var(--font-sm)/var(--lh-normal) var(--font-main);
 
     --md-14px-medium: var(--fw-medium) var(--font-md)/var(--lh-normal) var(--font-main);
-    --md-14px-medium-150%: var(--fw-medium) var(--font-md)/var(--lh-relaxed) var(--font-main);
+    --md-14px-medium-150: var(--fw-medium) var(--font-md)/var(--lh-relaxed) var(--font-main);
 
     --lg-16px-medium: var(--fw-medium) var(--font-lg)/var(--lh-normal) var(--font-main);
     --lg-16px-semibold: var(--fw-semibold) var(--font-lg)/var(--lh-normal) var(--font-main);
     --lg-16px-bold: var(--fw-bold) var(--font-lg)/var(--lh-normal) var(--font-main);
-    --lg-16px-medium-150%: var(--fw-medium) var(--font-lg)/var(--lh-relaxed) var(--font-main);
+    --lg-16px-medium-150: var(--fw-medium) var(--font-lg)/var(--lh-relaxed) var(--font-main);
 
     --2lg-18px-medium: var(--fw-medium) var(--font-2lg)/var(--lh-normal) var(--font-main);
     --2lg-18px-semibold: var(--fw-semibold) var(--font-2lg)/var(--lh-normal) var(--font-main);
