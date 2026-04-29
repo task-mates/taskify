@@ -346,7 +346,6 @@ export const TagOptionBox = styled.div`
 `;
 
 export const TagOptionTitle = styled.p`
-  margin-bottom: 8px;
   font-size: 12px;
   font-weight: 600;
   color: #404040;
@@ -359,6 +358,10 @@ export const TagOptionButton = styled.button`
   width: 100%;
   padding: 8px;
   border-radius: 8px;
+
+  &:first-of-type {
+    margin-top: 8px;
+  }
 
   &:hover {
     background: rgba(159, 166, 178, 0.1);
