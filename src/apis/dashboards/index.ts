@@ -1,34 +1,34 @@
-import instance from "@/src/apis/instance";
+import instance from '@/src/apis/instance';
 import {
   CreateDashboardRequest,
   Dashboard,
   GetDashboardListRequest,
   GetDashboardListResponse,
   UpdateDashboardRequest,
-} from "@/src/apis/dashboards/type";
+} from '@/src/apis/dashboards/type';
 
 export const dashboardsApi = {
   create: async (body: CreateDashboardRequest) => {
-    const { data } = await instance.post<Dashboard>("/dashboards", body);
+    const { data } = await instance.post<Dashboard>('/dashboards', body);
     return data;
   },
 
   getById: async (dashboardId: number) => {
     const { data } = await instance.get<Dashboard>(
-      `/dashboards/${dashboardId}`,
+      `/dashboards/${dashboardId}`
     );
     return data;
   },
 
   getList: async (params: GetDashboardListRequest) => {
     const { data } = await instance.get<GetDashboardListResponse>(
-      "/dashboards",
+      '/dashboards',
       {
         params: {
-          navigationMethod: "infiniteScroll",
+          navigationMethod: 'infiniteScroll',
           ...params,
         },
-      },
+      }
     );
     return data;
   },
@@ -36,7 +36,7 @@ export const dashboardsApi = {
   update: async (dashboardId: number, body: UpdateDashboardRequest) => {
     const { data } = await instance.put<Dashboard>(
       `/dashboards/${dashboardId}`,
-      body,
+      body
     );
     return data;
   },

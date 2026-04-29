@@ -117,30 +117,22 @@ const GlobalStyle = createGlobalStyle`
     /* --- Font --- */
     --font-main: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
 
-    --xs-12px-medium: 500 12px/normal Pretendard;
-    --xs-12px-semibold: 600 12px/normal Pretendard;
-    --sm-13px-medium: 500 13px/normal Pretendard;
-    --sm-13px-semibold: 600 13px/normal Pretendard;
-    --md-14px-medium: 500 14px/normal Pretendard;
-    --md-14px-medium-150: 500 14px/1.5rem Pretendard;
-    --lg-14px-semibold: 600 14px/normal Pretendard;
-    --lg-14px-bold: 700 14px/normal Pretendard;
-    --lg-16px-medium: 500 16px/normal Pretendard;
-    --lg-16px-semibold: 600 16px/normal Pretendard;
-    --lg-16px-medium-150: 500 16px/1.5rem Pretendard;
-    --lg-16px-bold: 700 16px/normal Pretendard;
-    --2lg-18px-medium: 500 18px/normal Pretendard;
-    --2lg-18px-semibold: 600 18px/normal Pretendard;
-    --2lg-18px-bold: 700 18px/normal Pretendard;
-    --xl-20px-medium: 500 20px/normal Pretendard;
-    --xl-20px-semibold: 600 20px/normal Pretendard;
-    --xl-20px-bold: 700 20px/normal Pretendard;
-    --2xl-24px-medium: 500 24px/normal Pretendard;
-    --2xl-24px-semibold: 600 24px/normal Pretendard;
-    --2xl-24px-bold: 700 24px/normal Pretendard;
-    --3xl-32px-semibold: 600 32px/normal Pretendard;
-    --3xl-32px-bold: 700 32px/normal Pretendard;
-}
+    --font-xs: 12px;
+    --font-sm: 13px;
+    --font-md: 14px;
+    --font-lg: 16px;
+    --font-2lg: 18px;
+    --font-xl: 20px;
+    --font-2xl: 24px;
+    --font-3xl: 32px;
+
+    --fw-medium: 500;
+    --fw-semibold: 600;
+    --fw-bold: 700;
+
+    --lh-normal: normal;
+    --lh-relaxed: 1.5;
+  }
 
   *, *::before, *::after {
     box-sizing: border-box;
@@ -172,21 +164,23 @@ const GlobalStyle = createGlobalStyle`
     cursor: pointer;
   }
 
-  ul, li{
+  form {
+    width: 100%;
+  }
+
+  ul, ol{
     list-style: none;
+    margin: 0;
+    padding: 0;
   }
 
   a {
     text-decoration: none;
   }
 
-  img, picture, video, svg {
+  img, picture, video{
     display: block;
     max-width: 100%;
-  }
-
-  form {
-    width: 100%;
   }
 `;
 
