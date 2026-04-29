@@ -103,9 +103,7 @@ export const AddButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-
   align-self: center;
-
   width: 20px;
   height: 200px;
   padding: 10px 20px;

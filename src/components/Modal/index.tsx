@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useScrollLock } from '@/src/hooks/useScrollLock';
 import { ModalProps } from './type';
@@ -15,15 +15,23 @@ export default function Modal({
   labelledById,
   overlayVariant = 'default',
 }: ModalProps) {
+  const [mounted, setMounted] = useState(false); // [추가]
+
   useScrollLock();
 
   const dialogRef = useRef<HTMLDivElement>(null);
   const onCloseRef = useRef(onClose);
   useEffect(() => {
+    setMounted(true); // [추가]
+  }, []);
+
+  useEffect(() => {
     onCloseRef.current = onClose;
   }, [onClose]);
 
   useEffect(() => {
+    if (!mounted) return; // [추가]
+
     const previouslyFocused = document.activeElement as HTMLElement;
     const focusable =
       dialogRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS);
@@ -31,9 +39,11 @@ export default function Modal({
     return () => {
       previouslyFocused?.focus();
     };
-  }, []);
+  }, [mounted]); //[수정]
 
   useEffect(() => {
+    if (!mounted) return; // [추가] mounted 전에는 document 사용 X
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         onCloseRef.current();
@@ -64,11 +74,13 @@ export default function Modal({
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [mounted]); //[수정]
 
   const handleOverlayClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) onClose();
   };
+
+  if (!mounted) return null; // [추가]
 
   return createPortal(
     <S.Overlay onClick={handleOverlayClick} $overlayVariant={overlayVariant}>

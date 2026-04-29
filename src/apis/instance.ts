@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
+import { getAccessToken } from '@/src/utils/authTokenStorage';
 
 const instance: AxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
@@ -8,7 +9,12 @@ const instance: AxiosInstance = axios.create({
   },
 });
 
-// instance.interceptors.request.use();
-// instance.interceptors.response.use();
+instance.interceptors.request.use((config) => {
+  const token = getAccessToken();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 export default instance;
