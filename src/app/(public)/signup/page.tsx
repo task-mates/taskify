@@ -3,170 +3,58 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { FormEvent, useEffect, useState } from 'react';
-import axios from 'axios';
+import { FormEvent, useState } from 'react';
 import Modal from '@/src/components/Modal';
-import { usersApi } from '@/src/apis/users';
-import {
-  AUTH_VALIDATION_MESSAGES,
-  isValidEmail,
-  isValidPassword,
-} from '@/src/utils/authValidation';
 import * as S from './styles';
-import type { ModalType, SignupDraft } from './type';
-// 회원가입 입력값 임시저장을 위한 키
-const SIGNUP_DRAFT_KEY = 'taskify-signup-draft';
-const ERROR_MESSAGES = {
-  emailRequired: '이메일을 입력해 주세요.',
-  emailInvalid: AUTH_VALIDATION_MESSAGES.emailInvalid,
-  emailDuplicate: '이미 사용중인 이메일입니다.',
-  nameRequired: '이름을 입력해 주세요.',
-  passwordRequired: '비밀번호를 입력해 주세요.',
-  passwordInvalid: AUTH_VALIDATION_MESSAGES.passwordInvalid,
-  passwordCheckRequired: '비밀번호 확인을 입력해 주세요.',
-  passwordMismatch: '비밀번호가 일치하지 않습니다.',
-} as const;
-
-const DUPLICATE_EMAIL_ERROR_CODES = ['DUPLICATE_EMAIL', 'EMAIL_ALREADY_EXISTS'];
-
-const isDuplicateEmailError = (
-  status?: number,
-  errorCode?: string
-) => {
-  return (
-    status === 409 ||
-    (typeof errorCode === 'string' &&
-      DUPLICATE_EMAIL_ERROR_CODES.includes(errorCode))
-  );
-};
+import type { ModalType } from './type';
+import { MODAL_MESSAGES } from './constants';
+import { useSignupForm } from '@/src/hooks/useSignupForm';
+import { useSignupSubmit } from '@/src/hooks/useSignupSubmit';
 
 export default function SignupPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordCheck, setPasswordCheck] = useState('');
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isPasswordCheckVisible, setIsPasswordCheckVisible] = useState(false);
-  const [emailTouched, setEmailTouched] = useState(false);
-  const [nameTouched, setNameTouched] = useState(false);
-  const [passwordTouched, setPasswordTouched] = useState(false);
-  const [passwordCheckTouched, setPasswordCheckTouched] = useState(false);
-  const [isTermsChecked, setIsTermsChecked] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [hasEmailDuplicateError, setHasEmailDuplicateError] = useState(false);
-  const [hasPasswordMismatchError, setHasPasswordMismatchError] =
-    useState(false);
   const [modalType, setModalType] = useState<ModalType>(null);
-  const isPasswordMatch = password === passwordCheck;
-  const hasEmailRequiredError = emailTouched && email.trim().length === 0;
-  const hasEmailFormatError =
-    emailTouched && email.trim().length > 0 && !isValidEmail(email);
-  const hasNameRequiredError = nameTouched && name.trim().length === 0;
-  const hasPasswordRequiredError = passwordTouched && password.length === 0;
-  const hasPasswordFormatError =
-    passwordTouched && password.length > 0 && !isValidPassword(password);
-  const hasPasswordCheckRequiredError =
-    passwordCheckTouched && passwordCheck.length === 0;
-  const emailErrorMessage = hasEmailDuplicateError
-    ? ERROR_MESSAGES.emailDuplicate
-    : hasEmailRequiredError
-      ? ERROR_MESSAGES.emailRequired
-    : hasEmailFormatError
-      ? ERROR_MESSAGES.emailInvalid
-      : '';
-  const nameErrorMessage = hasNameRequiredError ? ERROR_MESSAGES.nameRequired : '';
-  const passwordErrorMessage = hasPasswordRequiredError
-    ? ERROR_MESSAGES.passwordRequired
-    : hasPasswordFormatError
-      ? ERROR_MESSAGES.passwordInvalid
-      : '';
-  const passwordCheckErrorMessage = hasPasswordCheckRequiredError
-    ? ERROR_MESSAGES.passwordCheckRequired
-    : hasPasswordMismatchError
-      ? ERROR_MESSAGES.passwordMismatch
-      : '';
-  const isFormComplete =
-    email.trim().length > 0 &&
-    name.trim().length > 0 &&
-    password.length > 0 &&
-    passwordCheck.length > 0 &&
-    isTermsChecked;
+  const { isSubmitting, submitSignup } = useSignupSubmit();
+  const {
+    email,
+    name,
+    password,
+    passwordCheck,
+    isPasswordVisible,
+    isPasswordCheckVisible,
+    isTermsChecked,
+    hasEmailDuplicateError,
+    hasPasswordMismatchError,
+    emailErrorMessage,
+    nameErrorMessage,
+    passwordErrorMessage,
+    passwordCheckErrorMessage,
+    isFormComplete,
+    isPasswordMatch,
+    updateField,
+    touchField,
+    setIsTermsChecked,
+    setHasEmailDuplicateError,
+    setHasPasswordMismatchError,
+    setIsPasswordVisible,
+    setIsPasswordCheckVisible,
+    markAllTouched,
+    saveDraft,
+  } = useSignupForm();
 
-  useEffect(() => {
-    try {
-      const raw = sessionStorage.getItem(SIGNUP_DRAFT_KEY);
-      if (!raw) {
-        return;
-      }
-
-      const draft = JSON.parse(raw) as Partial<SignupDraft>;
-      setEmail(draft.email ?? '');
-      setName(draft.name ?? '');
-      setIsTermsChecked(Boolean(draft.isTermsChecked));
-    } catch {
-      sessionStorage.removeItem(SIGNUP_DRAFT_KEY);
-    }
-  }, []);
-
-  const saveDraft = () => {
-    const draft: SignupDraft = {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    void submitSignup({
       email,
       name,
-      isTermsChecked,
-    };
-    sessionStorage.setItem(SIGNUP_DRAFT_KEY, JSON.stringify(draft));
-  };
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setEmailTouched(true);
-    setNameTouched(true);
-    setPasswordTouched(true);
-    setPasswordCheckTouched(true);
-
-    if (isSubmitting || !isFormComplete) {
-      return;
-    }
-
-    if (!isPasswordMatch) {
-      setHasPasswordMismatchError(true);
-      return;
-    }
-
-    try {
-      setIsSubmitting(true);
-      setHasEmailDuplicateError(false);
-      setHasPasswordMismatchError(false);
-      await usersApi.signUp({
-        email,
-        nickname: name,
-        password,
-      });
-      sessionStorage.removeItem(SIGNUP_DRAFT_KEY);
-      setModalType('success');
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const status = error.response?.status;
-        const errorCode =
-          typeof error.response?.data === 'object' &&
-          error.response?.data !== null &&
-          'code' in error.response.data &&
-          typeof error.response.data.code === 'string'
-            ? error.response.data.code
-            : undefined;
-
-        if (isDuplicateEmailError(status, errorCode)) {
-          setHasEmailDuplicateError(true);
-          setModalType('duplicate');
-          return;
-        }
-      }
-
-      setModalType('error');
-    } finally {
-      setIsSubmitting(false);
-    }
+      password,
+      isFormComplete,
+      isPasswordMatch,
+      markAllTouched,
+      setHasEmailDuplicateError,
+      setHasPasswordMismatchError,
+      setModalType,
+    });
   };
 
   const handleModalConfirm = () => {
@@ -200,12 +88,12 @@ export default function SignupPage() {
             $hasError={Boolean(emailErrorMessage)}
             value={email}
             onChange={(e) => {
-              setEmail(e.target.value);
+              updateField('email', e.target.value);
               if (hasEmailDuplicateError) {
                 setHasEmailDuplicateError(false);
               }
             }}
-            onBlur={() => setEmailTouched(true)}
+            onBlur={() => touchField('email')}
             placeholder='이메일을 입력해주세요'
           />
           <S.ErrorText>{emailErrorMessage || ' '}</S.ErrorText>
@@ -216,8 +104,8 @@ export default function SignupPage() {
             type='text'
             $hasError={Boolean(nameErrorMessage)}
             value={name}
-            onChange={(e) => setName(e.target.value)}
-            onBlur={() => setNameTouched(true)}
+            onChange={(e) => updateField('name', e.target.value)}
+            onBlur={() => touchField('name')}
             placeholder='이름을 입력해주세요'
           />
           <S.ErrorText>{nameErrorMessage || ' '}</S.ErrorText>
@@ -231,13 +119,13 @@ export default function SignupPage() {
               value={password}
               onChange={(e) => {
                 const nextPassword = e.target.value;
-                setPassword(nextPassword);
+                updateField('password', nextPassword);
                 if (hasPasswordMismatchError) {
                   setHasPasswordMismatchError(nextPassword !== passwordCheck);
                 }
               }}
               onBlur={() => {
-                setPasswordTouched(true);
+                touchField('password');
                 if (passwordCheck.length > 0) {
                   setHasPasswordMismatchError(password !== passwordCheck);
                 }
@@ -274,13 +162,13 @@ export default function SignupPage() {
               value={passwordCheck}
               onChange={(e) => {
                 const nextPasswordCheck = e.target.value;
-                setPasswordCheck(nextPasswordCheck);
+                updateField('passwordCheck', nextPasswordCheck);
                 if (hasPasswordMismatchError) {
                   setHasPasswordMismatchError(password !== nextPasswordCheck);
                 }
               }}
               onBlur={() => {
-                setPasswordCheckTouched(true);
+                touchField('passwordCheck');
                 if (password.length > 0 && passwordCheck.length > 0) {
                   setHasPasswordMismatchError(password !== passwordCheck);
                 }
@@ -344,9 +232,7 @@ export default function SignupPage() {
         <Modal onClose={() => setModalType(null)}>
           <S.ModalCard>
             <S.ModalTitle>
-              {modalType === 'success' && '가입이 완료되었습니다.'}
-              {modalType === 'duplicate' && '이미 사용 중인 이메일입니다.'}
-              {modalType === 'error' && '회원가입 중 오류가 발생했습니다.'}
+              {MODAL_MESSAGES[modalType]}
             </S.ModalTitle>
             <S.ModalButton onClick={handleModalConfirm}>확인</S.ModalButton>
           </S.ModalCard>
