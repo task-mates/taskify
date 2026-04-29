@@ -31,6 +31,9 @@ export default function TodoCreateModal({
 
   const [tagInput, setTagInput] = useState('');
   const [tags, setTags] = useState<string[]>([]);
+  const [tagOptions, setTagOptions] = useState<string[]>([]);
+  const [isTagOpen, setIsTagOpen] = useState(false);
+  const tagBoxRef = useRef<HTMLDivElement | null>(null);
 
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
