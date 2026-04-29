@@ -12,6 +12,7 @@ import type { TodoCreateModalProps } from './type';
 import TodoBaseModal from '../common/TodoBaseModal';
 import * as S from './styles';
 import UploadImage from '@/src/components/icons/icon-uploadimg.svg';
+import DeleteIcon from '@/src/components/icons/icon-delete.svg';
 
 const TODO_CREATE_FORM_ID = 'todo-create-form';
 
@@ -34,6 +35,7 @@ export default function TodoCreateModal({
   const [tagOptions, setTagOptions] = useState<string[]>([]);
   const [isTagOpen, setIsTagOpen] = useState(false);
   const tagBoxRef = useRef<HTMLDivElement | null>(null);
+  const [openedTagMenu, setOpenedTagMenu] = useState<string | null>(null);
 
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
@@ -99,6 +101,7 @@ export default function TodoCreateModal({
     const handleClickOutside = (e: MouseEvent) => {
       if (tagBoxRef.current && !tagBoxRef.current.contains(e.target as Node)) {
         setIsTagOpen(false);
+        setOpenedTagMenu(null);
       }
     };
 
@@ -130,13 +133,6 @@ export default function TodoCreateModal({
     setTags((prev) => prev.filter((tag) => tag !== targetTag));
   };
 
-  // const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-  //   if (e.nativeEvent.isComposing) return;
-  //   if (e.key !== 'Enter') return;
-
-  //   e.preventDefault();
-  //   handleAddTag();
-  // };
   const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.nativeEvent.isComposing) return;
 
@@ -156,6 +152,12 @@ export default function TodoCreateModal({
 
   const shouldShowCreateOption =
     tagInput.trim() && !tags.includes(tagInput.trim());
+
+  const handleDeleteTagOption = (targetTag: string) => {
+    setTagOptions((prev) => prev.filter((tag) => tag !== targetTag));
+    setTags((prev) => prev.filter((tag) => tag !== targetTag));
+    setOpenedTagMenu(null);
+  };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -249,7 +251,6 @@ export default function TodoCreateModal({
                 $selected={!!selectedAssignee}
                 $open={isAssigneeOpen}
               >
-                {/* {selectedAssignee ? selectedAssignee.nickname : '담당자 선택'} */}
                 {selectedAssignee ? (
                   <S.SelectedAssignee>
                     <S.AssigneeAvatar
@@ -278,7 +279,6 @@ export default function TodoCreateModal({
                             setIsAssigneeOpen(false);
                           }}
                         >
-                          {/* {member.nickname} */}
                           <S.AssigneeAvatar $imageUrl={member.profileImageUrl}>
                             {!member.profileImageUrl && member.nickname}
                           </S.AssigneeAvatar>
@@ -295,9 +295,23 @@ export default function TodoCreateModal({
 
         <S.Field>
           <S.Label htmlFor="tag">태그</S.Label>
-          {/* <S.Input id="tag" type="text" placeholder="태그를 입력해주세요" /> */}
-          <S.TagBox ref={tagBoxRef}>
-            <S.TagInputArea onClick={() => setIsTagOpen(true)}>
+          <S.TagBox
+            ref={tagBoxRef}
+            onClick={() => {
+              if (openedTagMenu) {
+                setOpenedTagMenu(null);
+              }
+            }}
+          >
+            <S.TagInputArea
+              onClick={() => {
+                if (openedTagMenu) {
+                  setOpenedTagMenu(null);
+                }
+
+                setIsTagOpen(true);
+              }}
+            >
               {tags.map((tag) => (
                 <S.SelectedTagBadge key={tag}>
                   {tag}
@@ -333,13 +347,62 @@ export default function TodoCreateModal({
                 <S.TagOptionTitle>옵션 선택 또는 생성</S.TagOptionTitle>
 
                 {filteredTagOptions.map((tag) => (
-                  <S.TagOptionButton
+                  <S.TagOptionItem
                     key={tag}
-                    type="button"
-                    onClick={() => handleAddTag(tag)}
+                    $isMenuOpen={openedTagMenu === tag}
+                    $hasOpenedMenu={!!openedTagMenu}
+                    onClick={() => {
+                      if (openedTagMenu) {
+                        setOpenedTagMenu(null);
+                      }
+                    }}
                   >
-                    <S.TagBadge>{tag}</S.TagBadge>
-                  </S.TagOptionButton>
+                    <S.TagOptionButton
+                      type="button"
+                      $hasOpenedMenu={!!openedTagMenu}
+                      onClick={(e) => {
+                        if (openedTagMenu) {
+                          setOpenedTagMenu(null);
+                          return;
+                        }
+                        e.stopPropagation();
+                        handleAddTag(tag);
+                      }}
+                    >
+                      <S.TagBadge>{tag}</S.TagBadge>
+                    </S.TagOptionButton>
+
+                    <S.TagMoreButtonWrapper
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <S.TagMoreButton
+                        type="button"
+                        aria-label={`${tag} 태그 옵션 열기`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setOpenedTagMenu((prev) =>
+                            prev === tag ? null : tag
+                          );
+                        }}
+                      >
+                        ⋯
+                      </S.TagMoreButton>
+
+                      {openedTagMenu === tag && (
+                        <S.TagDeletePopup>
+                          <S.TagDeleteButton
+                            type="button"
+                            onClick={() => {
+                              handleDeleteTagOption(tag);
+                            }}
+                          >
+                            <DeleteIcon />
+                            삭제
+                          </S.TagDeleteButton>
+                        </S.TagDeletePopup>
+                      )}
+                    </S.TagMoreButtonWrapper>
+                  </S.TagOptionItem>
                 ))}
 
                 {shouldShowCreateOption && (

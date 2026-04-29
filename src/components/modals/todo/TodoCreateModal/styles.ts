@@ -351,20 +351,122 @@ export const TagOptionTitle = styled.p`
   color: #404040;
 `;
 
-export const TagOptionButton = styled.button`
+export const TagMoreButtonWrapper = styled.div`
+  position: absolute;
+  right: 8px;
+`;
+
+export const TagMoreButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+
+  color: #666;
+  font-size: 18px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  opacity: 0;
+  visibility: hidden;
+
+  &:hover {
+    background: rgba(159, 166, 178, 0.2);
+  }
+`;
+
+export const TagOptionItem = styled.div<{
+  $isMenuOpen: boolean;
+  $hasOpenedMenu: boolean;
+}>`
+  position: relative;
+
   display: flex;
   align-items: center;
+  justify-content: space-between;
 
   width: 100%;
-  padding: 8px;
   border-radius: 8px;
 
   &:first-of-type {
     margin-top: 8px;
   }
 
+  cursor: ${({ $hasOpenedMenu }) => ($hasOpenedMenu ? 'default' : 'pointer')};
+
+  background: ${({ $isMenuOpen }) =>
+    $isMenuOpen ? 'rgba(159, 166, 178, 0.1)' : 'transparent'};
+
   &:hover {
-    background: rgba(159, 166, 178, 0.1);
+    background: ${({ $hasOpenedMenu, $isMenuOpen }) =>
+      $hasOpenedMenu && !$isMenuOpen
+        ? 'transparent'
+        : 'rgba(159, 166, 178, 0.1)'};
+  }
+
+  &:hover ${TagMoreButton} {
+    opacity: ${({ $hasOpenedMenu, $isMenuOpen }) =>
+      $hasOpenedMenu && !$isMenuOpen ? 0 : 1};
+    visibility: ${({ $hasOpenedMenu, $isMenuOpen }) =>
+      $hasOpenedMenu && !$isMenuOpen ? 'hidden' : 'visible'};
+  }
+
+  ${({ $isMenuOpen }) =>
+    $isMenuOpen &&
+    `
+      ${TagMoreButton} {
+        opacity: 1;
+        visibility: visible;
+      }
+    `}
+`;
+
+export const TagOptionButton = styled.button<{ $hasOpenedMenu: boolean }>`
+  display: flex;
+  align-items: center;
+
+  flex: 1;
+  min-width: 0;
+  padding: 6px 8px;
+
+  cursor: ${({ $hasOpenedMenu }) => ($hasOpenedMenu ? 'default' : 'pointer')};
+`;
+
+export const TagDeletePopup = styled.div`
+  z-index: 3;
+  position: absolute;
+  right: calc(100% + 4px);
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 96px;
+  padding: 6px;
+
+  border: 1px solid #d6d5d9;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+`;
+
+export const TagDeleteButton = styled.button`
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  color: #e73527;
+  font-size: 14px;
+  font-weight: 500;
+
+  &:hover {
+    background: rgba(231, 53, 39, 0.1);
   }
 `;
 
@@ -395,12 +497,6 @@ export const TagCreateButton = styled.button`
     background: rgba(159, 166, 178, 0.1);
   }
 `;
-
-// export const TagList = styled.div`
-//   display: flex;
-//   flex-wrap: wrap;
-//   gap: 8px;
-// `;
 
 export const TagBadge = styled.span`
   // display: inline-flex;
