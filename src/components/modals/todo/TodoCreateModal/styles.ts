@@ -264,6 +264,68 @@ export const TagBox = styled.div`
   position: relative;
 `;
 
+export const TagInputArea = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+
+  width: 100%;
+  min-height: 54px;
+  padding: 8px 20px;
+  border-radius: 14px;
+  border: 1px solid #d6d5d9;
+  background: #fff;
+
+  cursor: text;
+
+  @media ${DEVICE.mobile} {
+    min-height: 48px;
+    border-radius: 12px;
+  }
+`;
+
+export const TagInput = styled.input`
+  flex: 1 0 120px;
+  min-width: 120px;
+
+  border: none;
+  outline: none;
+  background: transparent;
+
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+
+  &::placeholder {
+    color: #a39fb2;
+  }
+`;
+
+export const SelectedTagBadge = styled.span`
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 4px;
+
+  padding: 4px 6px;
+  border-radius: 6px;
+
+  font-size: 13px;
+  font-weight: 600;
+  color: #2f6f4e;
+  background: #e7f3ea;
+`;
+
+export const TagRemoveButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+`;
+
 export const TagOptionBox = styled.div`
   position: absolute;
   top: calc(100% + 8px);
@@ -275,7 +337,8 @@ export const TagOptionBox = styled.div`
 
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  max-height: 285px;
+  overflow-y: auto;
 
   @media ${DEVICE.mobile} {
     top: calc(100% + 4px);
@@ -283,36 +346,80 @@ export const TagOptionBox = styled.div`
 `;
 
 export const TagOptionTitle = styled.p`
+  margin-bottom: 8px;
   font-size: 12px;
   font-weight: 600;
   color: #404040;
 `;
 
+export const TagOptionButton = styled.button`
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+
+  &:hover {
+    background: rgba(159, 166, 178, 0.1);
+  }
+`;
+
 export const TagCreateButton = styled.button`
+  // margin-top: 8px;
+  // display: inline-flex;
+  // align-items: center;
+  // gap: 8px;
+  // font-size: 13px;
+  // color: #404040;
+  // font-weight: 600;
+
   margin-top: 8px;
-  display: inline-flex;
+
+  display: flex;
   align-items: center;
   gap: 8px;
+
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 8px;
+
   font-size: 13px;
   color: #404040;
   font-weight: 600;
+
+  &:hover {
+    background: rgba(159, 166, 178, 0.1);
+  }
 `;
 
-export const TagList = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-`;
+// export const TagList = styled.div`
+//   display: flex;
+//   flex-wrap: wrap;
+//   gap: 8px;
+// `;
 
 export const TagBadge = styled.span`
+  // display: inline-flex;
+  // align-items: center;
+  // padding: 4px 6px;
+  // border-radius: 6px;
+  // font-size: 13px;
+  // font-weight: 600;
+  // color: #cfe1fd;
+  // background: #2563eb;
+
   display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
+
   padding: 4px 6px;
   border-radius: 6px;
+
   font-size: 13px;
   font-weight: 600;
-  color: #cfe1fd;
-  background: #2563eb;
+  color: #2f6f4e;
+  background: #e7f3ea;
 `;
 
 export const PreviewImageBox = styled.div`

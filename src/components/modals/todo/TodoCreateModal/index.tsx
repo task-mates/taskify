@@ -97,36 +97,65 @@ export default function TodoCreateModal({
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (
-        selectBoxRef.current &&
-        !selectBoxRef.current.contains(e.target as Node)
-      ) {
-        setIsAssigneeOpen(false);
+      if (tagBoxRef.current && !tagBoxRef.current.contains(e.target as Node)) {
+        setIsTagOpen(false);
       }
     };
+
     document.addEventListener('mousedown', handleClickOutside);
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
 
-  const handleAddTag = () => {
-    const trimmedTag = tagInput.trim().replace(/\s/g, '');
+  const handleAddTag = (value = tagInput) => {
+    const trimmedTag = value.trim();
 
     if (!trimmedTag) return;
-    if (tags.includes(trimmedTag)) return;
 
-    setTags((prev) => [...prev, trimmedTag]);
+    setTags((prev) =>
+      prev.includes(trimmedTag) ? prev : [...prev, trimmedTag]
+    );
+
+    setTagOptions((prev) =>
+      prev.includes(trimmedTag) ? prev : [...prev, trimmedTag]
+    );
+
     setTagInput('');
+    setIsTagOpen(true);
   };
 
+  const handleRemoveTag = (targetTag: string) => {
+    setTags((prev) => prev.filter((tag) => tag !== targetTag));
+  };
+
+  // const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  //   if (e.nativeEvent.isComposing) return;
+  //   if (e.key !== 'Enter') return;
+
+  //   e.preventDefault();
+  //   handleAddTag();
+  // };
   const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.nativeEvent.isComposing) return;
-    if (e.key !== 'Enter') return;
 
-    e.preventDefault();
-    handleAddTag();
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddTag();
+    }
+
+    if (e.key === 'Backspace' && !tagInput && tags.length > 0) {
+      setTags((prev) => prev.slice(0, -1));
+    }
   };
+
+  const filteredTagOptions = tagInput.trim()
+    ? tagOptions.filter((tag) => tag.includes(tagInput.trim()))
+    : tagOptions;
+
+  const shouldShowCreateOption =
+    tagInput.trim() && !tags.includes(tagInput.trim());
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -267,47 +296,57 @@ export default function TodoCreateModal({
         <S.Field>
           <S.Label htmlFor="tag">태그</S.Label>
           {/* <S.Input id="tag" type="text" placeholder="태그를 입력해주세요" /> */}
-          <S.TagBox>
-            <S.Input
-              id="tag"
-              type="text"
-              placeholder="태그를 입력해주세요"
-              value={tagInput}
-              onChange={(e) => setTagInput(e.target.value)}
-              onKeyDown={handleTagKeyDown}
-            />
+          <S.TagBox ref={tagBoxRef}>
+            <S.TagInputArea onClick={() => setIsTagOpen(true)}>
+              {tags.map((tag) => (
+                <S.SelectedTagBadge key={tag}>
+                  {tag}
+                  <S.TagRemoveButton
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemoveTag(tag);
+                    }}
+                    aria-label={`${tag} 태그 삭제`}
+                  >
+                    ×
+                  </S.TagRemoveButton>
+                </S.SelectedTagBadge>
+              ))}
 
-            {/* {tagInput && (
+              <S.TagInput
+                id="tag"
+                type="text"
+                placeholder={tags.length === 0 ? '태그를 입력해주세요' : ''}
+                value={tagInput}
+                onFocus={() => setIsTagOpen(true)}
+                onChange={(e) => {
+                  setTagInput(e.target.value);
+                  setIsTagOpen(true);
+                }}
+                onKeyDown={handleTagKeyDown}
+              />
+            </S.TagInputArea>
+
+            {isTagOpen && (
               <S.TagOptionBox>
                 <S.TagOptionTitle>옵션 선택 또는 생성</S.TagOptionTitle>
-                <S.TagCreateButton type="button" onClick={handleAddTag}>
-                  생성 <S.TagBadge>{tagInput}</S.TagBadge>
-                </S.TagCreateButton>
-              </S.TagOptionBox>
-            )}
 
-            {tags.length > 0 && (
-              <S.TagList>
-                {tags.map((tag) => (
-                  <S.TagBadge key={tag}>{tag}</S.TagBadge>
+                {filteredTagOptions.map((tag) => (
+                  <S.TagOptionButton
+                    key={tag}
+                    type="button"
+                    onClick={() => handleAddTag(tag)}
+                  >
+                    <S.TagBadge>{tag}</S.TagBadge>
+                  </S.TagOptionButton>
                 ))}
-              </S.TagList>
-            )} */}
 
-            {(tagInput || tags.length > 0) && (
-              <S.TagOptionBox>
-                <S.TagOptionTitle>옵션 선택 또는 생성</S.TagOptionTitle>
-
-                {tags.length > 0 && (
-                  <S.TagList>
-                    {tags.map((tag) => (
-                      <S.TagBadge key={tag}>{tag}</S.TagBadge>
-                    ))}
-                  </S.TagList>
-                )}
-
-                {tagInput && (
-                  <S.TagCreateButton type="button" onClick={handleAddTag}>
+                {shouldShowCreateOption && (
+                  <S.TagCreateButton
+                    type="button"
+                    onClick={() => handleAddTag()}
+                  >
                     생성 <S.TagBadge>{tagInput}</S.TagBadge>
                   </S.TagCreateButton>
                 )}
