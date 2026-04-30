@@ -1,6 +1,7 @@
 'use client';
 
 import axios from 'axios';
+import dayjs from 'dayjs';
 import { useState, useEffect, useRef } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -95,10 +96,7 @@ export default function TodoCreateModal({
         columnId,
         title,
         description,
-        // dueDate: dueDate ? dueDate.toISOString() : undefined,
-        dueDate: dueDate
-          ? `${dueDate.getFullYear()}-${String(dueDate.getMonth() + 1).padStart(2, '0')}-${String(dueDate.getDate()).padStart(2, '0')} ${String(dueDate.getHours()).padStart(2, '0')}:${String(dueDate.getMinutes()).padStart(2, '0')}`
-          : '',
+        dueDate: dueDate ? dayjs(dueDate).format('YYYY-MM-DD HH:mm') : '',
         assigneeUserId: selectedAssignee?.userId,
         tags: tags.map((tag) => tag.name),
       });
