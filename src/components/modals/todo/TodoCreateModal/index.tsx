@@ -1,5 +1,6 @@
 'use client';
 
+import axios from 'axios';
 import { useState, useEffect, useRef } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -77,9 +78,9 @@ export default function TodoCreateModal({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    try {
-      let imageUrl: string | undefined;
+    let imageUrl: string | undefined;
 
+    try {
       if (selectedImageFile) {
         const uploadedImage = await columnsApi.uploadCardImage(
           columnId,
@@ -94,15 +95,32 @@ export default function TodoCreateModal({
         columnId,
         title,
         description,
-        dueDate: dueDate ? dueDate.toISOString() : undefined,
+        // dueDate: dueDate ? dueDate.toISOString() : undefined,
+        dueDate: dueDate
+          ? `${dueDate.getFullYear()}-${String(dueDate.getMonth() + 1).padStart(2, '0')}-${String(dueDate.getDate()).padStart(2, '0')} ${String(dueDate.getHours()).padStart(2, '0')}:${String(dueDate.getMinutes()).padStart(2, '0')}`
+          : '',
         assigneeUserId: selectedAssignee?.userId,
         tags: tags.map((tag) => tag.name),
-        imageUrl,
       });
 
       onClose();
     } catch (error) {
-      console.error('카드 생성 실패:', error);
+      if (axios.isAxiosError(error)) {
+        console.log('요청 body:', {
+          dashboardId,
+          columnId,
+          title,
+          description,
+          dueDate: dueDate ? dueDate.toISOString() : '',
+          assigneeUserId: selectedAssignee?.id,
+          tags: tags.map((tag) => tag.name),
+          imageUrl: imageUrl ?? '',
+        });
+
+        console.log('서버 에러 응답:', error.response?.data);
+        console.log('상태 코드:', error.response?.status);
+      }
+      // console.error('카드 생성 실패:', error);
       alert('카드 생성에 실패했습니다.');
     }
   };
