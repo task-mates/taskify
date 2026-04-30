@@ -18,15 +18,15 @@ const resolveCloseHref = (from: string | string[] | undefined) => {
 };
 
 export default async function TermsPage({ searchParams }: TermsPageProps) {
-  const params = searchParams ? await searchParams : undefined;
-  const closeHref = resolveCloseHref(params?.from);
+  const { from } = searchParams ? await searchParams : {};
+  const closeHref = resolveCloseHref(from);
 
   return (
     <S.Container>
       <S.Card>
         <S.Header>
           <S.Title>이용약관</S.Title>
-          <S.CloseLink href={closeHref} aria-label='페이지 닫기'>
+          <S.CloseLink href={closeHref} aria-label="페이지 닫기">
             ×
           </S.CloseLink>
         </S.Header>
