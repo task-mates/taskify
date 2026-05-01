@@ -69,10 +69,14 @@ export const Header = styled.div<{ $variant: HeaderVariant }>`
   }
 `;
 
-export const HeaderLeft = styled.div``;
-
-export const Title = styled.h2`
+export const HeaderLeft = styled.div`
+  display: block;
+  width: 100%;
+`;
+export const TitleBox = styled.div`
   width: 82%;
+`;
+export const Title = styled.h2`
   font-size: 24px;
   font-weight: 600;
   color: #333236;

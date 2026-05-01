@@ -24,7 +24,9 @@ export default function TodoBaseModal({
         <S.Wrapper>
           <S.Header $variant={headerVariant}>
             <S.HeaderLeft>
-              <S.Title id={labelId}>{title}</S.Title>
+              <S.TitleBox>
+                <S.Title id={labelId}>{title}</S.Title>
+              </S.TitleBox>
               {badgeGroup}
             </S.HeaderLeft>
 
