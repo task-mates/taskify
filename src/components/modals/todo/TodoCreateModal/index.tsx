@@ -10,22 +10,11 @@ import { columnsApi } from '@/src/apis/columns';
 import { membersApi } from '@/src/apis/members';
 import type { Member } from '@/src/apis/members/type';
 import ModalActionButtons from '../common/ModalActionButtons';
-import type { TodoCreateModalProps } from './type';
+import type { Tag, TagColor, TodoCreateModalProps } from './type';
 import TodoBaseModal from '../common/TodoBaseModal';
 import * as S from './styles';
 import UploadImage from '@/src/components/icons/icon-uploadimg.svg';
 import DeleteIcon from '@/src/components/icons/icon-delete.svg';
-
-type TagColor = {
-  backgroundColor: string;
-  color: string;
-};
-
-type Tag = {
-  name: string;
-  backgroundColor: string;
-  color: string;
-};
 
 const TAG_COLORS = [
   { backgroundColor: '#F2F2F2', color: '#666666' }, // 회색
@@ -271,7 +260,7 @@ export default function TodoCreateModal({
   return (
     <TodoBaseModal
       onClose={onClose}
-      title="Title"
+      title="할 일 생성"
       labelId="할 일 생성 모달"
       footerGroup={footerGroup}
     >
