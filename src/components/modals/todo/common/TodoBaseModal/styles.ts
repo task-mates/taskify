@@ -1,34 +1,36 @@
 import styled from 'styled-components';
 import { DEVICE } from '@/src/styles/Breakpoints';
-import { HeaderVariant } from './type';
+import { HeaderVariant, layoutVariant } from './type';
 
-export const Container = styled.div`
+export const Container = styled.div<{ $variant: layoutVariant }>`
   position: relative;
-  padding: 30px;
   max-width: 600px;
   min-width: 320px;
   width: 100%;
   height: 80vh;
+  max-height: 952px;
   background: #f3f5f8;
   border: 1px solid #9fa6b2;
   border-radius: 24px;
+  padding: 30px 0 0;
+
+  ${({ $variant }) =>
+    $variant === 'card' &&
+    `
+      padding: 30px 0 14px;
+  `}
 
   @media ${DEVICE.heightMd} {
     height: 90vh;
   }
 
   @media ${DEVICE.mobile} {
+    padding: 24px 0 0;
     max-width: none;
+    max-height: none;
     border: none;
     border-radius: 0;
     height: 100%;
-    padding: 0 30px;
-  }
-
-  @media (max-width: 499px),
-    ${DEVICE.mobile} and (hover: none) and (pointer: coarse) {
-    padding: 0;
-    overflow: auto;
   }
 `;
 
@@ -38,13 +40,7 @@ export const Wrapper = styled.div`
   flex-direction: column;
 
   @media ${DEVICE.mobile} {
-    padding-top: 24px;
     max-height: none;
-  }
-
-  @media (max-width: 499px),
-    ${DEVICE.mobile} and (hover: none) and (pointer: coarse) {
-    padding-right: 0;
   }
 `;
 
@@ -53,11 +49,12 @@ export const Header = styled.div<{ $variant: HeaderVariant }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin: 0 30px;
+  padding-bottom: 24px;
 
   ${({ $variant }) =>
     $variant === 'card' &&
     `
-      padding-bottom: 24px;
       border-bottom: 1px solid #D9D9D9;
       min-height: 90px;
 
@@ -65,13 +62,11 @@ export const Header = styled.div<{ $variant: HeaderVariant }>`
         padding-bottom: 20px;
         min-height: 80px;
       }
-
-      @media (max-width: 499px),
-    ${DEVICE.mobile} and (hover: none) and (pointer: coarse){
-        margin-left: 30px;
-        margin-right: 30px;
-      }
   `}
+
+  @media ${DEVICE.mobile} {
+    margin: 0 20px;
+  }
 `;
 
 export const HeaderLeft = styled.div``;
@@ -111,10 +106,20 @@ export const CloseButton = styled.button`
   }
 `;
 
-export const Content = styled.div`
-  padding-top: 30px;
+export const Content = styled.div<{ $variant: layoutVariant }>`
+  padding: 4px 30px 0;
   flex: 1;
   overflow: auto;
+
+  ${({ $variant }) =>
+    $variant === 'card' &&
+    `
+    padding: 30px 30px 0;  
+  `}
+
+  @media ${DEVICE.mobile} {
+    padding: 14px 20px;
+  }
 
   &::-webkit-scrollbar {
     width: 6px;
@@ -132,15 +137,12 @@ export const Content = styled.div`
   &::-webkit-scrollbar-thumb:hover {
     background-color: #0003;
   }
+`;
+
+export const Footer = styled.div`
+  padding: 30px;
 
   @media ${DEVICE.mobile} {
-    padding-top: 20px;
-    padding-bottom: 30px;
-  }
-
-  @media (max-width: 499px),
-    ${DEVICE.mobile} and (hover: none) and (pointer: coarse) {
-    padding-left: 30px;
-    padding-right: 30px;
+    padding: 20px;
   }
 `;
