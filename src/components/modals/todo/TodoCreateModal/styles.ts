@@ -90,6 +90,7 @@ export const DatePickerWrapper = styled.div`
     }
   }
 `;
+
 export const DateInput = styled(Input)`
   position: relative;
   padding-left: 46px;

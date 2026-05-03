@@ -3,7 +3,8 @@
 import axios from 'axios';
 import dayjs from 'dayjs';
 import { useState, useEffect, useRef } from 'react';
-import DatePicker from 'react-datepicker';
+import DatePicker, { registerLocale } from 'react-datepicker';
+import { ko } from 'date-fns/locale/ko';
 import 'react-datepicker/dist/react-datepicker.css';
 import { cardsApi } from '@/src/apis/cards';
 import { columnsApi } from '@/src/apis/columns';
@@ -15,6 +16,8 @@ import TodoBaseModal from '../common/TodoBaseModal';
 import * as S from './styles';
 import UploadImage from '@/src/components/icons/icon-uploadimg.svg';
 import DeleteIcon from '@/src/components/icons/icon-delete.svg';
+
+registerLocale('ko', ko);
 
 const TAG_COLORS = [
   { backgroundColor: '#F2F2F2', color: '#666666' }, // 회색
@@ -90,7 +93,7 @@ export default function TodoCreateModal({
         tags: tags.map((tag) => tag.name),
       });
 
-      onClose();
+      onClose(); //추후 토스트로 대체하면 좋을 것 같음
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.log('요청 body:', {
@@ -298,6 +301,7 @@ export default function TodoCreateModal({
             <S.DatePickerWrapper>
               <DatePicker
                 id="dueDate"
+                locale="ko"
                 selected={dueDate}
                 onChange={handleDateChange}
                 showTimeSelect
