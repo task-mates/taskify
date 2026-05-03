@@ -298,13 +298,14 @@ export default function TodoCreateModal({
         <S.Row>
           <S.Field>
             <S.Label htmlFor="dueDate">마감일</S.Label>
-            <S.DatePickerWrapper>
+            <S.DatePickerWrapper $selected={!!dueDate}>
               <DatePicker
                 id="dueDate"
                 locale="ko"
                 selected={dueDate}
                 onChange={handleDateChange}
                 showTimeSelect
+                isClearable
                 timeFormat="HH:mm"
                 timeIntervals={30}
                 dateFormat="yyyy. MM. dd HH:mm"
