@@ -9,6 +9,7 @@ import { getProfileColorByNickname } from '@/src/utils/profileColor';
 import SettingIcon from '@/src/components/icons/icon-setting.svg';
 import PlusIcon from '@/src/components/icons/icon-plus.svg';
 import CrownIcon from '@/src/components/icons/icon-crown.svg';
+import MemberProfiles from '@/src/components/layout/AppHeader/MemberProfiles';
 import * as S from './styles';
 import type { AppHeaderProps } from '@/src/components/layout/AppHeader/type';
 
@@ -78,6 +79,7 @@ export default function AppHeader({
             </S.ActionButton>
           </>
         )}
+        {isDashboardPage && <MemberProfiles dashboardId={dashboardId} />}
         {isInvitedDashboard && <>{/* TODO: 초대받은 대시보드 헤더 콘텐츠 */}</>}
 
         <S.ProfileButton type="button" onClick={() => router.push('/mypage')}>
