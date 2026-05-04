@@ -37,8 +37,10 @@ export default function DashboardView({ dashboardId }: DashboardViewProps) {
       setError(null);
 
       try {
-        const dashboardData = await getDashboardById(dashboardId);
-        const columnsResponse = await columnsApi.getList(dashboardId);
+        const [dashboardData, columnsResponse] = await Promise.all([
+          getDashboardById(dashboardId),
+          columnsApi.getList(dashboardId),
+        ]);
         const columnsData: ColumnWithCards[] = await Promise.all(
           columnsResponse.data.map((column) =>
             cardsApi
