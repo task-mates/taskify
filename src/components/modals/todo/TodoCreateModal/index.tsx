@@ -166,22 +166,8 @@ export default function TodoCreateModal({
     return ASSIGNEE_AVATAR_COLORS[hash % ASSIGNEE_AVATAR_COLORS.length];
   };
 
-  const getContrastColor = (hexColor: string) => {
-    const r = parseInt(hexColor.substring(1, 3), 16);
-    const g = parseInt(hexColor.substring(3, 5), 16);
-    const b = parseInt(hexColor.substring(5, 7), 16);
-
-    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-
-    return luminance > 0.5 ? '#000' : '#fff';
-  };
-
   const selectedAssigneeBgColor = selectedAssignee
     ? getAssigneeAvatarColor(selectedAssignee)
-    : '';
-
-  const selectedAssigneeTextColor = selectedAssigneeBgColor
-    ? getContrastColor(selectedAssigneeBgColor)
     : '';
 
   const getAvatarText = (nickname: string) => {
@@ -393,7 +379,6 @@ export default function TodoCreateModal({
                     <S.AssigneeAvatar
                       $imageUrl={selectedAssignee.profileImageUrl}
                       $backgroundColor={selectedAssigneeBgColor}
-                      $textColor={selectedAssigneeTextColor}
                     >
                       {!selectedAssignee.profileImageUrl &&
                         getAvatarText(selectedAssignee.nickname)}
@@ -415,7 +400,6 @@ export default function TodoCreateModal({
                   <S.SelectList role="listbox">
                     {members.map((member) => {
                       const memberBgColor = getAssigneeAvatarColor(member);
-                      const memberTextColor = getContrastColor(memberBgColor);
                       return (
                         <S.OptionItem key={member.id}>
                           <S.OptionButton
@@ -429,7 +413,6 @@ export default function TodoCreateModal({
                             <S.AssigneeAvatar
                               $imageUrl={member.profileImageUrl}
                               $backgroundColor={memberBgColor}
-                              $textColor={memberTextColor}
                             >
                               {!member.profileImageUrl &&
                                 getAvatarText(member.nickname)}

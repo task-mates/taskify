@@ -457,7 +457,6 @@ export const OptionButton = styled.button`
 export const AssigneeAvatar = styled.span<{
   $imageUrl: string | null;
   $backgroundColor: string;
-  $textColor: string;
 }>`
   flex-shrink: 0;
   display: inline-flex;
@@ -466,7 +465,7 @@ export const AssigneeAvatar = styled.span<{
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  color: ${({ $textColor }) => $textColor};
+  color: #fff;
   background-color: ${({ $imageUrl, $backgroundColor }) =>
     $imageUrl ? 'transparent' : $backgroundColor};
   background-image: ${({ $imageUrl }) =>
