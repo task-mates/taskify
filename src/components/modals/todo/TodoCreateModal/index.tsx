@@ -19,6 +19,21 @@ import DeleteIcon from '@/src/components/icons/icon-delete.svg';
 
 registerLocale('ko', ko);
 
+const ASSIGNEE_AVATAR_COLORS = [
+  '#F44336',
+  '#E91E63',
+  '#9C27B0',
+  '#673AB7',
+  '#3F51B5',
+  '#2196F3',
+  '#03A9F4',
+  '#00BCD4',
+  '#009688',
+  '#4CAF50',
+  '#FF9800',
+  '#FF5722',
+];
+
 const TAG_COLORS = [
   { backgroundColor: '#F2F2F2', color: '#666666' }, // 회색
   { backgroundColor: '#F4E3D7', color: '#8A4B2A' }, // 갈색
@@ -136,6 +151,38 @@ export default function TodoCreateModal({
     setSelectedAssignee(null);
     setIsAssigneeOpen(false);
   };
+
+  const getHashFromString = (value: string) => {
+    let hash = 0;
+    for (let i = 0; i < value.length; i += 1) {
+      hash = value.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return Math.abs(hash);
+  };
+
+  const getAssigneeAvatarColor = (member: Member) => {
+    const hashKey = `${member.userId ?? member.id}-${member.nickname}`;
+    const hash = getHashFromString(hashKey);
+    return ASSIGNEE_AVATAR_COLORS[hash % ASSIGNEE_AVATAR_COLORS.length];
+  };
+
+  const getContrastColor = (hexColor: string) => {
+    const r = parseInt(hexColor.substring(1, 3), 16);
+    const g = parseInt(hexColor.substring(3, 5), 16);
+    const b = parseInt(hexColor.substring(5, 7), 16);
+
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+    return luminance > 0.5 ? '#000' : '#fff';
+  };
+
+  const selectedAssigneeBgColor = selectedAssignee
+    ? getAssigneeAvatarColor(selectedAssignee)
+    : '';
+
+  const selectedAssigneeTextColor = selectedAssigneeBgColor
+    ? getContrastColor(selectedAssigneeBgColor)
+    : '';
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -335,13 +382,15 @@ export default function TodoCreateModal({
                   <S.SelectedAssignee>
                     <S.AssigneeAvatar
                       $imageUrl={selectedAssignee.profileImageUrl}
+                      $backgroundColor={selectedAssigneeBgColor}
+                      $textColor={selectedAssigneeTextColor}
                     >
                       {!selectedAssignee.profileImageUrl &&
                         selectedAssignee.nickname.slice(1, 3)}
                     </S.AssigneeAvatar>
                     <S.AssigneeName>{selectedAssignee.nickname}</S.AssigneeName>
                     <S.AssigneeClearButton
-                      type="button"
+                      role="button"
                       aria-label="담당자 선택 해제"
                       onClick={handleClearAssignee}
                     ></S.AssigneeClearButton>
@@ -354,24 +403,32 @@ export default function TodoCreateModal({
               {isAssigneeOpen && (
                 <S.SelectWrapper>
                   <S.SelectList role="listbox">
-                    {members.map((member) => (
-                      <S.OptionItem key={member.id}>
-                        <S.OptionButton
-                          type="button"
-                          role="option"
-                          onClick={() => {
-                            setSelectedAssignee(member);
-                            setIsAssigneeOpen(false);
-                          }}
-                        >
-                          <S.AssigneeAvatar $imageUrl={member.profileImageUrl}>
-                            {!member.profileImageUrl &&
-                              member.nickname.slice(1, 3)}
-                          </S.AssigneeAvatar>
-                          <S.AssigneeName>{member.nickname}</S.AssigneeName>
-                        </S.OptionButton>
-                      </S.OptionItem>
-                    ))}
+                    {members.map((member) => {
+                      const memberBgColor = getAssigneeAvatarColor(member);
+                      const memberTextColor = getContrastColor(memberBgColor);
+                      return (
+                        <S.OptionItem key={member.id}>
+                          <S.OptionButton
+                            type="button"
+                            role="option"
+                            onClick={() => {
+                              setSelectedAssignee(member);
+                              setIsAssigneeOpen(false);
+                            }}
+                          >
+                            <S.AssigneeAvatar
+                              $imageUrl={member.profileImageUrl}
+                              $backgroundColor={memberBgColor}
+                              $textColor={memberTextColor}
+                            >
+                              {!member.profileImageUrl &&
+                                member.nickname.slice(1, 3)}
+                            </S.AssigneeAvatar>
+                            <S.AssigneeName>{member.nickname}</S.AssigneeName>
+                          </S.OptionButton>
+                        </S.OptionItem>
+                      );
+                    })}
                   </S.SelectList>
                 </S.SelectWrapper>
               )}

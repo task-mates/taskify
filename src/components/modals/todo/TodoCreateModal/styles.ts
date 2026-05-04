@@ -454,7 +454,11 @@ export const OptionButton = styled.button`
     padding: 10px 5px;
   }
 `;
-export const AssigneeAvatar = styled.span<{ $imageUrl: string | null }>`
+export const AssigneeAvatar = styled.span<{
+  $imageUrl: string | null;
+  $backgroundColor: string;
+  $textColor: string;
+}>`
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
@@ -462,8 +466,9 @@ export const AssigneeAvatar = styled.span<{ $imageUrl: string | null }>`
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  color: #fff;
-  background-color: #2f9d6a;
+  color: ${({ $textColor }) => $textColor};
+  background-color: ${({ $imageUrl, $backgroundColor }) =>
+    $imageUrl ? 'transparent' : $backgroundColor};
   background-image: ${({ $imageUrl }) =>
     $imageUrl ? `url(${$imageUrl})` : 'none'};
   background-size: cover;
@@ -480,9 +485,10 @@ export const AssigneeName = styled.span`
   color: #333236;
 `;
 
-export const AssigneeClearButton = styled.button`
+export const AssigneeClearButton = styled.span`
   display: inline-flex;
   position: relative;
+  cursor: pointer;
 
   &::after {
     content: '';
