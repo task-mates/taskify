@@ -19,6 +19,7 @@ export const Wrapper = styled.header`
 export const HamburgerButton = styled.button`
   display: none;
   font-size: 24px;
+  margin-right: 7px;
 
   @media ${DEVICE.mobile} {
     display: block;
@@ -51,6 +52,12 @@ export const ActionButton = styled.button`
   font: var(--md-14px-medium);
   color: var(--color-gray-500);
   cursor: pointer;
+`;
+
+export const Divider = styled.div`
+  width: 1px;
+  height: 38px;
+  background: var(--color-gray-300);
 `;
 
 export const ProfileButton = styled.button`

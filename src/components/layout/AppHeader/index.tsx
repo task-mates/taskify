@@ -26,13 +26,14 @@ export default function AppHeader({
   const isMyDashboard = pathname === '/mydashboard';
   const isMyPage = pathname === '/mypage';
   const isOwnedDashboard = !!dashboardId && createdByMe;
-  const isInvitedDashboard = !!dashboardId && !createdByMe;
   const isDashboardPage = !!dashboardId;
 
   useEffect(() => {
     usersApi
       .getMe()
-      .then(setUser)
+      .then((user) => {
+        setUser(user);
+      })
       .catch((err) => console.error(err));
   }, []);
 
@@ -58,7 +59,6 @@ export default function AppHeader({
       </S.Title>
 
       <S.RightSection>
-        {isMyDashboard && <>{/* TODO: 마이 대시보드 헤더 콘텐츠 */}</>}
         {isOwnedDashboard && (
           <>
             <S.ActionButton
@@ -80,8 +80,7 @@ export default function AppHeader({
           </>
         )}
         {isDashboardPage && <MemberProfiles dashboardId={dashboardId} />}
-        {isInvitedDashboard && <>{/* TODO: 초대받은 대시보드 헤더 콘텐츠 */}</>}
-
+        <S.Divider />
         <S.ProfileButton type="button" onClick={() => router.push('/mypage')}>
           {user?.profileImageUrl ? (
             <Image
@@ -92,11 +91,7 @@ export default function AppHeader({
               style={{ borderRadius: '50%', objectFit: 'cover' }}
             />
           ) : (
-            <S.ProfileFallback
-              style={{
-                background: getProfileColorByNickname(user?.nickname ?? ''),
-              }}
-            >
+            <S.ProfileFallback style={{ background: user ? getProfileColorByNickname(user.nickname) : '' }}>
               {user?.nickname?.[0] ?? '?'}
             </S.ProfileFallback>
           )}
