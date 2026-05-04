@@ -99,9 +99,8 @@ export const CardList = styled.div<{ $isOpen: boolean }>`
   }
 `;
 
-export const ArrowButton = styled.button<{ $isOpen: boolean }>`
+export const ArrowButton = styled.button`
   display: none;
-  transition: transform 0.2s;
 
   @media ${DEVICE.mobile} {
     display: inline-flex;
@@ -114,8 +113,14 @@ export const ArrowButton = styled.button<{ $isOpen: boolean }>`
     border: none;
     background: transparent;
     cursor: pointer;
-    transform: ${({ $isOpen }) =>
-      $isOpen ? 'rotate(180deg)' : 'rotate(0deg)'};
+
+    svg {
+      display: block;
+    }
+
+    svg path {
+      fill: #a39fb2;
+    }
   }
 `;
 
