@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { usePathname, useParams } from 'next/navigation';
 import Sidebar from '@/src/components/layout/Sidebar';
 import AppHeader from '@/src/components/layout/AppHeader';
-import { dashboardsApi } from '@/src/apis/dashboards';
+import { getDashboardList } from '@/src/apis/dashboards';
 import type { Dashboard } from '@/src/apis/dashboards/type';
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
@@ -31,7 +31,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       setIsError(false);
 
       try {
-        const { dashboards } = await dashboardsApi.getList({ size: 20 }); //TODO 추후 무한 스크롤 구현을 위한 임의의 size 설정
+        const { dashboards } = await getDashboardList({ size: 20 }); //TODO 추후 무한 스크롤 구현을 위한 임의의 size 설정
         setDashboards(dashboards);
       } catch (e) {
         console.error(e);
