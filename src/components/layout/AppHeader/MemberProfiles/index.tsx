@@ -20,7 +20,9 @@ export default function MemberProfiles({ dashboardId }: MemberProfilesProps) {
   useEffect(() => {
     membersApi
       .getList(dashboardId)
-      .then(({ members }) => setMembers(members))
+      .then(({ members }) => {
+        setMembers(members);
+      })
       .catch((err) => console.error(err));
   }, [dashboardId]);
 
@@ -33,15 +35,13 @@ export default function MemberProfiles({ dashboardId }: MemberProfilesProps) {
               <Image
                 src={member.profileImageUrl}
                 alt={member.nickname}
-                width={38}
-                height={38}
+                width={30}
+                height={30}
                 style={{ borderRadius: '50%', objectFit: 'cover' }}
               />
             ) : (
               <S.MemberIconFallback
-                style={{
-                  background: getProfileColorByNickname(member.nickname),
-                }}
+                style={{ background: getProfileColorByNickname(member.nickname) }}
               >
                 {member.nickname[0]}
               </S.MemberIconFallback>
@@ -60,15 +60,13 @@ export default function MemberProfiles({ dashboardId }: MemberProfilesProps) {
               <Image
                 src={member.profileImageUrl}
                 alt={member.nickname}
-                width={38}
-                height={38}
+                width={30}
+                height={30}
                 style={{ borderRadius: '50%', objectFit: 'cover' }}
               />
             ) : (
               <S.MemberIconFallback
-                style={{
-                  background: getProfileColorByNickname(member.nickname),
-                }}
+                style={{ background: getProfileColorByNickname(member.nickname) }}
               >
                 {member.nickname[0]}
               </S.MemberIconFallback>
