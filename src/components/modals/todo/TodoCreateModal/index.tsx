@@ -184,6 +184,16 @@ export default function TodoCreateModal({
     ? getContrastColor(selectedAssigneeBgColor)
     : '';
 
+  const getAvatarText = (nickname: string) => {
+    const trimmedNickname = nickname.trim();
+
+    if (!trimmedNickname) return '';
+
+    const isKorean = /[ㄱ-ㅎㅏ-ㅣ가-힣]/.test(trimmedNickname);
+
+    return isKorean ? trimmedNickname.slice(1, 3) : trimmedNickname.slice(0, 1);
+  };
+
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -386,7 +396,7 @@ export default function TodoCreateModal({
                       $textColor={selectedAssigneeTextColor}
                     >
                       {!selectedAssignee.profileImageUrl &&
-                        selectedAssignee.nickname.slice(1, 3)}
+                        getAvatarText(selectedAssignee.nickname)}
                     </S.AssigneeAvatar>
                     <S.AssigneeName>{selectedAssignee.nickname}</S.AssigneeName>
                     <S.AssigneeClearButton
@@ -422,7 +432,7 @@ export default function TodoCreateModal({
                               $textColor={memberTextColor}
                             >
                               {!member.profileImageUrl &&
-                                member.nickname.slice(1, 3)}
+                                getAvatarText(member.nickname)}
                             </S.AssigneeAvatar>
                             <S.AssigneeName>{member.nickname}</S.AssigneeName>
                           </S.OptionButton>

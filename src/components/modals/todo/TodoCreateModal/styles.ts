@@ -473,7 +473,7 @@ export const AssigneeAvatar = styled.span<{
     $imageUrl ? `url(${$imageUrl})` : 'none'};
   background-size: cover;
   background-position: center;
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
