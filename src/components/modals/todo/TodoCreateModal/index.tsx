@@ -7,8 +7,8 @@ import DatePicker, { registerLocale } from 'react-datepicker';
 import { ko } from 'date-fns/locale/ko';
 import 'react-datepicker/dist/react-datepicker.css';
 import { cardsApi } from '@/src/apis/cards';
-import { columnsApi } from '@/src/apis/columns';
 import { membersApi } from '@/src/apis/members';
+import { columnsApi } from '@/src/apis/columns';
 import type { Member } from '@/src/apis/members/type';
 import ModalActionButtons from '../common/ModalActionButtons';
 import type { Tag, TagColor, TodoCreateModalProps } from './type';
@@ -19,6 +19,9 @@ import DeleteIcon from '@/src/components/icons/icon-delete.svg';
 
 registerLocale('ko', ko);
 
+// ==============================
+// 담당자 닉네임 색상 팔레트
+// ==============================
 const ASSIGNEE_AVATAR_COLORS = [
   '#F44336',
   '#E91E63',
@@ -34,6 +37,9 @@ const ASSIGNEE_AVATAR_COLORS = [
   '#FF5722',
 ];
 
+// ==============================
+// 태그 색상 팔레트
+// ==============================
 const TAG_COLORS = [
   { backgroundColor: '#F2F2F2', color: '#666666' }, // 회색
   { backgroundColor: '#F4E3D7', color: '#8A4B2A' }, // 갈색
@@ -46,6 +52,7 @@ const TAG_COLORS = [
   { backgroundColor: '#F9D9D6', color: '#B84038' }, // 빨간색
 ];
 
+// 폼 연결용 ID
 const TODO_CREATE_FORM_ID = 'todo-create-form';
 
 export default function TodoCreateModal({
@@ -53,18 +60,30 @@ export default function TodoCreateModal({
   dashboardId,
   columnId,
 }: TodoCreateModalProps) {
+  // ==============================
+  // 기본 입력 상태 (제목, 설명, 마감일)
+  // ==============================
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState<Date | null>(null);
 
+  // ==============================
+  // 담당자 상태 (멤버 목록, 드롭다운, 선택된 담당자)
+  // ==============================
   const [members, setMembers] = useState<Member[]>([]);
   const [isAssigneeOpen, setIsAssigneeOpen] = useState(false);
   const [selectedAssignee, setSelectedAssignee] = useState<Member | null>(null);
   const selectBoxRef = useRef<HTMLDivElement | null>(null);
 
+  // ==============================
+  // 태그 상태 (입력값, 선택된 태그, 옵션 목록)
+  // ==============================
   const [tagInput, setTagInput] = useState('');
   const [tags, setTags] = useState<Tag[]>([]);
   const [tagOptions, setTagOptions] = useState<Tag[]>([]);
+  // ==============================
+  // 태그 UI 상태 (옵션 박스, 더보기 메뉴, 색상 미리보기)
+  // ==============================
   const [isTagOpen, setIsTagOpen] = useState(false);
   const tagBoxRef = useRef<HTMLDivElement | null>(null);
   const [openedTagMenu, setOpenedTagMenu] = useState<string | null>(null);
@@ -72,9 +91,15 @@ export default function TodoCreateModal({
   const currentInputColorRef = useRef<TagColor | null>(null);
   const lastTagColorRef = useRef<TagColor | null>(null);
 
+  // ==============================
+  // 이미지 업로드 상태 (미리보기 URL, 실제 선택 파일)
+  // ==============================
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
 
+  // ==============================
+  // 모달 하단 버튼 영역
+  // ==============================
   const footerGroup = (
     <ModalActionButtons
       onCancel={onClose}
@@ -83,6 +108,9 @@ export default function TodoCreateModal({
     />
   );
 
+  // ==============================
+  // 카드 생성 제출 로직
+  // ==============================
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -106,6 +134,7 @@ export default function TodoCreateModal({
         dueDate: dueDate ? dayjs(dueDate).format('YYYY-MM-DD HH:mm') : '',
         assigneeUserId: selectedAssignee?.userId,
         tags: tags.map((tag) => tag.name),
+        imageUrl,
       });
 
       onClose(); //추후 토스트로 대체하면 좋을 것 같음
@@ -117,7 +146,7 @@ export default function TodoCreateModal({
           title,
           description,
           dueDate: dueDate ? dueDate.toISOString() : '',
-          assigneeUserId: selectedAssignee?.id,
+          assigneeUserId: selectedAssignee?.userId,
           tags: tags.map((tag) => tag.name),
           imageUrl: imageUrl ?? '',
         });
@@ -130,56 +159,9 @@ export default function TodoCreateModal({
     }
   };
 
-  const handleDateChange = (date: Date | null) => {
-    setDueDate(date);
-  };
-
-  useEffect(() => {
-    const fetchMembers = async () => {
-      try {
-        const data = await membersApi.getList(dashboardId);
-        setMembers(data.members);
-      } catch (error) {
-        console.error('멤버 목록 조회 실패:', error);
-      }
-    };
-    fetchMembers();
-  }, [dashboardId]);
-
-  const handleClearAssignee = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    setSelectedAssignee(null);
-    setIsAssigneeOpen(false);
-  };
-
-  const getHashFromString = (value: string) => {
-    let hash = 0;
-    for (let i = 0; i < value.length; i += 1) {
-      hash = value.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    return Math.abs(hash);
-  };
-
-  const getAssigneeAvatarColor = (member: Member) => {
-    const hashKey = `${member.userId ?? member.id}-${member.nickname}`;
-    const hash = getHashFromString(hashKey);
-    return ASSIGNEE_AVATAR_COLORS[hash % ASSIGNEE_AVATAR_COLORS.length];
-  };
-
-  const selectedAssigneeBgColor = selectedAssignee
-    ? getAssigneeAvatarColor(selectedAssignee)
-    : '';
-
-  const getAvatarText = (nickname: string) => {
-    const trimmedNickname = nickname.trim();
-
-    if (!trimmedNickname) return '';
-
-    const isKorean = /[ㄱ-ㅎㅏ-ㅣ가-힣]/.test(trimmedNickname);
-
-    return isKorean ? trimmedNickname.slice(1, 3) : trimmedNickname.slice(0, 1);
-  };
-
+  // ==============================
+  // 드롭다운 바깥 클릭 시 닫기 로직
+  // ==============================
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -202,6 +184,67 @@ export default function TodoCreateModal({
     };
   }, []);
 
+  // ==============================
+  // 마감일 선택 로직
+  // ==============================
+  const handleDateChange = (date: Date | null) => {
+    setDueDate(date);
+  };
+
+  // ==============================
+  // 담당자 관련 로직
+  // ==============================
+  // 담당자 목록 조회 로직
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const data = await membersApi.getList(dashboardId);
+        setMembers(data.members);
+      } catch (error) {
+        console.error('멤버 목록 조회 실패:', error);
+      }
+    };
+    fetchMembers();
+  }, [dashboardId]);
+
+  // 담당자 선택 해제 로직
+  const handleClearAssignee = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setSelectedAssignee(null);
+    setIsAssigneeOpen(false);
+  };
+
+  // 담당자 아바타 색상 생성 로직
+  const getHashFromString = (value: string) => {
+    let hash = 0;
+    for (let i = 0; i < value.length; i += 1) {
+      hash = value.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return Math.abs(hash);
+  };
+
+  const getAssigneeAvatarColor = (member: Member) => {
+    const hashKey = `${member.userId ?? member.id}-${member.nickname}`;
+    const hash = getHashFromString(hashKey);
+    return ASSIGNEE_AVATAR_COLORS[hash % ASSIGNEE_AVATAR_COLORS.length];
+  };
+
+  const selectedAssigneeBgColor = selectedAssignee
+    ? getAssigneeAvatarColor(selectedAssignee)
+    : '';
+
+  // 담당자 아바타 텍스트 생성 로직
+  const getAvatarText = (nickname: string) => {
+    const trimmedNickname = nickname.trim();
+    if (!trimmedNickname) return '';
+    const isKorean = /[ㄱ-ㅎㅏ-ㅣ가-힣]/.test(trimmedNickname);
+    return isKorean ? trimmedNickname.slice(1, 3) : trimmedNickname.slice(0, 1);
+  };
+
+  // ==============================
+  // 태그 관련 로직
+  // ==============================
+  // 태그 색상 선택 로직
   const getRandomTagColor = (excludeColor?: TagColor | null) => {
     const availableColors = excludeColor
       ? TAG_COLORS.filter(
@@ -215,6 +258,7 @@ export default function TodoCreateModal({
     return availableColors[randomIndex];
   };
 
+  // 태그 추가 로직
   const handleAddTag = (value = tagInput) => {
     const trimmedTag = value.trim();
 
@@ -250,10 +294,12 @@ export default function TodoCreateModal({
     setIsTagOpen(true);
   };
 
+  // 선택된 태그 제거 로직
   const handleRemoveTag = (targetTag: string) => {
     setTags((prev) => prev.filter((tag) => tag.name !== targetTag));
   };
 
+  // 태그 입력 키보드 처리 로직
   const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.nativeEvent.isComposing) return;
 
@@ -267,6 +313,7 @@ export default function TodoCreateModal({
     }
   };
 
+  // 태그 옵션 필터링 로직
   const filteredTagOptions = tagInput.trim()
     ? tagOptions.filter((tag) => tag.name.includes(tagInput.trim()))
     : tagOptions;
@@ -274,41 +321,44 @@ export default function TodoCreateModal({
   const shouldShowCreateOption =
     tagInput.trim() && !tagOptions.some((tag) => tag.name === tagInput.trim());
 
+  // 태그 옵션 삭제 로직
   const handleDeleteTagOption = (targetTag: string) => {
     setTagOptions((prev) => prev.filter((tag) => tag.name !== targetTag));
     setTags((prev) => prev.filter((tag) => tag.name !== targetTag));
     setOpenedTagMenu(null);
   };
 
+  // ==============================
+  // 이미지 관련 로직
+  // ==============================
+  // 이미지 선택 및 미리보기 생성 로직
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-
     if (!file) return;
-
     setSelectedImageFile(file);
-
     if (previewImageUrl) {
       URL.revokeObjectURL(previewImageUrl);
     }
-
     const imageUrl = URL.createObjectURL(file);
     setPreviewImageUrl(imageUrl);
   };
 
+  // 이미지 제거 로직
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const handleRemoveImage = () => {
     if (previewImageUrl) {
       URL.revokeObjectURL(previewImageUrl);
     }
-
     setPreviewImageUrl(null);
     setSelectedImageFile(null);
-
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
   };
 
+  // ==============================
+  // 렌더링
+  // ==============================
   return (
     <TodoBaseModal
       onClose={onClose}
