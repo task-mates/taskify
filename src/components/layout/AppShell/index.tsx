@@ -16,9 +16,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   const pathname = usePathname();
   const params = useParams();
-  const dashboardId = params?.id ? Number(params.id) : null;
-  const createdByMe =
-    dashboards.find((d) => d.id === dashboardId)?.createdByMe ?? false;
+  const dashboardId = params?.id ? Number(params.id) : undefined;
+  const currentDashboard = dashboards.find((d) => d.id === dashboardId);
+  const createdByMe = currentDashboard?.createdByMe ?? false;
+  const dashboardTitle = currentDashboard?.title;
 
   useEffect(() => {
     setIsSidebarOpen(false);
@@ -57,6 +58,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <AppHeader
           onSidebarOpen={() => setIsSidebarOpen(true)}
           dashboardId={dashboardId}
+          dashboardTitle={dashboardTitle}
           createdByMe={createdByMe}
         />
         {children}
