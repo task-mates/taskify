@@ -60,6 +60,21 @@ export const Body = styled.div`
   overflow-y: auto;
 `;
 
+export const EmptyMessage = styled.p`
+  margin: 0;
+  padding: 20px;
+  font-size: 14px;
+  color: #6b7280;
+`;
+
+export const LoadMoreHint = styled.p`
+  margin: 0;
+  padding: 12px 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #6b7280;
+`;
+
 export const AddSection = styled.div``;
 
 export const AddButton = styled.button`
