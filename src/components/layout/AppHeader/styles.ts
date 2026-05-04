@@ -32,6 +32,18 @@ export const RightSection = styled.div`
   margin-left: auto;
 `;
 
+export const ActionButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid var(--color-gray-300);
+  border-radius: 8px;
+  font: var(--md-14px-medium);
+  color: var(--color-gray-500);
+  cursor: pointer;
+`;
+
 export const ProfileButton = styled.button`
   display: flex;
   align-items: center;
