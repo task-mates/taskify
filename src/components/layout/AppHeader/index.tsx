@@ -8,12 +8,14 @@ import type { User } from '@/src/apis/users/type';
 import { getProfileColorByNickname } from '@/src/utils/profileColor';
 import SettingIcon from '@/src/components/icons/icon-setting.svg';
 import PlusIcon from '@/src/components/icons/icon-plus.svg';
+import CrownIcon from '@/src/components/icons/icon-crown.svg';
 import * as S from './styles';
 import type { AppHeaderProps } from '@/src/components/layout/AppHeader/type';
 
 export default function AppHeader({
   onSidebarOpen,
   dashboardId,
+  dashboardTitle,
   createdByMe,
 }: AppHeaderProps) {
   const pathname = usePathname();
@@ -21,8 +23,10 @@ export default function AppHeader({
   const [user, setUser] = useState<User | null>(null);
 
   const isMyDashboard = pathname === '/mydashboard';
+  const isMyPage = pathname === '/mypage';
   const isOwnedDashboard = !!dashboardId && createdByMe;
   const isInvitedDashboard = !!dashboardId && !createdByMe;
+  const isDashboardPage = !!dashboardId;
 
   useEffect(() => {
     usersApi
@@ -40,6 +44,17 @@ export default function AppHeader({
       >
         ☰
       </S.HamburgerButton>
+
+      <S.Title>
+        {isMyDashboard && '내 대시보드'}
+        {isMyPage && '계정관리'}
+        {isDashboardPage && (
+          <>
+            {dashboardTitle}
+            {createdByMe && <CrownIcon aria-hidden="true" />}
+          </>
+        )}
+      </S.Title>
 
       <S.RightSection>
         {isMyDashboard && <>{/* TODO: 마이 대시보드 헤더 콘텐츠 */}</>}
@@ -77,9 +92,7 @@ export default function AppHeader({
           ) : (
             <S.ProfileFallback
               style={{
-                background: user?.nickname
-                  ? getProfileColorByNickname(user.nickname)
-                  : '#E0E0E0',
+                background: getProfileColorByNickname(user?.nickname ?? ''),
               }}
             >
               {user?.nickname?.[0] ?? '?'}

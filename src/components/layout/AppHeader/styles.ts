@@ -25,6 +25,15 @@ export const HamburgerButton = styled.button`
   }
 `;
 
+export const Title = styled.h1`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: var(--2lg-18px-bold);
+  color: var(--color-gray-900);
+  margin-right: auto;
+`;
+
 export const RightSection = styled.div`
   display: flex;
   align-items: center;
@@ -55,9 +64,8 @@ export const ProfileFallback = styled.div`
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  color: #fff;
-  font-size: 14px;
-  font-weight: 600;
+  color: var(--color-white);
+  font: var(--lg-14px-semibold);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -65,7 +73,7 @@ export const ProfileFallback = styled.div`
 
 export const ProfileName = styled.span`
   font: var(--lg-16px-medium);
-  color: #333;
+  color: var(--color-black-200);
 
   @media ${DEVICE.mobile} {
     display: none;

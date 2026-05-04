@@ -1,5 +1,6 @@
 export interface AppHeaderProps {
   onSidebarOpen: () => void;
-  dashboardId: number | null;
+  dashboardId?: number;
+  dashboardTitle?: string;
   createdByMe: boolean;
 }
