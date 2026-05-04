@@ -1,6 +1,6 @@
 import * as S from './styles';
 import ColumnSection from './components/ColumnSection';
-import { dashboardsApi } from '@/src/apis/dashboards';
+import { getDashboardById } from '@/src/apis/dashboards';
 import { columnsApi } from '@/src/apis/columns';
 import { cardsApi } from '@/src/apis/cards';
 import type { Card as CardInfo } from '@/src/apis/cards/type';
@@ -21,7 +21,7 @@ export default async function DashboardPage({ params }: PageProps) {
   const { id } = await params;
   const dashboardId = Number(id);
 
-  const dashboard = await dashboardsApi.getById(dashboardId);
+  const dashboard = await getDashboardById(dashboardId);
   const columnsResponse = await columnsApi.getList(dashboardId);
 
   const columnsWithCards: ColumnWithCards[] = await Promise.all(
