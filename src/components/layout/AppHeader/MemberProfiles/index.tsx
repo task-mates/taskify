@@ -28,55 +28,39 @@ export default function MemberProfiles({ dashboardId }: MemberProfilesProps) {
 
   return (
     <S.Wrapper>
-      <S.ListPc>
-        {members.slice(0, MAX_PC).map((member) => (
-          <S.MemberIcon key={member.id}>
-            {member.profileImageUrl ? (
-              <Image
-                src={member.profileImageUrl}
-                alt={member.nickname}
-                width={30}
-                height={30}
-                style={{ borderRadius: '50%', objectFit: 'cover' }}
-              />
-            ) : (
-              <S.MemberIconFallback
-                style={{ background: getProfileColorByNickname(member.nickname) }}
-              >
-                {member.nickname[0]}
-              </S.MemberIconFallback>
-            )}
-          </S.MemberIcon>
-        ))}
-        {members.length > MAX_PC && (
-          <S.MemberIconExtra>+{members.length - MAX_PC}</S.MemberIconExtra>
-        )}
-      </S.ListPc>
-
-      <S.ListTablet>
-        {members.slice(0, MAX_TABLET).map((member) => (
-          <S.MemberIcon key={member.id}>
-            {member.profileImageUrl ? (
-              <Image
-                src={member.profileImageUrl}
-                alt={member.nickname}
-                width={30}
-                height={30}
-                style={{ borderRadius: '50%', objectFit: 'cover' }}
-              />
-            ) : (
-              <S.MemberIconFallback
-                style={{ background: getProfileColorByNickname(member.nickname) }}
-              >
-                {member.nickname[0]}
-              </S.MemberIconFallback>
-            )}
-          </S.MemberIcon>
-        ))}
-        {members.length > MAX_TABLET && (
-          <S.MemberIconExtra>+{members.length - MAX_TABLET}</S.MemberIconExtra>
-        )}
-      </S.ListTablet>
+      {(
+        [
+          { Container: S.ListPc, max: MAX_PC },
+          { Container: S.ListTablet, max: MAX_TABLET },
+        ] as const
+      ).map(({ Container, max }) => (
+        <Container key={max}>
+          {members.slice(0, max).map((member) => (
+            <S.MemberIcon key={member.id}>
+              {member.profileImageUrl ? (
+                <Image
+                  src={member.profileImageUrl}
+                  alt={member.nickname}
+                  width={30}
+                  height={30}
+                  style={{ borderRadius: '50%', objectFit: 'cover' }}
+                />
+              ) : (
+                <S.MemberIconFallback
+                  style={{
+                    background: getProfileColorByNickname(member.nickname),
+                  }}
+                >
+                  {member.nickname[0]}
+                </S.MemberIconFallback>
+              )}
+            </S.MemberIcon>
+          ))}
+          {members.length > max && (
+            <S.MemberIconExtra>+{members.length - max}</S.MemberIconExtra>
+          )}
+        </Container>
+      ))}
     </S.Wrapper>
   );
 }
