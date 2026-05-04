@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { DEVICE } from '@/src/styles/Breakpoints';
 
 export const Section = styled.section`
   min-width: 320px;
@@ -11,6 +12,14 @@ export const Section = styled.section`
   gap: 12px;
 
   overflow: auto;
+
+  @media ${DEVICE.mobile} {
+    min-width: unset;
+    height: auto;
+    overflow: visible;
+
+    max-width: 400px;
+  }
 `;
 
 export const Header = styled.div`
@@ -48,16 +57,35 @@ export const Count = styled.span`
 export const Setting = styled.div`
   cursor: pointer;
   margin-top: 4px;
+
+  display: flex;
+  gap: 8px;
 `;
 
-export const CardList = styled.div`
+export const CardList = styled.div<{ $isOpen: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 10px;
-
   flex: 1;
-  min-height: 0;
   overflow-y: auto;
+
+  @media ${DEVICE.mobile} {
+    display: ${({ $isOpen }) => ($isOpen ? 'flex' : 'none')};
+    flex: none;
+    min-height: unset;
+    overflow-y: visible;
+  }
+`;
+
+export const ArrowButton = styled.button<{ $isOpen: boolean }>`
+  display: none; /* 데스크탑에서는 숨김 */
+  transition: transform 0.2s;
+
+  @media ${DEVICE.mobile} {
+    display: block;
+    transform: ${({ $isOpen }) =>
+      $isOpen ? 'rotate(180deg)' : 'rotate(0deg)'};
+  }
 `;
 
 export const Empty = styled.p`

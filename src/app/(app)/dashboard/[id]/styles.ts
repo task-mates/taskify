@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { DEVICE } from '@/src/styles/Breakpoints';
 
 export const PageMain = styled.main`
   padding: 24px;
@@ -35,6 +36,12 @@ export const ColumnList = styled.div`
   min-height: 0;
   overflow-x: auto;
   overflow-y: hidden;
+
+  @media ${DEVICE.mobile} {
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
 `;
 
 export const AddButton = styled.button`
@@ -52,6 +59,14 @@ export const AddButton = styled.button`
 
   &:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  @media ${DEVICE.mobile} {
+    width: 100%;
+    max-width: 360px;
+    height: 20px;
+    padding: 20px 10px;
+    align-self: flex-start;
   }
 `;
 
