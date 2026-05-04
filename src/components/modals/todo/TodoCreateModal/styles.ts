@@ -462,12 +462,12 @@ export const AssigneeAvatar = styled.span<{ $imageUrl: string | null }>`
   width: 20px;
   height: 20px;
   border-radius: 50%;
+  color: #fff;
   background-color: #2f9d6a;
   background-image: ${({ $imageUrl }) =>
     $imageUrl ? `url(${$imageUrl})` : 'none'};
   background-size: cover;
   background-position: center;
-  color: #fff;
   font-size: 8px;
   font-weight: 600;
   white-space: nowrap;
@@ -478,6 +478,23 @@ export const AssigneeName = styled.span`
   font-size: 16px;
   font-weight: 500;
   color: #333236;
+`;
+
+export const AssigneeClearButton = styled.button`
+  display: inline-flex;
+  position: relative;
+
+  &::after {
+    content: '';
+    background-color: #000;
+    background-image: url(/images/icon-close-wh.svg);
+    background-size: 60%;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+  }
 `;
 
 export const TagBox = styled.div`

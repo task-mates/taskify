@@ -1,8 +1,8 @@
 'use client';
 
 import axios from 'axios';
-import dayjs from 'dayjs';
 import { useState, useEffect, useRef } from 'react';
+import dayjs from 'dayjs';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import { ko } from 'date-fns/locale/ko';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -130,6 +130,12 @@ export default function TodoCreateModal({
     };
     fetchMembers();
   }, [dashboardId]);
+
+  const handleClearAssignee = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setSelectedAssignee(null);
+    setIsAssigneeOpen(false);
+  };
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -331,9 +337,14 @@ export default function TodoCreateModal({
                       $imageUrl={selectedAssignee.profileImageUrl}
                     >
                       {!selectedAssignee.profileImageUrl &&
-                        selectedAssignee.nickname.slice(0, 2)}
+                        selectedAssignee.nickname.slice(1, 3)}
                     </S.AssigneeAvatar>
                     <S.AssigneeName>{selectedAssignee.nickname}</S.AssigneeName>
+                    <S.AssigneeClearButton
+                      type="button"
+                      aria-label="담당자 선택 해제"
+                      onClick={handleClearAssignee}
+                    ></S.AssigneeClearButton>
                   </S.SelectedAssignee>
                 ) : (
                   '담당자 선택'
@@ -354,7 +365,8 @@ export default function TodoCreateModal({
                           }}
                         >
                           <S.AssigneeAvatar $imageUrl={member.profileImageUrl}>
-                            {!member.profileImageUrl && member.nickname}
+                            {!member.profileImageUrl &&
+                              member.nickname.slice(1, 3)}
                           </S.AssigneeAvatar>
                           <S.AssigneeName>{member.nickname}</S.AssigneeName>
                         </S.OptionButton>
