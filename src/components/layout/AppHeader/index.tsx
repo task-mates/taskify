@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { usersApi } from '@/src/apis/users';
 import type { User } from '@/src/apis/users/type';
 import { getProfileColorByNickname } from '@/src/utils/profileColor';
+import SettingIcon from '@/src/components/icons/icon-setting.svg';
+import PlusIcon from '@/src/components/icons/icon-plus.svg';
 import * as S from './styles';
 import type { AppHeaderProps } from '@/src/components/layout/AppHeader/type';
 
@@ -41,7 +43,26 @@ export default function AppHeader({
 
       <S.RightSection>
         {isMyDashboard && <>{/* TODO: 마이 대시보드 헤더 콘텐츠 */}</>}
-        {isOwnedDashboard && <>{/* TODO: 내가 만든 대시보드 헤더 콘텐츠 */}</>}
+        {isOwnedDashboard && (
+          <>
+            <S.ActionButton
+              type="button"
+              onClick={() => router.push(`/dashboard/${dashboardId}/edit`)}
+            >
+              <SettingIcon aria-hidden="true" />
+              관리
+            </S.ActionButton>
+            <S.ActionButton
+              type="button"
+              onClick={() => {
+                // TODO: 초대하기 모달
+              }}
+            >
+              <PlusIcon aria-hidden="true" />
+              초대하기
+            </S.ActionButton>
+          </>
+        )}
         {isInvitedDashboard && <>{/* TODO: 초대받은 대시보드 헤더 콘텐츠 */}</>}
 
         <S.ProfileButton type="button" onClick={() => router.push('/mypage')}>
