@@ -41,6 +41,8 @@ export const ColumnList = styled.div`
     flex-direction: column;
     overflow-x: hidden;
     overflow-y: auto;
+    align-items: center;
+    justify-content: flex-start;
   }
 `;
 
@@ -49,6 +51,7 @@ export const AddButton = styled.button`
   justify-content: center;
   align-items: center;
   align-self: center;
+  flex-shrink: 0;
   width: 20px;
   height: 200px;
   padding: 10px 20px;
@@ -62,11 +65,12 @@ export const AddButton = styled.button`
   }
 
   @media ${DEVICE.mobile} {
+    order: -1;
     width: 100%;
     max-width: 360px;
     height: 20px;
     padding: 20px 10px;
-    align-self: flex-start;
+    align-self: center;
   }
 `;
 

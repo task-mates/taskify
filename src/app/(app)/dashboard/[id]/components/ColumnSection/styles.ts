@@ -15,10 +15,10 @@ export const Section = styled.section`
 
   @media ${DEVICE.mobile} {
     min-width: unset;
+    width: 100%;
+    max-width: 400px;
     height: auto;
     overflow: visible;
-
-    max-width: 400px;
   }
 `;
 
@@ -26,12 +26,23 @@ export const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
+
+  @media ${DEVICE.mobile} {
+    gap: 8px;
+  }
 `;
 
 export const TitleGroup = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
+
+  @media ${DEVICE.mobile} {
+    flex: 1;
+    justify-content: flex-start;
+  }
 `;
 
 export const Title = styled.h2`
@@ -57,9 +68,19 @@ export const Count = styled.span`
 export const Setting = styled.div`
   cursor: pointer;
   margin-top: 4px;
-
   display: flex;
+  align-items: center;
   gap: 8px;
+  flex-shrink: 0;
+
+  svg {
+    flex-shrink: 0;
+    display: block;
+  }
+
+  @media ${DEVICE.mobile} {
+    margin-top: 0;
+  }
 `;
 
 export const CardList = styled.div<{ $isOpen: boolean }>`
@@ -74,15 +95,25 @@ export const CardList = styled.div<{ $isOpen: boolean }>`
     flex: none;
     min-height: unset;
     overflow-y: visible;
+    width: 100%;
   }
 `;
 
 export const ArrowButton = styled.button<{ $isOpen: boolean }>`
-  display: none; /* 데스크탑에서는 숨김 */
+  display: none;
   transition: transform 0.2s;
 
   @media ${DEVICE.mobile} {
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    min-width: 40px;
+    min-height: 40px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
     transform: ${({ $isOpen }) =>
       $isOpen ? 'rotate(180deg)' : 'rotate(0deg)'};
   }
@@ -105,14 +136,23 @@ export const AddButton = styled.button`
   border-radius: 8px;
   background-color: #ffffff;
   cursor: pointer;
+  flex-shrink: 0;
 
   &:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  @media ${DEVICE.mobile} {
+    min-height: 48px;
   }
 `;
 
 export const IconContainer = styled.div`
   background-color: #e1eaf1;
-  padding: 1px 6px;
+  padding: 5px 5px;
   border-radius: 4px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 `;
