@@ -145,10 +145,16 @@ export default function TodoCreateModal({
         columnId,
         title,
         description,
-        dueDate: dueDate ? dayjs(dueDate).format('YYYY-MM-DD HH:mm') : '',
-        assigneeUserId: selectedAssignee?.userId,
         tags: tags.map((tag) => tag.name),
-        imageUrl,
+        ...(dueDate && {
+          dueDate: dayjs(dueDate).format('YYYY-MM-DD HH:mm'),
+        }),
+        ...(selectedAssignee && {
+          assigneeUserId: selectedAssignee.userId,
+        }),
+        ...(imageUrl && {
+          imageUrl,
+        }),
       };
 
       console.log('카드 생성 요청 body:', requestBody);
