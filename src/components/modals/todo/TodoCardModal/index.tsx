@@ -58,6 +58,15 @@ export default function TodoCardModal({
 
   const [modalMode, setModalMode] = useState<'detail' | 'update'>('detail');
 
+  const fetchCard = useCallback(async () => {
+    try {
+      const data = await cardsApi.getById(cardId);
+      setCard(data);
+    } catch (e) {
+      console.error(e);
+    }
+  }, [cardId]);
+
   const handleDeleteCard = async () => {
     console.log('삭제 버튼 클릭됨');
     const isConfirmed = window.confirm('카드를 삭제하시겠습니까?');
@@ -74,7 +83,7 @@ export default function TodoCardModal({
   };
 
   const TAG_COLORS = [
-    { backgroundColor: '#F2F2F2', color: '#666666' },
+    { backgroundColor: '#E5E7EB', color: '#374151' },
     { backgroundColor: '#F4E3D7', color: '#8A4B2A' },
     { backgroundColor: '#FADFCB', color: '#B85C2E' },
     { backgroundColor: '#F8E7B8', color: '#A36A00' },
@@ -95,6 +104,7 @@ export default function TodoCardModal({
   };
 
   const tags = (card?.tags ?? []).filter((tag) => tag.trim());
+
   const badgeGroup = (
     <S.BadgeGroup>
       {columnTitle && <S.ColumnBadge>{columnTitle}</S.ColumnBadge>}
@@ -191,17 +201,12 @@ export default function TodoCardModal({
   }, []);
 
   useEffect(() => {
-    const fetchCard = async () => {
-      try {
-        const data = await cardsApi.getById(cardId);
-        setCard(data);
-      } catch (e) {
-        console.error(e);
-      }
+    const loadCard = async () => {
+      await fetchCard();
     };
 
-    fetchCard();
-  }, [cardId]);
+    loadCard();
+  }, [fetchCard]);
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -493,7 +498,10 @@ export default function TodoCardModal({
             cardId={cardId}
             dashboardId={dashboardId}
             columnId={card.columnId}
-            onSuccess={() => setModalMode('detail')}
+            onSuccess={async () => {
+              await fetchCard();
+              setModalMode('detail');
+            }}
           />
         )
       )}
