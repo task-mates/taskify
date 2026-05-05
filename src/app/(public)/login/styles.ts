@@ -81,12 +81,11 @@ export const TogglePasswordButton = styled.button`
 `;
 
 export const LoginButton = styled(Button).attrs({
-  variant: 'primary',
   width: '100%',
   height: '44px',
 })`
   margin-top: 8px;
-  border-radius: 8px;
+  font-weight: 700;
 `;
 
 export const ErrorText = styled.p`
