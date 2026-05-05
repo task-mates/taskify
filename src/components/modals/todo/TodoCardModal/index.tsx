@@ -104,7 +104,6 @@ export default function TodoCardModal({
   };
 
   const tags = (card?.tags ?? []).filter((tag) => tag.trim());
-
   const badgeGroup = (
     <S.BadgeGroup>
       {columnTitle && <S.ColumnBadge>{columnTitle}</S.ColumnBadge>}
@@ -365,6 +364,15 @@ export default function TodoCardModal({
     return `${time.hour() < 12 ? '오전' : '오후'} ${time.format('h:mm')}`;
   };
 
+  const getAvatarText = (nickname: string) => {
+    const trimmedNickname = nickname.trim();
+    if (!trimmedNickname) return '';
+
+    const isKorean = /[ㄱ-ㅎㅏ-ㅣ가-힣]/.test(trimmedNickname);
+
+    return isKorean ? trimmedNickname.slice(1, 3) : trimmedNickname.slice(0, 1);
+  };
+
   return (
     <TodoBaseModal
       title={modalMode === 'detail' ? (card?.title ?? '') : '할 일 수정'}
@@ -393,7 +401,7 @@ export default function TodoCardModal({
                         style={{ objectFit: 'cover' }}
                       />
                     ) : (
-                      assigneeNickname
+                      getAvatarText(assigneeNickname)
                     )}
                   </S.TaskInfoNameBadge>
                   {assigneeNickname}
@@ -439,7 +447,7 @@ export default function TodoCardModal({
                     style={{ objectFit: 'cover' }}
                   />
                 ) : (
-                  currentUserNickname
+                  getAvatarText(currentUserNickname)
                 )}
               </S.CommentBadge>
             )}
