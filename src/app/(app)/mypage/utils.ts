@@ -6,8 +6,6 @@ type PasswordErrorParams = {
 };
 
 export const hasProfileChanges = (params: {
-  currentEmail: string;
-  initialEmail: string;
   currentName: string;
   initialName: string;
   currentProfileImageUrl: string | null;
@@ -15,8 +13,6 @@ export const hasProfileChanges = (params: {
   selectedProfileImage: File | null;
 }) => {
   const {
-    currentEmail,
-    initialEmail,
     currentName,
     initialName,
     currentProfileImageUrl,
@@ -25,7 +21,6 @@ export const hasProfileChanges = (params: {
   } = params;
 
   const trimmedName = currentName.trim();
-  const isEmailChanged = currentEmail.trim() !== initialEmail.trim();
   const isNameChanged = trimmedName !== initialName.trim();
   const normalizedCurrentImage = currentProfileImageUrl ?? null;
   const normalizedInitialImage = initialProfileImageUrl ?? null;
@@ -34,7 +29,7 @@ export const hasProfileChanges = (params: {
     selectedProfileImage !== null;
 
   // 이름, 프로필 이미지 중 하나라도 초기값과 다를 때
-  const isProfileDirty = isEmailChanged || isNameChanged || isImageChanged;
+  const isProfileDirty = isNameChanged || isImageChanged;
 
   return {
     trimmedName,

@@ -43,8 +43,6 @@ const useMyPageProfileState = () => {
   });
 
   const { isProfileDirty: isProfileSaveEnabled } = hasProfileChanges({
-    currentEmail: email,
-    initialEmail,
     currentName: name,
     initialName,
     currentProfileImageUrl: profileImageUrl,
@@ -233,8 +231,6 @@ export default function MyPage() {
 
   const handleProfileSave = async () => {
     const { trimmedName } = hasProfileChanges({
-      currentEmail: email,
-      initialEmail,
       currentName: name,
       initialName,
       currentProfileImageUrl: profileImageUrl,
@@ -465,7 +461,11 @@ export default function MyPage() {
             type="submit"
             disabled={
               isSubmittingPassword ||
-              !isPasswordFieldsFilled ||
+              !isPasswordChangeClientValid({
+                currentPassword,
+                newPassword,
+                confirmPassword,
+              }) ||
               newPassword === currentPassword
             }
           >

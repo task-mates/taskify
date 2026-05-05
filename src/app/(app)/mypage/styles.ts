@@ -28,7 +28,7 @@ export const ProfileSection = styled(Section)`
   box-sizing: border-box;
   width: min(100%, ${MYPAGE_CARD_MAX_WIDTH});
   max-width: ${MYPAGE_CARD_MAX_WIDTH};
-  height: 366px;
+  min-height: 366px;
   margin-bottom: 16px;
 
   @media ${DEVICE.mobile} {
@@ -132,6 +132,11 @@ export const ProfileMenu = styled.div`
   gap: 4px;
   min-width: 120px;
   z-index: 1;
+
+  @media ${DEVICE.mobile} {
+    left: 0;
+    top: calc(100% + 8px);
+  }
 `;
 
 export const ProfileMenuButton = styled.button<{ $danger?: boolean }>`
