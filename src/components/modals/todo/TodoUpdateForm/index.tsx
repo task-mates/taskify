@@ -163,9 +163,9 @@ export default function TodoUpdateForm({
         columnId,
         title,
         description,
-        dueDate: dueDate ? dayjs(dueDate).format('YYYY-MM-DD HH:mm') : '',
-        assigneeUserId: selectedAssignee?.userId,
         tags: tags.map((tag) => tag.name),
+        dueDate: dueDate ? dayjs(dueDate).format('YYYY-MM-DD HH:mm') : null,
+        assigneeUserId: selectedAssignee ? selectedAssignee.userId : null,
         imageUrl,
       };
 
