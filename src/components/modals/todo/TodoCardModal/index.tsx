@@ -59,6 +59,7 @@ export default function TodoCardModal({
   const [modalMode, setModalMode] = useState<'detail' | 'update'>('detail');
 
   const handleDeleteCard = async () => {
+    console.log('삭제 버튼 클릭됨');
     const isConfirmed = window.confirm('카드를 삭제하시겠습니까?');
 
     if (!isConfirmed) return;
@@ -116,7 +117,13 @@ export default function TodoCardModal({
               <S.ActionButton
                 type="button"
                 $variant="delete"
-                onClick={handleDeleteCard}
+                onMouseDown={(e) => {
+                  e.stopPropagation();
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteCard();
+                }}
               >
                 <DeleteIcon />
                 삭제하기
@@ -330,9 +337,9 @@ export default function TodoCardModal({
       badgeGroup={modalMode === 'detail' ? badgeGroup : undefined}
       actionMenu={modalMode === 'detail' ? actionMenu : undefined}
       footerGroup={modalMode === 'update' ? updateFooterGroup : undefined}
-      headerVariant="card"
+      headerVariant={modalMode === 'detail' ? 'card' : 'default'}
       overlayVariant="full"
-      layoutVariant="card"
+      layoutVariant={modalMode === 'detail' ? 'card' : 'default'}
     >
       {modalMode === 'detail' ? (
         <>
