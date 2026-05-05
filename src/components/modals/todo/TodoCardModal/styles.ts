@@ -174,7 +174,9 @@ export const TaskInfoValue = styled.span`
   }
 `;
 
-export const TaskInfoNameBadge = styled.span`
+export const TaskInfoNameBadge = styled.span<{
+  $backgroundColor: string;
+}>`
   flex-shrink: 0;
   width: 30px;
   height: 30px;
@@ -183,7 +185,7 @@ export const TaskInfoNameBadge = styled.span`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #1458bc;
+  background: ${({ $backgroundColor }) => $backgroundColor};
   color: #fff;
   border-radius: 50%;
   white-space: nowrap;
@@ -229,7 +231,9 @@ export const CommentTextareaWrapper = styled.div<{ $expanded: boolean }>`
   gap: 12px;
 `;
 
-export const CommentBadge = styled.span`
+export const CommentBadge = styled.span<{
+  $backgroundColor: string;
+}>`
   flex-shrink: 0;
   width: 30px;
   height: 30px;
@@ -238,7 +242,7 @@ export const CommentBadge = styled.span`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #1458bc;
+  background: ${({ $backgroundColor }) => $backgroundColor};
   color: #fff;
   border-radius: 50%;
   white-space: nowrap;

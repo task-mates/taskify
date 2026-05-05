@@ -23,6 +23,56 @@ const COMMENT_TEXTAREA_MAX_ROWS = 6;
 const COMMENT_TEXTAREA_MAX_HEIGHT =
   COMMENT_TEXTAREA_LINE_HEIGHT * COMMENT_TEXTAREA_MAX_ROWS;
 
+const TAG_COLORS = [
+  { backgroundColor: '#E5E7EB', color: '#374151' },
+  { backgroundColor: '#F4E3D7', color: '#8A4B2A' },
+  { backgroundColor: '#FADFCB', color: '#B85C2E' },
+  { backgroundColor: '#F8E7B8', color: '#A36A00' },
+  { backgroundColor: '#DDEFE3', color: '#2F6F4E' },
+  { backgroundColor: '#D8ECFF', color: '#2D6FA3' },
+  { backgroundColor: '#E7DDF7', color: '#6E4BA3' },
+  { backgroundColor: '#F7DDE8', color: '#A33E68' },
+  { backgroundColor: '#F9D9D6', color: '#B84038' },
+];
+
+const ASSIGNEE_AVATAR_COLORS = [
+  '#F44336',
+  '#E91E63',
+  '#9C27B0',
+  '#673AB7',
+  '#3F51B5',
+  '#2196F3',
+  '#03A9F4',
+  '#00BCD4',
+  '#009688',
+  '#4CAF50',
+  '#FF9800',
+  '#FF5722',
+];
+
+type AvatarColorTarget = {
+  id?: number;
+  userId?: number;
+  nickname: string;
+};
+
+const getHashFromString = (value: string) => {
+  let hash = 0;
+
+  for (let i = 0; i < value.length; i += 1) {
+    hash = value.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  return Math.abs(hash);
+};
+
+const getAssigneeAvatarColor = (member: AvatarColorTarget) => {
+  const hashKey = `${member.userId ?? member.id}-${member.nickname}`;
+  const hash = getHashFromString(hashKey);
+
+  return ASSIGNEE_AVATAR_COLORS[hash % ASSIGNEE_AVATAR_COLORS.length];
+};
+
 export default function TodoCardModal({
   onClose,
   cardId,
@@ -58,6 +108,20 @@ export default function TodoCardModal({
 
   const [modalMode, setModalMode] = useState<'detail' | 'update'>('detail');
 
+  const assigneeBgColor = card?.assignee
+    ? getAssigneeAvatarColor({
+        userId: card.assignee.id,
+        nickname: card.assignee.nickname,
+      })
+    : '';
+
+  const currentUserBgColor = currentUser
+    ? getAssigneeAvatarColor({
+        userId: currentUser.id,
+        nickname: currentUser.nickname,
+      })
+    : '';
+
   const fetchCard = useCallback(async () => {
     try {
       const data = await cardsApi.getById(cardId);
@@ -81,18 +145,6 @@ export default function TodoCardModal({
       alert('카드 삭제에 실패했습니다.');
     }
   };
-
-  const TAG_COLORS = [
-    { backgroundColor: '#E5E7EB', color: '#374151' },
-    { backgroundColor: '#F4E3D7', color: '#8A4B2A' },
-    { backgroundColor: '#FADFCB', color: '#B85C2E' },
-    { backgroundColor: '#F8E7B8', color: '#A36A00' },
-    { backgroundColor: '#DDEFE3', color: '#2F6F4E' },
-    { backgroundColor: '#D8ECFF', color: '#2D6FA3' },
-    { backgroundColor: '#E7DDF7', color: '#6E4BA3' },
-    { backgroundColor: '#F7DDE8', color: '#A33E68' },
-    { backgroundColor: '#F9D9D6', color: '#B84038' },
-  ];
 
   const getTagColorByName = (tagName: string) => {
     const hash = [...tagName].reduce(
@@ -394,7 +446,7 @@ export default function TodoCardModal({
               <S.TaskInfoItem>
                 <S.TaskInfoLabel>담당자</S.TaskInfoLabel>
                 <S.TaskInfoValue>
-                  <S.TaskInfoNameBadge>
+                  <S.TaskInfoNameBadge $backgroundColor={assigneeBgColor}>
                     {assigneeProfileImage ? (
                       <Image
                         src={assigneeProfileImage}
@@ -442,7 +494,7 @@ export default function TodoCardModal({
 
           <S.CommentTextareaWrapper $expanded={isTextareaExpanded}>
             {!isTextareaExpanded && currentUserNickname && (
-              <S.CommentBadge>
+              <S.CommentBadge $backgroundColor={currentUserBgColor}>
                 {currentUserImage ? (
                   <Image
                     src={currentUserImage}
@@ -479,30 +531,37 @@ export default function TodoCardModal({
           </S.CommentTextareaWrapper>
 
           <S.CommentList>
-            {comments.map((comment) => (
-              <S.CommentItem key={comment.id}>
-                <S.CommentBadge>
-                  {getAvatarText(comment.author.nickname)}
-                </S.CommentBadge>
+            {comments.map((comment) => {
+              const commentAuthorBgColor = getAssigneeAvatarColor({
+                userId: comment.author.id,
+                nickname: comment.author.nickname,
+              });
 
-                <S.CommentContent>
-                  <S.CommentInfo>
-                    <S.CommentName>{comment.author.nickname}</S.CommentName>
+              return (
+                <S.CommentItem key={comment.id}>
+                  <S.CommentBadge $backgroundColor={commentAuthorBgColor}>
+                    {getAvatarText(comment.author.nickname)}
+                  </S.CommentBadge>
 
-                    <S.CommentCreated>
-                      <S.CommentDate>
-                        {formatDate(comment.createdAt)}
-                      </S.CommentDate>
-                      <S.CommentTime>
-                        {formatTime(comment.createdAt)}
-                      </S.CommentTime>
-                    </S.CommentCreated>
-                  </S.CommentInfo>
+                  <S.CommentContent>
+                    <S.CommentInfo>
+                      <S.CommentName>{comment.author.nickname}</S.CommentName>
 
-                  <S.CommentText>{comment.content}</S.CommentText>
-                </S.CommentContent>
-              </S.CommentItem>
-            ))}
+                      <S.CommentCreated>
+                        <S.CommentDate>
+                          {formatDate(comment.createdAt)}
+                        </S.CommentDate>
+                        <S.CommentTime>
+                          {formatTime(comment.createdAt)}
+                        </S.CommentTime>
+                      </S.CommentCreated>
+                    </S.CommentInfo>
+
+                    <S.CommentText>{comment.content}</S.CommentText>
+                  </S.CommentContent>
+                </S.CommentItem>
+              );
+            })}
 
             <div ref={observerRef} style={{ height: '1px' }} />
           </S.CommentList>
