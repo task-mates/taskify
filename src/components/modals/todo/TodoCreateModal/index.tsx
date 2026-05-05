@@ -331,14 +331,20 @@ export default function TodoCreateModal({
   // ==============================
   // 이미지 관련 로직
   // ==============================
+  // 이미지 미리보기 URL cleanup 로직
+  useEffect(() => {
+    return () => {
+      if (previewImageUrl) {
+        URL.revokeObjectURL(previewImageUrl);
+      }
+    };
+  }, [previewImageUrl]);
+
   // 이미지 선택 및 미리보기 생성 로직
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setSelectedImageFile(file);
-    if (previewImageUrl) {
-      URL.revokeObjectURL(previewImageUrl);
-    }
     const imageUrl = URL.createObjectURL(file);
     setPreviewImageUrl(imageUrl);
   };
@@ -512,7 +518,7 @@ export default function TodoCreateModal({
                       handleRemoveTag(tag.name);
                     }}
                   >
-                    ×
+                    x
                   </S.TagRemoveButton>
                 </S.SelectedTagBadge>
               ))}
