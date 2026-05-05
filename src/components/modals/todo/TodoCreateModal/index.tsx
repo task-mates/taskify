@@ -1,7 +1,7 @@
 'use client';
 
 import axios from 'axios';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import dayjs from 'dayjs';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import { ko } from 'date-fns/locale/ko';
@@ -260,40 +260,52 @@ export default function TodoCreateModal({
   // ==============================
 
   // 태그 추가 로직
-  const handleAddTag = (value = tagInput) => {
-    const trimmedTag = value.trim();
+  // 태그 추가 로직
+  const handleAddTag = useCallback(
+    (value = tagInput) => {
+      const trimmedTag = value.trim();
 
-    if (!trimmedTag) return;
+      if (!trimmedTag) return;
 
-    const existingOption = tagOptions.find((tag) => tag.name === trimmedTag);
+      const existingOption = tagOptions.find((tag) => tag.name === trimmedTag);
 
-    const tagColor =
-      currentInputColorRef.current ??
-      getRandomTagColor(lastTagColorRef.current);
+      const tagColor =
+        currentInputColorRef.current ??
+        getRandomTagColor(lastTagColorRef.current);
 
-    const newTag = existingOption ?? {
-      name: trimmedTag,
-      ...tagColor,
-    };
+      const newTag = existingOption ?? {
+        name: trimmedTag,
+        ...tagColor,
+      };
 
-    setTags((prev) =>
-      prev.some((tag) => tag.name === trimmedTag) ? prev : [...prev, newTag]
-    );
+      setTags((prev) =>
+        prev.some((tag) => tag.name === trimmedTag) ? prev : [...prev, newTag]
+      );
 
-    setTagOptions((prev) =>
-      prev.some((tag) => tag.name === trimmedTag) ? prev : [...prev, newTag]
-    );
+      setTagOptions((prev) =>
+        prev.some((tag) => tag.name === trimmedTag) ? prev : [...prev, newTag]
+      );
 
-    lastTagColorRef.current = {
-      backgroundColor: newTag.backgroundColor,
-      color: newTag.color,
-    };
+      lastTagColorRef.current = {
+        backgroundColor: newTag.backgroundColor,
+        color: newTag.color,
+      };
 
-    currentInputColorRef.current = null;
-    setPreviewTagColor(null);
-    setTagInput('');
-    setIsTagOpen(true);
-  };
+      currentInputColorRef.current = null;
+      setPreviewTagColor(null);
+      setTagInput('');
+      setIsTagOpen(true);
+    },
+    [
+      tagInput,
+      tagOptions,
+      setTags,
+      setTagOptions,
+      setPreviewTagColor,
+      setTagInput,
+      setIsTagOpen,
+    ]
+  );
 
   // 선택된 태그 제거 로직
   const handleRemoveTag = (targetTag: string) => {
