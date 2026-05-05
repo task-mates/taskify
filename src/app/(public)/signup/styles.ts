@@ -147,6 +147,7 @@ export const SignupButton = styled(Button).attrs({
   variant: 'primary',
   width: '100%',
   height: '44px',
+  type: 'submit',
 })`
   margin-top: 8px;
   border-radius: 8px;
@@ -192,8 +193,10 @@ export const ModalTitle = styled.p`
 
 export const ModalButton = styled(Button).attrs({
   variant: 'primary',
-  width: '96px',
+  width: 'auto',
   height: '40px',
 })`
+  min-width: 96px;
+  padding: 0 20px;
   border-radius: 8px;
 `;
