@@ -259,6 +259,10 @@ export const CommentTextareaBox = styled.div<{ $expanded: boolean }>`
   background: #fff;
   border: 1px solid #a39fb2;
   border-radius: 12px;
+
+  &:focus-within {
+    border-color: #333;
+  }
 `;
 
 export const CommentTextarea = styled.textarea`
@@ -397,4 +401,47 @@ export const CommentActionButton = styled.button`
   &:hover {
     color: #333236;
   }
+`;
+
+export const CommentUpdateBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+export const CommentUpdateTextarea = styled.textarea`
+  width: 100%;
+  min-height: 90px;
+  padding: 8px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  resize: none;
+
+  color: #333236;
+  font-size: 14px;
+  line-height: 20px;
+
+  &:focus {
+    outline: none;
+    border-color: #333;
+  }
+`;
+
+export const CommentUpdateButtonGroup = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+`;
+
+export const CommentUpdateButton = styled.button<{ $variant?: 'primary' }>`
+  padding: 6px 12px;
+  border: 1px solid
+    ${({ $variant }) => ($variant === 'primary' ? '#83c6e5' : '#888787')};
+  border-radius: 4px;
+  background-color: ${({ $variant }) =>
+    $variant === 'primary' ? '#83c6e5' : '#888787'};
+  color: ${({ $variant }) => ($variant === 'primary' ? '#ffffff' : '#fff')};
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
 `;

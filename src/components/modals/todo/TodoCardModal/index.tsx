@@ -2,7 +2,12 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 import dayjs from 'dayjs';
 import Image from 'next/image';
 import { cardsApi } from '@/src/apis/cards';
-import { createComment, getCommentList } from '@/src/apis/comments';
+import {
+  createComment,
+  getCommentList,
+  updateComment,
+  removeComment,
+} from '@/src/apis/comments';
 import { usersApi } from '@/src/apis/users';
 import type { Card } from '@/src/apis/cards/type';
 import type { Comment } from '@/src/apis/comments/type';
@@ -96,6 +101,11 @@ export default function TodoCardModal({
   const [isTyping, setIsTyping] = useState(false);
 
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+
+  const [updatingCommentId, setUpdatingCommentId] = useState<number | null>(
+    null
+  );
+  const [updatingCommentContent, setUpdatingCommentContent] = useState('');
 
   const assigneeNickname = card?.assignee?.nickname?.trim();
   const assigneeProfileImage = card?.assignee?.profileImageUrl;
@@ -372,6 +382,64 @@ export default function TodoCardModal({
     }
   };
 
+  // 댓글 update 모드 시작
+  const handleStartUpdateComment = (comment: Comment) => {
+    setUpdatingCommentId(comment.id);
+    setUpdatingCommentContent(comment.content);
+  };
+
+  // 댓글 update 취소
+  const handleCancelUpdateComment = () => {
+    setUpdatingCommentId(null);
+    setUpdatingCommentContent('');
+  };
+
+  // 댓글 update 저장
+  const handleUpdateComment = async (commentId: number) => {
+    const content = updatingCommentContent.trim();
+
+    if (!content) {
+      alert('댓글 내용을 입력해주세요.');
+      return;
+    }
+
+    try {
+      const updatedComment = await updateComment(commentId, {
+        content,
+      });
+
+      setComments((prevComments) =>
+        prevComments.map((comment) =>
+          comment.id === commentId ? updatedComment : comment
+        )
+      );
+
+      setUpdatingCommentId(null);
+      setUpdatingCommentContent('');
+    } catch (e) {
+      console.error(e);
+      alert('댓글 수정에 실패했습니다.');
+    }
+  };
+
+  // 댓글 삭제
+  const handleDeleteComment = async (commentId: number) => {
+    const isConfirmed = window.confirm('댓글을 삭제하시겠습니까?');
+
+    if (!isConfirmed) return;
+
+    try {
+      await removeComment(commentId);
+
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment.id !== commentId)
+      );
+    } catch (e) {
+      console.error(e);
+      alert('댓글 삭제에 실패했습니다.');
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await submitComment();
@@ -556,19 +624,56 @@ export default function TodoCardModal({
                         </S.CommentTime>
                       </S.CommentCreated>
 
-                      {currentUser?.id === comment.author.id && (
-                        <S.CommentActionGroup>
-                          <S.CommentActionButton type="button">
-                            수정
-                          </S.CommentActionButton>
-                          <S.CommentActionButton type="button">
-                            삭제
-                          </S.CommentActionButton>
-                        </S.CommentActionGroup>
-                      )}
+                      {currentUser?.id === comment.author.id &&
+                        updatingCommentId !== comment.id && (
+                          <S.CommentActionGroup>
+                            <S.CommentActionButton
+                              type="button"
+                              onClick={() => handleStartUpdateComment(comment)}
+                            >
+                              수정
+                            </S.CommentActionButton>
+
+                            <S.CommentActionButton
+                              type="button"
+                              onClick={() => handleDeleteComment(comment.id)}
+                            >
+                              삭제
+                            </S.CommentActionButton>
+                          </S.CommentActionGroup>
+                        )}
                     </S.CommentInfo>
 
-                    <S.CommentText>{comment.content}</S.CommentText>
+                    {updatingCommentId === comment.id ? (
+                      <S.CommentUpdateBox>
+                        <S.CommentUpdateTextarea
+                          value={updatingCommentContent}
+                          maxLength={COMMENT_MAX_LENGTH}
+                          onChange={(e) =>
+                            setUpdatingCommentContent(e.target.value)
+                          }
+                        />
+
+                        <S.CommentUpdateButtonGroup>
+                          <S.CommentUpdateButton
+                            type="button"
+                            onClick={handleCancelUpdateComment}
+                          >
+                            취소
+                          </S.CommentUpdateButton>
+
+                          <S.CommentUpdateButton
+                            type="button"
+                            $variant="primary"
+                            onClick={() => handleUpdateComment(comment.id)}
+                          >
+                            저장
+                          </S.CommentUpdateButton>
+                        </S.CommentUpdateButtonGroup>
+                      </S.CommentUpdateBox>
+                    ) : (
+                      <S.CommentText>{comment.content}</S.CommentText>
+                    )}
                   </S.CommentContent>
                 </S.CommentItem>
               );
