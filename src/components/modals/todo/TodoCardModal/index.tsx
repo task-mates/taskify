@@ -220,6 +220,8 @@ export default function TodoCardModal({
     fetchCurrentUser();
   }, []);
 
+  const COMMENT_MAX_LENGTH = 255;
+
   // 댓글 목록 가져오는 함수 useCallback 처리
   const fetchComments = useCallback(
     async (nextCursorId?: number | null) => {
@@ -412,7 +414,9 @@ export default function TodoCardModal({
             {dueDate && (
               <S.TaskInfoItem>
                 <S.TaskInfoLabel>마감일</S.TaskInfoLabel>
-                <S.TaskInfoValue>{formatDate(dueDate)}</S.TaskInfoValue>
+                <S.TaskInfoValue>
+                  {formatDate(dueDate)} {formatTime(dueDate)}
+                </S.TaskInfoValue>
               </S.TaskInfoItem>
             )}
           </S.TaskInfo>
@@ -458,6 +462,7 @@ export default function TodoCardModal({
                   ref={textareaRef}
                   name="comment"
                   placeholder="댓글을 남겨보세요"
+                  maxLength={COMMENT_MAX_LENGTH}
                   onChange={handleCommentChange}
                   onKeyDown={handleKeyDown}
                 />
@@ -476,7 +481,9 @@ export default function TodoCardModal({
           <S.CommentList>
             {comments.map((comment) => (
               <S.CommentItem key={comment.id}>
-                <S.CommentBadge>{comment.author.nickname}</S.CommentBadge>
+                <S.CommentBadge>
+                  {getAvatarText(comment.author.nickname)}
+                </S.CommentBadge>
 
                 <S.CommentContent>
                   <S.CommentInfo>
