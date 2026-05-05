@@ -140,7 +140,7 @@ export default function TodoCreateModal({
         imageUrl = uploadedImage.imageUrl;
       }
 
-      await cardsApi.create({
+      const requestBody = {
         dashboardId,
         columnId,
         title,
@@ -149,7 +149,11 @@ export default function TodoCreateModal({
         assigneeUserId: selectedAssignee?.userId,
         tags: tags.map((tag) => tag.name),
         imageUrl,
-      });
+      };
+
+      console.log('카드 생성 요청 body:', requestBody);
+
+      await cardsApi.create(requestBody);
 
       onClose(); //추후 토스트로 대체하면 좋을 것 같음
     } catch (error) {
@@ -213,6 +217,9 @@ export default function TodoCreateModal({
     const fetchMembers = async () => {
       try {
         const data = await membersApi.getList(dashboardId);
+
+        console.log('멤버 목록:', data.members);
+
         setMembers(data.members);
       } catch (error) {
         console.error('멤버 목록 조회 실패:', error);
@@ -475,6 +482,8 @@ export default function TodoCreateModal({
                             type="button"
                             role="option"
                             onClick={() => {
+                              console.log('선택한 담당자:', member);
+
                               setSelectedAssignee(member);
                               setIsAssigneeOpen(false);
                             }}
