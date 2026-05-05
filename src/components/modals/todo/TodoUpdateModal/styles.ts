@@ -586,7 +586,7 @@ export const TagOptionBox = styled.div`
 
   display: flex;
   flex-direction: column;
-  max-height: 285px;
+  max-height: 260px;
   overflow-y: auto;
 
   @media ${DEVICE.mobile} {
