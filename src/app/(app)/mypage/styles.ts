@@ -161,11 +161,10 @@ export const ProfileFormWrap = styled.div`
   }
 `;
 
-export const ProfileFields = styled.div<{ $size: string }>`
-  height: ${({ $size }) => $size};
+export const ProfileFields = styled.div`
   display: grid;
-  grid-template-rows: auto 44px 1fr auto 44px;
   gap: 8px;
+  align-content: start;
 `;
 
 export const Label = styled.label``;

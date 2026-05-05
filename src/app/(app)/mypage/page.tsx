@@ -20,7 +20,6 @@ import * as S from './styles';
 const useMyPageProfileState = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [email, setEmail] = useState('');
-  const [initialEmail, setInitialEmail] = useState('');
   const [name, setName] = useState('');
   const [initialName, setInitialName] = useState('');
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
@@ -55,8 +54,6 @@ const useMyPageProfileState = () => {
     setIsProfileMenuOpen,
     email,
     setEmail,
-    initialEmail,
-    setInitialEmail,
     name,
     setName,
     initialName,
@@ -100,10 +97,6 @@ const useMyPagePasswordState = () => {
   });
 
   const currentPasswordErrorMessage = currentPasswordServerError;
-  const isPasswordFieldsFilled =
-    currentPassword.length > 0 &&
-    newPassword.length > 0 &&
-    confirmPassword.length > 0;
 
   return {
     currentPassword,
@@ -119,7 +112,6 @@ const useMyPagePasswordState = () => {
     newPasswordErrorMessage,
     passwordMismatchMessage,
     currentPasswordErrorMessage,
-    isPasswordFieldsFilled,
   };
 };
 
@@ -130,8 +122,6 @@ export default function MyPage() {
     setIsProfileMenuOpen,
     email,
     setEmail,
-    initialEmail,
-    setInitialEmail,
     name,
     setName,
     initialName,
@@ -166,7 +156,6 @@ export default function MyPage() {
     newPasswordErrorMessage,
     passwordMismatchMessage,
     currentPasswordErrorMessage,
-    isPasswordFieldsFilled,
   } = useMyPagePasswordState();
 
   useEffect(() => {
@@ -174,7 +163,6 @@ export default function MyPage() {
       try {
         const me = await usersApi.getMe();
         setEmail(me.email);
-        setInitialEmail(me.email);
         setName(me.nickname);
         setInitialName(me.nickname);
         setProfileImageUrl(me.profileImageUrl || null);
@@ -187,7 +175,6 @@ export default function MyPage() {
     void fetchMyInfo();
   }, [
     setEmail,
-    setInitialEmail,
     setName,
     setInitialName,
     setProfileImageUrl,
@@ -260,7 +247,6 @@ export default function MyPage() {
       setName(updated.nickname);
       setInitialName(updated.nickname);
       setEmail(updated.email);
-      setInitialEmail(updated.email);
       setProfileImageUrl(updated.profileImageUrl || null);
       setInitialProfileImageUrl(updated.profileImageUrl || null);
       setSelectedProfileImage(null);
@@ -373,7 +359,7 @@ export default function MyPage() {
           </S.ProfileImageWrap>
 
           <S.ProfileFormWrap>
-            <S.ProfileFields $size={PROFILE_BOX_SIZE}>
+            <S.ProfileFields>
               <S.Label>이메일</S.Label>
               <S.DisabledValue>{email}</S.DisabledValue>
 
