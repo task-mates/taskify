@@ -41,7 +41,7 @@ const ASSIGNEE_AVATAR_COLORS = [
 // 태그 색상 팔레트
 // ==============================
 const TAG_COLORS = [
-  { backgroundColor: '#F2F2F2', color: '#666666' }, // 회색
+  { backgroundColor: '#E5E7EB', color: '#374151' }, // 회색
   { backgroundColor: '#F4E3D7', color: '#8A4B2A' }, // 갈색
   { backgroundColor: '#FADFCB', color: '#B85C2E' }, // 주황색
   { backgroundColor: '#F8E7B8', color: '#A36A00' }, // 노란색

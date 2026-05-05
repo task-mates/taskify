@@ -40,7 +40,7 @@ const ASSIGNEE_AVATAR_COLORS = [
 ];
 
 const TAG_COLORS = [
-  { backgroundColor: '#F2F2F2', color: '#666666' },
+  { backgroundColor: '#E5E7EB', color: '#374151' },
   { backgroundColor: '#F4E3D7', color: '#8A4B2A' },
   { backgroundColor: '#FADFCB', color: '#B85C2E' },
   { backgroundColor: '#F8E7B8', color: '#A36A00' },
