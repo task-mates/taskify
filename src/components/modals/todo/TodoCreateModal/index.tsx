@@ -218,7 +218,7 @@ export default function TodoCreateModal({
       try {
         const data = await membersApi.getList(dashboardId);
 
-        console.log('멤버 목록:', data.members);
+        // console.log('멤버 목록:', data.members);
 
         setMembers(data.members);
       } catch (error) {
@@ -482,7 +482,7 @@ export default function TodoCreateModal({
                             type="button"
                             role="option"
                             onClick={() => {
-                              console.log('선택한 담당자:', member);
+                              // console.log('선택한 담당자:', member);
 
                               setSelectedAssignee(member);
                               setIsAssigneeOpen(false);
