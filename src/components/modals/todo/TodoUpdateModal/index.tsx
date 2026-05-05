@@ -52,6 +52,17 @@ const TAG_COLORS = [
   { backgroundColor: '#F9D9D6', color: '#B84038' }, // 빨간색
 ];
 
+// 태그 이름 기준으로 항상 같은 색상을 반환
+const getTagColorByName = (tagName: string) => {
+  let hash = 0;
+
+  for (let i = 0; i < tagName.length; i += 1) {
+    hash = tagName.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  return TAG_COLORS[Math.abs(hash) % TAG_COLORS.length];
+};
+
 // 태그 색상 선택 로직
 const getRandomTagColor = (excludeColor?: TagColor | null) => {
   const availableColors = excludeColor
@@ -143,7 +154,7 @@ export default function TodoUpdateModal({
 
         const initialTags = card.tags.map((tag) => ({
           name: tag,
-          ...getRandomTagColor(),
+          ...getTagColorByName(tag),
         }));
 
         setTags(initialTags);
@@ -304,8 +315,7 @@ export default function TodoUpdateModal({
       const existingOption = tagOptions.find((tag) => tag.name === trimmedTag);
 
       const tagColor =
-        currentInputColorRef.current ??
-        getRandomTagColor(lastTagColorRef.current);
+        currentInputColorRef.current ?? getTagColorByName(trimmedTag);
 
       const newTag = existingOption ?? {
         name: trimmedTag,
