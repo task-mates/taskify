@@ -52,6 +52,20 @@ const TAG_COLORS = [
   { backgroundColor: '#F9D9D6', color: '#B84038' }, // 빨간색
 ];
 
+// 태그 색상 선택 로직
+const getRandomTagColor = (excludeColor?: TagColor | null) => {
+  const availableColors = excludeColor
+    ? TAG_COLORS.filter(
+        (tagColor) =>
+          tagColor.backgroundColor !== excludeColor.backgroundColor ||
+          tagColor.color !== excludeColor.color
+      )
+    : TAG_COLORS;
+
+  const randomIndex = Math.floor(Math.random() * availableColors.length);
+  return availableColors[randomIndex];
+};
+
 // 폼 연결용 ID
 const TODO_CREATE_FORM_ID = 'todo-create-form';
 
@@ -244,19 +258,6 @@ export default function TodoCreateModal({
   // ==============================
   // 태그 관련 로직
   // ==============================
-  // 태그 색상 선택 로직
-  const getRandomTagColor = (excludeColor?: TagColor | null) => {
-    const availableColors = excludeColor
-      ? TAG_COLORS.filter(
-          (tagColor) =>
-            tagColor.backgroundColor !== excludeColor.backgroundColor ||
-            tagColor.color !== excludeColor.color
-        )
-      : TAG_COLORS;
-
-    const randomIndex = Math.floor(Math.random() * availableColors.length);
-    return availableColors[randomIndex];
-  };
 
   // 태그 추가 로직
   const handleAddTag = (value = tagInput) => {
