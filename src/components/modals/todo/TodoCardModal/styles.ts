@@ -50,13 +50,16 @@ export const TagBadgeArea = styled.div`
   }
 `;
 
-export const TagBadge = styled.span`
+export const TagBadge = styled.span<{
+  $backgroundColor: string;
+  $color: string;
+}>`
   padding: 4px 6px;
   font-size: 13px;
   font-weight: 600;
   border-radius: 6px;
-  background: #1458bc;
-  color: #cfe1fd;
+  background: ${({ $backgroundColor }) => $backgroundColor};
+  color: ${({ $color }) => $color};
 
   @media ${DEVICE.mobile} {
     font-size: 12px;

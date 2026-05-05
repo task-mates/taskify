@@ -73,16 +73,47 @@ export default function TodoCardModal({
     }
   };
 
-  const tags = (card?.tags ?? []).filter((tag) => tag.trim());
+  const TAG_COLORS = [
+    { backgroundColor: '#F2F2F2', color: '#666666' },
+    { backgroundColor: '#F4E3D7', color: '#8A4B2A' },
+    { backgroundColor: '#FADFCB', color: '#B85C2E' },
+    { backgroundColor: '#F8E7B8', color: '#A36A00' },
+    { backgroundColor: '#DDEFE3', color: '#2F6F4E' },
+    { backgroundColor: '#D8ECFF', color: '#2D6FA3' },
+    { backgroundColor: '#E7DDF7', color: '#6E4BA3' },
+    { backgroundColor: '#F7DDE8', color: '#A33E68' },
+    { backgroundColor: '#F9D9D6', color: '#B84038' },
+  ];
 
+  const getTagColorByName = (tagName: string) => {
+    const hash = [...tagName].reduce(
+      (acc, char) => acc + char.charCodeAt(0),
+      0
+    );
+
+    return TAG_COLORS[hash % TAG_COLORS.length];
+  };
+
+  const tags = (card?.tags ?? []).filter((tag) => tag.trim());
   const badgeGroup = (
     <S.BadgeGroup>
       {columnTitle && <S.ColumnBadge>{columnTitle}</S.ColumnBadge>}
+
       {tags.length > 0 && (
         <S.TagBadgeArea>
-          {tags.map((tag) => (
-            <S.TagBadge key={tag}>{tag}</S.TagBadge>
-          ))}
+          {tags.map((tag) => {
+            const tagColor = getTagColorByName(tag);
+
+            return (
+              <S.TagBadge
+                key={tag}
+                $backgroundColor={tagColor.backgroundColor}
+                $color={tagColor.color}
+              >
+                {tag}
+              </S.TagBadge>
+            );
+          })}
         </S.TagBadgeArea>
       )}
     </S.BadgeGroup>
