@@ -1,37 +1,63 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import Card from './components/Card';
+import * as S from './styles';
+import ColumnSection from './components/ColumnSection';
+import { dashboardsApi } from '@/src/apis/dashboards';
+import { columnsApi } from '@/src/apis/columns';
 import { cardsApi } from '@/src/apis/cards';
-import type { Card as CardType } from '@/src/apis/cards/type';
+import type { Card as CardInfo } from '@/src/apis/cards/type';
+import PlusIcon from '@/src/components/icons/icon-plus.svg';
 
-export default function DashboardPage() {
-  const [cards, setCards] = useState<CardType[]>([]);
+type PageProps = {
+  params: Promise<{ id: string }>;
+};
 
-  useEffect(() => {
-    cardsApi.getList({ columnId: 60868, size: 20 }).then((res) => {
-      setCards(res.cards);
-    });
-  }, []);
+type ColumnWithCards = {
+  columnId: number;
+  title: string;
+  totalCount: number;
+  cards: CardInfo[];
+};
 
-  if (cards.length === 0) {
-    return <main style={{ padding: '24px' }}>카드가 없습니다.</main>;
-  }
+export default async function DashboardPage({ params }: PageProps) {
+  const { id } = await params;
+  const dashboardId = Number(id);
+
+  const dashboard = await dashboardsApi.getById(dashboardId);
+  const columnsResponse = await columnsApi.getList(dashboardId);
+
+  const columnsWithCards: ColumnWithCards[] = await Promise.all(
+    columnsResponse.data.map((column) =>
+      cardsApi
+        .getList({ columnId: column.id, size: 20 })
+        .then((cardsResponse) => ({
+          columnId: column.id,
+          title: column.title,
+          totalCount: cardsResponse.totalCount,
+          cards: cardsResponse.cards,
+        }))
+    )
+  );
 
   return (
-    <main
-      style={{
-        padding: '24px',
-        maxWidth: 320,
-        backgroundColor: '#E1EAF1',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '10px',
-      }}
-    >
-      {cards.map((card) => (
-        <Card key={card.id} card={card} />
-      ))}
-    </main>
+    <S.PageMain>
+      <S.PageTitle>
+        <S.ColorDot $color={dashboard.color} />
+        {dashboard.title}
+      </S.PageTitle>
+      <S.ColumnList>
+        {columnsWithCards.map((column) => (
+          <ColumnSection
+            key={column.columnId}
+            title={column.title}
+            totalCount={column.totalCount}
+            cards={column.cards}
+          />
+        ))}
+        <S.AddButton>
+          <S.IconContainer>
+            <PlusIcon aria-hidden="true" />
+          </S.IconContainer>
+        </S.AddButton>
+      </S.ColumnList>
+    </S.PageMain>
   );
 }

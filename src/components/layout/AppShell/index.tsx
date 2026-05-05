@@ -58,8 +58,11 @@ const HamburgerButton = styled.button`
 
 const Layout = styled.div`
   display: flex;
+  height: 100%;
 `;
 
 const Content = styled.main`
   flex: 1;
+  min-width: 0;
+  overflow-y: hidden;
 `;
