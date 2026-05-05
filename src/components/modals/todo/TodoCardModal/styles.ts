@@ -339,6 +339,7 @@ export const CommentItem = styled.div`
 `;
 
 export const CommentContent = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -376,4 +377,24 @@ export const CommentText = styled.p`
   font-weight: 500;
   color: #333236;
   white-space: pre-wrap;
+`;
+
+export const CommentActionGroup = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+`;
+
+export const CommentActionButton = styled.button`
+  border: 0;
+  background: none;
+  color: #a39fb2;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  text-decoration: underline;
+
+  &:hover {
+    color: #333236;
+  }
 `;

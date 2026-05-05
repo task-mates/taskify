@@ -555,6 +555,17 @@ export default function TodoCardModal({
                           {formatTime(comment.createdAt)}
                         </S.CommentTime>
                       </S.CommentCreated>
+
+                      {currentUser?.id === comment.author.id && (
+                        <S.CommentActionGroup>
+                          <S.CommentActionButton type="button">
+                            수정
+                          </S.CommentActionButton>
+                          <S.CommentActionButton type="button">
+                            삭제
+                          </S.CommentActionButton>
+                        </S.CommentActionGroup>
+                      )}
                     </S.CommentInfo>
 
                     <S.CommentText>{comment.content}</S.CommentText>
