@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { DEVICE } from '@/src/styles/Breakpoints';
 import Link from 'next/link';
+import Button from '@/src/components/common/Button';
 
 export const Container = styled.main`
   width: 100%;
@@ -142,21 +143,13 @@ export const ErrorText = styled.p`
   font-size: 13px;
 `;
 
-export const SignupButton = styled.button`
-  width: 100%;
-  height: 44px;
+export const SignupButton = styled(Button).attrs({
+  variant: 'primary',
+  width: '100%',
+  height: '44px',
+})`
   margin-top: 8px;
-  border: 0;
   border-radius: 8px;
-  background-color: #83c6e5;
-  color: #ffffff;
-  font-weight: 700;
-  cursor: pointer;
-
-  &:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-  }
 `;
 
 export const LoginRow = styled.div`
@@ -197,14 +190,10 @@ export const ModalTitle = styled.p`
   text-align: center;
 `;
 
-export const ModalButton = styled.button`
-  min-width: 96px;
-  height: 40px;
-  padding: 0 20px;
-  border: 0;
+export const ModalButton = styled(Button).attrs({
+  variant: 'primary',
+  width: '96px',
+  height: '40px',
+})`
   border-radius: 8px;
-  background: #83c6e5;
-  color: #ffffff;
-  font-weight: 700;
-  cursor: pointer;
 `;
