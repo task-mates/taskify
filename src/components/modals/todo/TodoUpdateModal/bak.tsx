@@ -11,7 +11,7 @@ import { membersApi } from '@/src/apis/members';
 import { columnsApi } from '@/src/apis/columns';
 import type { Member } from '@/src/apis/members/type';
 import ModalActionButtons from '../common/ModalActionButtons';
-import type { Tag, TagColor, TodoCreateModalProps } from './type';
+import type { Tag, TagColor, TodoUpdateModalProps } from './type';
 import TodoBaseModal from '../common/TodoBaseModal';
 import * as S from './styles';
 import UploadImage from '@/src/components/icons/icon-uploadimg.svg';
@@ -52,6 +52,17 @@ const TAG_COLORS = [
   { backgroundColor: '#F9D9D6', color: '#B84038' }, // 빨간색
 ];
 
+// 태그 이름 기준으로 항상 같은 색상을 반환
+const getTagColorByName = (tagName: string) => {
+  let hash = 0;
+
+  for (let i = 0; i < tagName.length; i += 1) {
+    hash = tagName.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  return TAG_COLORS[Math.abs(hash) % TAG_COLORS.length];
+};
+
 // 태그 색상 선택 로직
 const getRandomTagColor = (excludeColor?: TagColor | null) => {
   const availableColors = excludeColor
@@ -67,13 +78,14 @@ const getRandomTagColor = (excludeColor?: TagColor | null) => {
 };
 
 // 폼 연결용 ID
-const TODO_CREATE_FORM_ID = 'todo-create-form';
+const TODO_UPDATE_FORM_ID = 'todo-update-form';
 
-export default function TodoCreateModal({
+export default function TodoUpdateModal({
   onClose,
   dashboardId,
   columnId,
-}: TodoCreateModalProps) {
+  cardId,
+}: TodoUpdateModalProps) {
   // ==============================
   // 기본 입력 상태 (제목, 설명, 마감일)
   // ==============================
@@ -117,18 +129,60 @@ export default function TodoCreateModal({
   const footerGroup = (
     <ModalActionButtons
       onCancel={onClose}
-      submitText="생성"
-      formId={TODO_CREATE_FORM_ID}
+      submitText="수정"
+      formId={TODO_UPDATE_FORM_ID}
     />
   );
 
   // ==============================
-  // 카드 생성 제출 로직
+  // 기존 카드 정보 불러와서 input 기본값 채우기
+  // ==============================
+  useEffect(() => {
+    const fetchUpdateModalData = async () => {
+      try {
+        const [card, memberData] = await Promise.all([
+          cardsApi.getById(cardId),
+          membersApi.getList(dashboardId),
+        ]);
+
+        const dashboardMembers = memberData.members;
+
+        setMembers(dashboardMembers);
+        setTitle(card.title);
+        setDescription(card.description);
+        setDueDate(card.dueDate ? new Date(card.dueDate) : null);
+
+        const initialTags = card.tags.map((tag) => ({
+          name: tag,
+          ...getTagColorByName(tag),
+        }));
+
+        setTags(initialTags);
+        setTagOptions(initialTags);
+        setPreviewImageUrl(card.imageUrl);
+
+        const matchedMember = card.assignee
+          ? dashboardMembers.find(
+              (member) => member.userId === card.assignee?.id
+            )
+          : null;
+
+        setSelectedAssignee(matchedMember ?? null);
+      } catch (error) {
+        console.error('수정 모달 데이터 조회 실패:', error);
+      }
+    };
+
+    fetchUpdateModalData();
+  }, [cardId, dashboardId]);
+
+  // ==============================
+  // 카드 수정 제출 로직
   // ==============================
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    let imageUrl: string | undefined;
+    let imageUrl: string | null = previewImageUrl;
 
     try {
       if (selectedImageFile) {
@@ -141,7 +195,6 @@ export default function TodoCreateModal({
       }
 
       const requestBody = {
-        dashboardId,
         columnId,
         title,
         description,
@@ -151,9 +204,9 @@ export default function TodoCreateModal({
         imageUrl,
       };
 
-      console.log('카드 생성 요청 body:', requestBody);
+      console.log('카드 수정 요청 body:', requestBody);
 
-      await cardsApi.create(requestBody);
+      await cardsApi.update(cardId, requestBody);
 
       onClose(); //추후 토스트로 대체하면 좋을 것 같음
     } catch (error) {
@@ -172,8 +225,8 @@ export default function TodoCreateModal({
         console.log('서버 에러 응답:', error.response?.data);
         console.log('상태 코드:', error.response?.status);
       }
-      // console.error('카드 생성 실패:', error);
-      alert('카드 생성에 실패했습니다.');
+      // console.error('카드 수정 실패:', error);
+      alert('카드 수정에 실패했습니다.');
     }
   };
 
@@ -212,21 +265,6 @@ export default function TodoCreateModal({
   // ==============================
   // 담당자 관련 로직
   // ==============================
-  // 담당자 목록 조회 로직
-  useEffect(() => {
-    const fetchMembers = async () => {
-      try {
-        const data = await membersApi.getList(dashboardId);
-
-        // console.log('멤버 목록:', data.members);
-
-        setMembers(data.members);
-      } catch (error) {
-        console.error('멤버 목록 조회 실패:', error);
-      }
-    };
-    fetchMembers();
-  }, [dashboardId]);
 
   // 담당자 선택 해제 로직
   const handleClearAssignee = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -276,8 +314,7 @@ export default function TodoCreateModal({
       const existingOption = tagOptions.find((tag) => tag.name === trimmedTag);
 
       const tagColor =
-        currentInputColorRef.current ??
-        getRandomTagColor(lastTagColorRef.current);
+        currentInputColorRef.current ?? getTagColorByName(trimmedTag);
 
       const newTag = existingOption ?? {
         name: trimmedTag,
@@ -353,7 +390,7 @@ export default function TodoCreateModal({
   // 이미지 미리보기 URL cleanup 로직
   useEffect(() => {
     return () => {
-      if (previewImageUrl) {
+      if (previewImageUrl?.startsWith('blob:')) {
         URL.revokeObjectURL(previewImageUrl);
       }
     };
@@ -371,11 +408,13 @@ export default function TodoCreateModal({
   // 이미지 제거 로직
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const handleRemoveImage = () => {
-    if (previewImageUrl) {
+    if (previewImageUrl?.startsWith('blob:')) {
       URL.revokeObjectURL(previewImageUrl);
     }
+
     setPreviewImageUrl(null);
     setSelectedImageFile(null);
+
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -387,11 +426,11 @@ export default function TodoCreateModal({
   return (
     <TodoBaseModal
       onClose={onClose}
-      title="할 일 생성"
-      labelId="할 일 생성 모달"
+      title="할 일 수정"
+      labelId="할 일 수정 모달"
       footerGroup={footerGroup}
     >
-      <S.Form id={TODO_CREATE_FORM_ID} onSubmit={handleSubmit}>
+      <S.Form id={TODO_UPDATE_FORM_ID} onSubmit={handleSubmit}>
         <S.Field>
           <S.Label htmlFor="title" $required>
             제목

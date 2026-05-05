@@ -9,6 +9,8 @@ import type { Comment } from '@/src/apis/comments/type';
 import type { User } from '@/src/apis/users/type';
 import type { TodoCardModalProps } from './type';
 import TodoBaseModal from '../common/TodoBaseModal';
+import ModalActionButtons from '../common/ModalActionButtons';
+import TodoUpdateForm, { TODO_UPDATE_FORM_ID } from '../TodoUpdateForm';
 import * as S from './styles';
 import SendIcon from '@/src/components/icons/icon-send.svg';
 import MeatballIcon from '@/src/components/icons/icon-meatball.svg';
@@ -54,6 +56,8 @@ export default function TodoCardModal({
   const currentUserNickname = currentUser?.nickname?.trim();
   const currentUserImage = currentUser?.profileImageUrl;
 
+  const [modalMode, setModalMode] = useState<'detail' | 'update'>('detail');
+
   const handleDeleteCard = async () => {
     const isConfirmed = window.confirm('카드를 삭제하시겠습니까?');
 
@@ -96,7 +100,13 @@ export default function TodoCardModal({
         <S.ActionButtonPopup>
           <S.ActionButtonList>
             <S.ActionButtonItem>
-              <S.ActionButton type="button">
+              <S.ActionButton
+                type="button"
+                onClick={() => {
+                  setIsActionMenuOpen(false);
+                  setModalMode('update');
+                }}
+              >
                 <EditIcon />
                 수정하기
               </S.ActionButton>
@@ -116,6 +126,14 @@ export default function TodoCardModal({
         </S.ActionButtonPopup>
       )}
     </S.ActionMenuBox>
+  );
+
+  const updateFooterGroup = (
+    <ModalActionButtons
+      onCancel={() => setModalMode('detail')}
+      submitText="수정"
+      formId={TODO_UPDATE_FORM_ID}
+    />
   );
 
   useEffect(() => {
@@ -306,121 +324,141 @@ export default function TodoCardModal({
 
   return (
     <TodoBaseModal
-      title={card?.title ?? ''}
-      labelId="할 일 카드 모달"
+      title={modalMode === 'detail' ? (card?.title ?? '') : '할 일 수정'}
+      labelId={modalMode === 'detail' ? '할 일 카드 모달' : '할 일 수정 모달'}
       onClose={onClose}
-      badgeGroup={badgeGroup}
-      actionMenu={actionMenu}
+      badgeGroup={modalMode === 'detail' ? badgeGroup : undefined}
+      actionMenu={modalMode === 'detail' ? actionMenu : undefined}
+      footerGroup={modalMode === 'update' ? updateFooterGroup : undefined}
       headerVariant="card"
       overlayVariant="full"
       layoutVariant="card"
     >
-      <S.TaskInfo>
-        {assigneeNickname && (
-          <S.TaskInfoItem>
-            <S.TaskInfoLabel>담당자</S.TaskInfoLabel>
-            <S.TaskInfoValue>
-              <S.TaskInfoNameBadge>
-                {assigneeProfileImage ? (
+      {modalMode === 'detail' ? (
+        <>
+          <S.TaskInfo>
+            {assigneeNickname && (
+              <S.TaskInfoItem>
+                <S.TaskInfoLabel>담당자</S.TaskInfoLabel>
+                <S.TaskInfoValue>
+                  <S.TaskInfoNameBadge>
+                    {assigneeProfileImage ? (
+                      <Image
+                        src={assigneeProfileImage}
+                        alt={assigneeNickname}
+                        fill
+                        style={{ objectFit: 'cover' }}
+                      />
+                    ) : (
+                      assigneeNickname
+                    )}
+                  </S.TaskInfoNameBadge>
+                  {assigneeNickname}
+                </S.TaskInfoValue>
+              </S.TaskInfoItem>
+            )}
+
+            {dueDate && (
+              <S.TaskInfoItem>
+                <S.TaskInfoLabel>마감일</S.TaskInfoLabel>
+                <S.TaskInfoValue>{formatDate(dueDate)}</S.TaskInfoValue>
+              </S.TaskInfoItem>
+            )}
+          </S.TaskInfo>
+
+          <S.DetailContent>
+            {cardCoverImage && (
+              <S.Thumbnail>
+                <Image
+                  src={cardCoverImage}
+                  alt="썸네일"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                />
+              </S.Thumbnail>
+            )}
+
+            {cardDescription && (
+              <S.Description>{cardDescription}</S.Description>
+            )}
+          </S.DetailContent>
+
+          <S.Divider />
+
+          <S.CommentTextareaWrapper $expanded={isTextareaExpanded}>
+            {!isTextareaExpanded && currentUserNickname && (
+              <S.CommentBadge>
+                {currentUserImage ? (
                   <Image
-                    src={assigneeProfileImage}
-                    alt={assigneeNickname}
+                    src={currentUserImage}
+                    alt={currentUserNickname}
                     fill
                     style={{ objectFit: 'cover' }}
                   />
                 ) : (
-                  assigneeNickname
+                  currentUserNickname
                 )}
-              </S.TaskInfoNameBadge>
-              {assigneeNickname}
-            </S.TaskInfoValue>
-          </S.TaskInfoItem>
-        )}
-
-        {dueDate && (
-          <S.TaskInfoItem>
-            <S.TaskInfoLabel>마감일</S.TaskInfoLabel>
-            <S.TaskInfoValue>{formatDate(dueDate)}</S.TaskInfoValue>
-          </S.TaskInfoItem>
-        )}
-      </S.TaskInfo>
-
-      <S.DetailContent>
-        {cardCoverImage && (
-          <S.Thumbnail>
-            <Image
-              src={cardCoverImage}
-              alt="썸네일"
-              fill
-              style={{ objectFit: 'cover' }}
-            />
-          </S.Thumbnail>
-        )}
-
-        {cardDescription && <S.Description>{cardDescription}</S.Description>}
-      </S.DetailContent>
-
-      <S.Divider />
-
-      <S.CommentTextareaWrapper $expanded={isTextareaExpanded}>
-        {!isTextareaExpanded && currentUserNickname && (
-          <S.CommentBadge>
-            {currentUserImage ? (
-              <Image
-                src={currentUserImage}
-                alt={currentUserNickname}
-                fill
-                style={{ objectFit: 'cover' }}
-              />
-            ) : (
-              currentUserNickname
+              </S.CommentBadge>
             )}
-          </S.CommentBadge>
-        )}
 
-        <form onSubmit={handleSubmit}>
-          <S.CommentTextareaBox $expanded={isTextareaExpanded}>
-            <S.CommentTextarea
-              ref={textareaRef}
-              name="comment"
-              placeholder="댓글을 남겨보세요"
-              onChange={handleCommentChange}
-              onKeyDown={handleKeyDown}
-            />
+            <form onSubmit={handleSubmit}>
+              <S.CommentTextareaBox $expanded={isTextareaExpanded}>
+                <S.CommentTextarea
+                  ref={textareaRef}
+                  name="comment"
+                  placeholder="댓글을 남겨보세요"
+                  onChange={handleCommentChange}
+                  onKeyDown={handleKeyDown}
+                />
 
-            <S.SendButton
-              $active={isTyping}
-              type="submit"
-              aria-label="댓글 등록"
-            >
-              <SendIcon />
-            </S.SendButton>
-          </S.CommentTextareaBox>
-        </form>
-      </S.CommentTextareaWrapper>
+                <S.SendButton
+                  $active={isTyping}
+                  type="submit"
+                  aria-label="댓글 등록"
+                >
+                  <SendIcon />
+                </S.SendButton>
+              </S.CommentTextareaBox>
+            </form>
+          </S.CommentTextareaWrapper>
 
-      <S.CommentList>
-        {comments.map((comment) => (
-          <S.CommentItem key={comment.id}>
-            <S.CommentBadge>{comment.author.nickname}</S.CommentBadge>
+          <S.CommentList>
+            {comments.map((comment) => (
+              <S.CommentItem key={comment.id}>
+                <S.CommentBadge>{comment.author.nickname}</S.CommentBadge>
 
-            <S.CommentContent>
-              <S.CommentInfo>
-                <S.CommentName>{comment.author.nickname}</S.CommentName>
+                <S.CommentContent>
+                  <S.CommentInfo>
+                    <S.CommentName>{comment.author.nickname}</S.CommentName>
 
-                <S.CommentCreated>
-                  <S.CommentDate>{formatDate(comment.createdAt)}</S.CommentDate>
-                  <S.CommentTime>{formatTime(comment.createdAt)}</S.CommentTime>
-                </S.CommentCreated>
-              </S.CommentInfo>
+                    <S.CommentCreated>
+                      <S.CommentDate>
+                        {formatDate(comment.createdAt)}
+                      </S.CommentDate>
+                      <S.CommentTime>
+                        {formatTime(comment.createdAt)}
+                      </S.CommentTime>
+                    </S.CommentCreated>
+                  </S.CommentInfo>
 
-              <S.CommentText>{comment.content}</S.CommentText>
-            </S.CommentContent>
-          </S.CommentItem>
-        ))}
+                  <S.CommentText>{comment.content}</S.CommentText>
+                </S.CommentContent>
+              </S.CommentItem>
+            ))}
 
-        <div ref={observerRef} style={{ height: '1px' }} />
-      </S.CommentList>
+            <div ref={observerRef} style={{ height: '1px' }} />
+          </S.CommentList>
+        </>
+      ) : (
+        card && (
+          <TodoUpdateForm
+            cardId={cardId}
+            dashboardId={dashboardId}
+            columnId={card.columnId}
+            onSuccess={() => setModalMode('detail')}
+          />
+        )
+      )}
     </TodoBaseModal>
   );
 }
