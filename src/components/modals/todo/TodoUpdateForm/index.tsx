@@ -12,6 +12,7 @@ import { columnsApi } from '@/src/apis/columns';
 import type { Member } from '@/src/apis/members/type';
 import type { Tag } from '@/src/types/tag';
 import { getTagColorByName, TAG_PREVIEW_COLOR } from '@/src/utils/tagColor';
+import { getProfileColorByNickname } from '@/src/utils/profileColor';
 import * as S from '../TodoUpdateModal/styles';
 import UploadImage from '@/src/components/icons/icon-uploadimg.svg';
 import DeleteIcon from '@/src/components/icons/icon-delete.svg';
@@ -24,21 +25,6 @@ type TodoUpdateFormProps = {
   columnId: number;
   onSuccess: () => void;
 };
-
-const ASSIGNEE_AVATAR_COLORS = [
-  '#F44336',
-  '#E91E63',
-  '#9C27B0',
-  '#673AB7',
-  '#3F51B5',
-  '#2196F3',
-  '#03A9F4',
-  '#00BCD4',
-  '#009688',
-  '#4CAF50',
-  '#FF9800',
-  '#FF5722',
-];
 
 export const TODO_UPDATE_FORM_ID = 'todo-update-form';
 
@@ -177,24 +163,8 @@ export default function TodoUpdateForm({
     setIsAssigneeOpen(false);
   };
 
-  const getHashFromString = (value: string) => {
-    let hash = 0;
-
-    for (let i = 0; i < value.length; i += 1) {
-      hash = value.charCodeAt(i) + ((hash << 5) - hash);
-    }
-
-    return Math.abs(hash);
-  };
-
-  const getAssigneeAvatarColor = (member: Member) => {
-    const hashKey = `${member.userId ?? member.id}-${member.nickname}`;
-    const hash = getHashFromString(hashKey);
-    return ASSIGNEE_AVATAR_COLORS[hash % ASSIGNEE_AVATAR_COLORS.length];
-  };
-
   const selectedAssigneeBgColor = selectedAssignee
-    ? getAssigneeAvatarColor(selectedAssignee)
+    ? getProfileColorByNickname(selectedAssignee.nickname)
     : '';
 
   const getAvatarText = (nickname: string) => {
@@ -377,7 +347,9 @@ export default function TodoUpdateForm({
               <S.SelectWrapper>
                 <S.SelectList role="listbox">
                   {members.map((member) => {
-                    const memberBgColor = getAssigneeAvatarColor(member);
+                    const memberBgColor = getProfileColorByNickname(
+                      member.nickname
+                    );
 
                     return (
                       <S.OptionItem key={member.id}>
