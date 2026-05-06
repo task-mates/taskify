@@ -9,8 +9,9 @@ export type Tag = {
   color: string;
 };
 
-export interface TodoCreateModalProps {
+export interface TodoUpdateModalProps {
   onClose: () => void;
   dashboardId: number;
   columnId: number;
+  cardId: number;
 }

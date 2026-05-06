@@ -8,8 +8,6 @@ import PlusIcon from '@/src/components/icons/icon-plus.svg';
 import CrownIcon from '@/src/components/icons/icon-crown.svg';
 import * as S from './styles';
 import type { SidebarProps } from '@/src/components/layout/Sidebar/type';
-import type { Dashboard } from '@/src/apis/dashboards/type';
-import { getDashboardList } from '@/src/apis/dashboards';
 
 const PAGE_SIZE = 20;
 
