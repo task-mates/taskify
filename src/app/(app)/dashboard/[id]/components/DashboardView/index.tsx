@@ -1,21 +1,19 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { DragDropContext, type DropResult } from '@hello-pangea/dnd';
 import * as S from './styles';
 import ColumnSection from '../ColumnSection';
+import ColumnCreateModal from '@/src/components/modals/ColumnCreateModal';
 import { getDashboardById } from '@/src/apis/dashboards';
 import { columnsApi } from '@/src/apis/columns';
 import { cardsApi } from '@/src/apis/cards';
-import type { Card as CardInfo } from '@/src/apis/cards/type';
 import type { Dashboard } from '@/src/apis/dashboards/type';
 import PlusIcon from '@/src/components/icons/icon-plus.svg';
-
-type ColumnWithCards = {
-  columnId: number;
-  title: string;
-  totalCount: number;
-  cards: CardInfo[];
-};
+import {
+  applyDragResult,
+  type ColumnWithCards,
+} from '../../utils/applyDragResult';
 
 type DashboardViewProps = {
   dashboardId: number;
@@ -28,6 +26,9 @@ export default function DashboardView({ dashboardId }: DashboardViewProps) {
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+  const loadRef = useRef<(() => Promise<void>) | undefined>(undefined);
 
   useEffect(() => {
     let cancelled = false;
@@ -71,12 +72,42 @@ export default function DashboardView({ dashboardId }: DashboardViewProps) {
       }
     };
 
+    loadRef.current = load;
     void load();
 
     return () => {
       cancelled = true;
     };
   }, [dashboardId]);
+
+  const handleRefresh = () => {
+    void loadRef.current?.();
+  };
+
+  const handleDragEnd = useCallback((result: DropResult) => {
+    if (!result.destination) return;
+
+    const destColId = Number(result.destination.droppableId);
+    const sourceColId = Number(result.source.droppableId);
+    const cardId = Number(result.draggableId);
+
+    let previous: ColumnWithCards[] | null = null;
+
+    setColumnsWithCards((prev) => {
+      const applied = applyDragResult(prev, result);
+      if (!applied) return prev;
+      previous = prev;
+      return applied;
+    });
+
+    if (sourceColId === destColId || previous === null) return;
+
+    const snapshot = previous;
+
+    cardsApi.update(cardId, { columnId: destColId }).catch(() => {
+      setColumnsWithCards(snapshot);
+    });
+  }, []);
 
   if (loading) {
     return (
@@ -100,21 +131,37 @@ export default function DashboardView({ dashboardId }: DashboardViewProps) {
         <S.ColorDot $color={dashboard.color} />
         {dashboard.title}
       </S.PageTitle>
-      <S.ColumnList>
-        {columnsWithCards.map((column) => (
-          <ColumnSection
-            key={column.columnId}
-            title={column.title}
-            totalCount={column.totalCount}
-            cards={column.cards}
-          />
-        ))}
-        <S.AddButton>
-          <S.IconContainer>
-            <PlusIcon aria-hidden="true" />
-          </S.IconContainer>
-        </S.AddButton>
-      </S.ColumnList>
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <S.ColumnList>
+          {columnsWithCards.map((column) => (
+            <ColumnSection
+              key={column.columnId}
+              columnId={column.columnId}
+              title={column.title}
+              totalCount={column.totalCount}
+              cards={column.cards}
+              onUpdated={handleRefresh}
+            />
+          ))}
+          <S.AddButton
+            type="button"
+            onClick={() => setIsCreateModalOpen(true)}
+            aria-label="새 칼럼 추가"
+          >
+            <S.IconContainer>
+              <PlusIcon aria-hidden="true" />
+            </S.IconContainer>
+          </S.AddButton>
+        </S.ColumnList>
+      </DragDropContext>
+
+      {isCreateModalOpen && (
+        <ColumnCreateModal
+          dashboardId={dashboardId}
+          onClose={() => setIsCreateModalOpen(false)}
+          onCreated={handleRefresh}
+        />
+      )}
     </S.PageMain>
   );
 }

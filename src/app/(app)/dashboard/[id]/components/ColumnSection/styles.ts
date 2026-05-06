@@ -11,7 +11,7 @@ export const Section = styled.section`
   flex-direction: column;
   gap: 12px;
 
-  overflow: auto;
+  overflow: hidden;
 
   @media ${DEVICE.mobile} {
     min-width: unset;
@@ -66,7 +66,7 @@ export const Count = styled.span`
 `;
 
 export const Setting = styled.div`
-  cursor: pointer;
+  position: relative;
   margin-top: 4px;
   display: flex;
   align-items: center;
@@ -83,11 +83,69 @@ export const Setting = styled.div`
   }
 `;
 
+export const SettingButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+`;
+
+export const ActionButtonPopup = styled.div`
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  white-space: nowrap;
+  padding: 12px 10px;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #d9d9d9;
+  z-index: 100;
+`;
+
+export const ActionButtonList = styled.ul``;
+
+export const ActionButtonItem = styled.li`
+  & + & {
+    margin-top: 5px;
+    padding-top: 5px;
+    position: relative;
+  }
+  & + &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 93px;
+    height: 1px;
+    background: #d6d5d9;
+  }
+`;
+
+export const ActionButton = styled.button<{ $variant?: 'default' | 'delete' }>`
+  padding: 10px 12px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 6px;
+  color: ${({ $variant }) =>
+    $variant === 'delete' ? 'var(--color-red)' : 'var(--color-black-200)'};
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  transition: background 0.3s;
+  width: 100%;
+
+  &:hover {
+    background: rgba(243, 245, 248, 0.5);
+  }
+`;
+
 export const CardList = styled.div<{ $isOpen: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 10px;
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
 
   @media ${DEVICE.mobile} {
@@ -160,4 +218,14 @@ export const IconContainer = styled.div`
   display: inline-flex;
   align-items: center;
   justify-content: center;
+`;
+
+export const DraggableWrap = styled.div<{ $isDragging: boolean }>`
+  flex-shrink: 0;
+  ${({ $isDragging }) =>
+    $isDragging &&
+    `
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    opacity: 0.95;
+  `}
 `;
