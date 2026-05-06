@@ -10,6 +10,7 @@ import SettingIcon from '@/src/components/icons/icon-setting.svg';
 import PlusIcon from '@/src/components/icons/icon-plus.svg';
 import CrownIcon from '@/src/components/icons/icon-crown.svg';
 import MemberProfiles from '@/src/components/layout/AppHeader/MemberProfiles';
+import DashboardInviteModal from '@/src/components/modals/DashboardInviteModal';
 import * as S from './styles';
 import type { AppHeaderProps } from '@/src/components/layout/AppHeader/type';
 
@@ -22,6 +23,7 @@ export default function AppHeader({
   const pathname = usePathname();
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
   const isMyDashboard = pathname === '/mydashboard';
   const isMyPage = pathname === '/mypage';
@@ -38,6 +40,7 @@ export default function AppHeader({
   }, []);
 
   return (
+    <>
     <S.Wrapper>
       <S.HamburgerButton
         type="button"
@@ -70,9 +73,7 @@ export default function AppHeader({
             </S.ActionButton>
             <S.ActionButton
               type="button"
-              onClick={() => {
-                // TODO: 초대하기 모달
-              }}
+              onClick={() => setIsInviteModalOpen(true)}
             >
               <PlusIcon aria-hidden="true" />
               초대하기
@@ -99,5 +100,13 @@ export default function AppHeader({
         </S.ProfileButton>
       </S.RightSection>
     </S.Wrapper>
+
+      {isInviteModalOpen && dashboardId && (
+        <DashboardInviteModal
+          dashboardId={dashboardId}
+          onClose={() => setIsInviteModalOpen(false)}
+        />
+      )}
+    </>
   );
 }
