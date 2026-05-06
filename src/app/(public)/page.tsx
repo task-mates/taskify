@@ -3,25 +3,13 @@
 import LandingHeader from '@/src/components/layout/LandingHeader';
 import * as S from './styles';
 import GitHubIcon from '@/src/components/icons/icon-github.svg';
+import LogoIcon from '@/public/images/logo.svg';
 
 export default function Home() {
   return (
     <>
       <LandingHeader />
       <S.Container>
-        <S.Header>
-          <S.HdInner>
-            <S.LogoBox>
-              <S.LogoImage src="/images/logo.svg" alt="TASKIFY 로고" />
-            </S.LogoBox>
-
-            <S.Util>
-              <S.UtilLink href="/login">로그인</S.UtilLink>
-              <S.UtilLink href="/signup">회원가입</S.UtilLink>
-            </S.Util>
-          </S.HdInner>
-        </S.Header>
-
         <S.LandingWrapper>
           <S.Intro>
             <S.TextArea>
@@ -174,7 +162,7 @@ export default function Home() {
         <S.Footer>
           <S.FtInner>
             <S.LogoBox>
-              <S.LogoImage src="/images/logo.svg" alt="TASKIFY 로고" />
+              <LogoIcon />
             </S.LogoBox>
             <S.InfoGroup>
               <S.FooterUtil>
