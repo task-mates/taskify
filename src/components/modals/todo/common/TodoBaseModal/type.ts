@@ -1,6 +1,7 @@
 import type { ModalVariant } from '@/src/components/Modal/type';
 
 export type HeaderVariant = 'default' | 'card';
+export type layoutVariant = 'default' | 'card';
 
 export interface TodoBaseModalProps {
   onClose: () => void;
@@ -9,7 +10,8 @@ export interface TodoBaseModalProps {
   badgeGroup?: React.ReactNode;
   actionMenu?: React.ReactNode;
   children: React.ReactNode;
+  footerGroup?: React.ReactNode;
   headerVariant?: HeaderVariant;
-
-  overlayVariant?: ModalVariant; // 추가
+  overlayVariant?: ModalVariant;
+  layoutVariant?: layoutVariant;
 }

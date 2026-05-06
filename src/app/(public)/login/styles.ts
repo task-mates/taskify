@@ -1,18 +1,16 @@
-import styled from "styled-components";
-import { DEVICE } from "@/src/styles/Breakpoints";
-import Link from "next/link";
+import styled from 'styled-components';
+import { DEVICE } from '@/src/styles/Breakpoints';
+import Link from 'next/link';
 
-// AppShell 분리 후 로그인 페이지 레이아웃 재조정 예정
 export const Container = styled.main`
   width: 100%;
-  max-width: 1440px;
+  max-width: 372px;
   min-height: 100vh;
   margin: 0 auto;
-  padding: 72px 48px;
+  padding: 72px 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(48px, 8vw, 120px);
 
   @media ${DEVICE.tablet} {
     padding: 80px 16px;
@@ -99,6 +97,8 @@ export const LoginButton = styled.button`
 `;
 
 export const ErrorText = styled.p`
+  min-height: 18px;
+  margin: 0;
   color: #e5484d;
   font-size: 13px;
 `;
@@ -121,16 +121,4 @@ export const SignupLink = styled(Link)`
   font-weight: 700;
   cursor: pointer;
   text-decoration: underline;
-`;
-
-export const DesktopImageWrapper = styled.div`
-  position: relative;
-  width: clamp(520px, 52vw, 860px);
-  aspect-ratio: 860 / 575;
-  border-radius: 12px;
-  overflow: hidden;
-
-  @media ${DEVICE.tablet} {
-    display: none;
-  }
 `;

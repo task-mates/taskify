@@ -62,8 +62,8 @@ export default function FaqPage() {
   return (
     <S.Main>
       <S.Content>
-        <S.HomeLink href="/" aria-label="메인 페이지로 이동">
-          <Image src="/images/icon-logo.svg" alt="Taskify 로고" fill priority />
+        <S.HomeLink href='/' aria-label='메인 페이지로 이동'>
+          <Image src='/images/icon-logo.svg' alt='Taskify 로고' fill priority />
         </S.HomeLink>
         <S.Title>자주 묻는 질문</S.Title>
         <S.Description>
@@ -75,13 +75,13 @@ export default function FaqPage() {
             <S.Item key={faq.id}>
               <S.QuestionTitle>
                 <S.ToggleButton
-                  type="button"
+                  type='button'
                   onClick={() => handleToggle(faq.id)}
                   aria-expanded={openQuestions.includes(faq.id)}
                   aria-controls={`faq-answer-${index}`}
                 >
                   <S.QuestionText>
-                    <S.LeftToggleIcon aria-hidden="true">
+                    <S.LeftToggleIcon aria-hidden='true'>
                       {openQuestions.includes(faq.id) ? '▾' : '▸'}
                     </S.LeftToggleIcon>
                     {faq.question}

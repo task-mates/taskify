@@ -50,13 +50,16 @@ export const TagBadgeArea = styled.div`
   }
 `;
 
-export const TagBadge = styled.span`
+export const TagBadge = styled.span<{
+  $backgroundColor: string;
+  $color: string;
+}>`
   padding: 4px 6px;
   font-size: 13px;
   font-weight: 600;
   border-radius: 6px;
-  background: #1458bc;
-  color: #cfe1fd;
+  background: ${({ $backgroundColor }) => $backgroundColor};
+  color: ${({ $color }) => $color};
 
   @media ${DEVICE.mobile} {
     font-size: 12px;
@@ -171,7 +174,9 @@ export const TaskInfoValue = styled.span`
   }
 `;
 
-export const TaskInfoNameBadge = styled.span`
+export const TaskInfoNameBadge = styled.span<{
+  $backgroundColor: string;
+}>`
   flex-shrink: 0;
   width: 30px;
   height: 30px;
@@ -180,7 +185,7 @@ export const TaskInfoNameBadge = styled.span`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #1458bc;
+  background: ${({ $backgroundColor }) => $backgroundColor};
   color: #fff;
   border-radius: 50%;
   white-space: nowrap;
@@ -226,7 +231,9 @@ export const CommentTextareaWrapper = styled.div<{ $expanded: boolean }>`
   gap: 12px;
 `;
 
-export const CommentBadge = styled.span`
+export const CommentBadge = styled.span<{
+  $backgroundColor: string;
+}>`
   flex-shrink: 0;
   width: 30px;
   height: 30px;
@@ -235,7 +242,7 @@ export const CommentBadge = styled.span`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #1458bc;
+  background: ${({ $backgroundColor }) => $backgroundColor};
   color: #fff;
   border-radius: 50%;
   white-space: nowrap;
@@ -252,6 +259,10 @@ export const CommentTextareaBox = styled.div<{ $expanded: boolean }>`
   background: #fff;
   border: 1px solid #a39fb2;
   border-radius: 12px;
+
+  &:focus-within {
+    border-color: #333;
+  }
 `;
 
 export const CommentTextarea = styled.textarea`
@@ -332,6 +343,7 @@ export const CommentItem = styled.div`
 `;
 
 export const CommentContent = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -369,4 +381,67 @@ export const CommentText = styled.p`
   font-weight: 500;
   color: #333236;
   white-space: pre-wrap;
+`;
+
+export const CommentActionGroup = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+`;
+
+export const CommentActionButton = styled.button`
+  border: 0;
+  background: none;
+  color: #a39fb2;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  text-decoration: underline;
+
+  &:hover {
+    color: #333236;
+  }
+`;
+
+export const CommentUpdateBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+export const CommentUpdateTextarea = styled.textarea`
+  width: 100%;
+  min-height: 90px;
+  padding: 8px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  resize: none;
+
+  color: #333236;
+  font-size: 14px;
+  line-height: 20px;
+
+  &:focus {
+    outline: none;
+    border-color: #333;
+  }
+`;
+
+export const CommentUpdateButtonGroup = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+`;
+
+export const CommentUpdateButton = styled.button<{ $variant?: 'primary' }>`
+  padding: 6px 12px;
+  border: 1px solid
+    ${({ $variant }) => ($variant === 'primary' ? '#83c6e5' : '#888787')};
+  border-radius: 4px;
+  background-color: ${({ $variant }) =>
+    $variant === 'primary' ? '#83c6e5' : '#888787'};
+  color: ${({ $variant }) => ($variant === 'primary' ? '#ffffff' : '#fff')};
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
 `;
