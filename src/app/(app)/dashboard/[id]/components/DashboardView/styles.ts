@@ -3,7 +3,6 @@ import { DEVICE } from '@/src/styles/Breakpoints';
 
 export const PageMain = styled.main`
   padding: 24px;
-  /* MainSlot(헤더 아래 영역) 높이에 맞춤 */
   height: 100%;
   max-height: 100%;
   min-height: 0;

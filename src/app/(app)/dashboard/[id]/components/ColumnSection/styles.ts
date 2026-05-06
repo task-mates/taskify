@@ -4,7 +4,6 @@ import { DEVICE } from '@/src/styles/Breakpoints';
 export const Section = styled.section`
   min-width: 320px;
   height: 100%;
-  min-height: 0;
   padding: 16px;
   border-radius: 16px;
 
