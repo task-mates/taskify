@@ -106,9 +106,11 @@ export default function DashboardView({ dashboardId }: DashboardViewProps) {
         {columnsWithCards.map((column) => (
           <ColumnSection
             key={column.columnId}
+            columnId={column.columnId}
             title={column.title}
             totalCount={column.totalCount}
             cards={column.cards}
+            onUpdated={() => window.location.reload()}
           />
         ))}
         <S.AddButton
