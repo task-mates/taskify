@@ -6,7 +6,7 @@ import * as S from './styles';
 import Card from '../Card';
 import type { Card as CardInfo } from '@/src/apis/cards/type';
 import PlusIcon from '@/src/components/icons/icon-plus.svg';
-import SettingIcon from '@/src/components/icons/icon-setting.svg';
+import ColumnSettingIcon from '@/src/components/icons/icon-column-setting.svg';
 import ChevronDownIcon from '@/src/components/icons/icon-chevron-down.svg';
 import ChevronUpIcon from '@/src/components/icons/icon-chevron-up.svg';
 
@@ -34,7 +34,7 @@ export default function ColumnSection({
           <S.Count>{totalCount}</S.Count>
         </S.TitleGroup>
         <S.Setting>
-          <SettingIcon aria-hidden="true" />
+          <ColumnSettingIcon aria-hidden="true" />
           <S.ArrowButton
             onClick={() => setIsOpen((prev) => !prev)}
             aria-label={isOpen ? '접기' : '펼치기'}
