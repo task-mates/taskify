@@ -13,7 +13,7 @@ export default function LandingFooter() {
         </S.LogoBox>
         <S.InfoGroup>
           <S.FooterUtil>
-            <S.FooterUtilLink href="#">Privacy Policy</S.FooterUtilLink>
+            <S.FooterUtilLink href="/terms">Terms of Service</S.FooterUtilLink>
             <S.FooterUtilLink href="/faq">FAQ</S.FooterUtilLink>
           </S.FooterUtil>
           <S.SnsArea>
