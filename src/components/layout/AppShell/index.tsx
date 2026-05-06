@@ -13,7 +13,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const [dashboards, setDashboards] = useState<Dashboard[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [currentDashboard, setCurrentDashboard] = useState<Dashboard | null>(null);
+  const [currentDashboard, setCurrentDashboard] = useState<Dashboard | null>(
+    null
+  );
 
   const pathname = usePathname();
   const params = useParams();
@@ -85,8 +87,5 @@ const Layout = styled.div`
 const Content = styled.main`
   flex: 1;
   min-width: 0;
-<<<<<<< feat/mydashboard-page
-=======
   overflow-y: hidden;
->>>>>>> develop
 `;
