@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { DEVICE } from '@/src/styles/Breakpoints';
 import Link from 'next/link';
+import Button from '@/src/components/common/Button';
 
 export const Container = styled.main`
   width: 100%;
@@ -79,21 +80,12 @@ export const TogglePasswordButton = styled.button`
   cursor: pointer;
 `;
 
-export const LoginButton = styled.button`
-  width: 100%;
-  height: 44px;
+export const LoginButton = styled(Button).attrs({
+  width: '100%',
+  height: '44px',
+})`
   margin-top: 8px;
-  border: 0;
-  border-radius: 8px;
-  background-color: #83c6e5;
-  color: #ffffff;
   font-weight: 700;
-  cursor: pointer;
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.7;
-  }
 `;
 
 export const ErrorText = styled.p`

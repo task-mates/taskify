@@ -4,9 +4,11 @@ import { DEVICE } from '@/src/styles/Breakpoints';
 export const PageMain = styled.main`
   padding: 24px;
   height: 100%;
+  max-height: 100%;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  overflow-y: hidden;
+  overflow: hidden;
   background: #e1eaf1;
 `;
 

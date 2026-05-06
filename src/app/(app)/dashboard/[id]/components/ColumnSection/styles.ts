@@ -11,7 +11,7 @@ export const Section = styled.section`
   flex-direction: column;
   gap: 12px;
 
-  overflow: auto;
+  overflow: hidden;
 
   @media ${DEVICE.mobile} {
     min-width: unset;
@@ -145,6 +145,7 @@ export const CardList = styled.div<{ $isOpen: boolean }>`
   flex-direction: column;
   gap: 10px;
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
 
   @media ${DEVICE.mobile} {
@@ -217,4 +218,14 @@ export const IconContainer = styled.div`
   display: inline-flex;
   align-items: center;
   justify-content: center;
+`;
+
+export const DraggableWrap = styled.div<{ $isDragging: boolean }>`
+  flex-shrink: 0;
+  ${({ $isDragging }) =>
+    $isDragging &&
+    `
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    opacity: 0.95;
+  `}
 `;

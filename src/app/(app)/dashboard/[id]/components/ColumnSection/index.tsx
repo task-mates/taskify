@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { Draggable, Droppable } from '@hello-pangea/dnd';
 import * as S from './styles';
 import Card from '../Card';
 import Confirm from '@/src/components/Confirm';
@@ -8,7 +9,7 @@ import ColumnEditModal from '@/src/components/modals/ColumnEditModal';
 import { columnsApi } from '@/src/apis/columns';
 import type { Card as CardInfo } from '@/src/apis/cards/type';
 import PlusIcon from '@/src/components/icons/icon-plus.svg';
-import SettingIcon from '@/src/components/icons/icon-setting.svg';
+import ColumnSettingIcon from '@/src/components/icons/icon-column-setting.svg';
 import EditIcon from '@/src/components/icons/icon-edit.svg';
 import DeleteIcon from '@/src/components/icons/icon-delete.svg';
 import ChevronDownIcon from '@/src/components/icons/icon-chevron-down.svg';
@@ -34,6 +35,7 @@ export default function ColumnSection({
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const droppableId = String(columnId);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -67,7 +69,7 @@ export default function ColumnSection({
             aria-label="칼럼 설정"
             onClick={() => setIsMenuOpen((prev) => !prev)}
           >
-            <SettingIcon aria-hidden="true" />
+            <ColumnSettingIcon aria-hidden="true" />
           </S.SettingButton>
 
           {isMenuOpen && (
@@ -116,27 +118,53 @@ export default function ColumnSection({
         </S.Setting>
       </S.Header>
 
-      <S.CardList $isOpen={isOpen}>
-        <S.AddButton>
-          <S.IconContainer>
-            <PlusIcon aria-hidden="true" />
-          </S.IconContainer>
-        </S.AddButton>
-        {cards.length === 0 ? (
-          <S.Empty>카드가 없습니다.</S.Empty>
-        ) : (
-          cards.map((card) => <Card key={card.id} card={card} />)
+      <S.AddButton type="button">
+        <S.IconContainer>
+          <PlusIcon aria-hidden="true" />
+        </S.IconContainer>
+      </S.AddButton>
+
+      <Droppable droppableId={droppableId}>
+        {(provided) => (
+          <S.CardList
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+            $isOpen={isOpen}
+          >
+            {cards.length === 0 ? (
+              <S.Empty>카드가 없습니다.</S.Empty>
+            ) : (
+              cards.map((card, index) => (
+                <Draggable
+                  key={card.id}
+                  draggableId={String(card.id)}
+                  index={index}
+                  isDragDisabled={!isOpen}
+                >
+                  {(dragProvided, snapshot) => (
+                    <S.DraggableWrap
+                      ref={dragProvided.innerRef}
+                      {...dragProvided.draggableProps}
+                      {...dragProvided.dragHandleProps}
+                      $isDragging={snapshot.isDragging}
+                    >
+                      <Card card={card} />
+                    </S.DraggableWrap>
+                  )}
+                </Draggable>
+              ))
+            )}
+            {provided.placeholder}
+          </S.CardList>
         )}
-      </S.CardList>
+      </Droppable>
 
       {isEditModalOpen && (
         <ColumnEditModal
           columnId={columnId}
           currentTitle={title}
           onClose={() => setIsEditModalOpen(false)}
-          onEdited={() => {
-            onUpdated?.();
-          }}
+          onEdited={onUpdated}
         />
       )}
 
