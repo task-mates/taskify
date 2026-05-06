@@ -1,8 +1,7 @@
-import { toast } from 'react-hot-toast';
-
+import { toast, type ToastOptions } from 'react-hot-toast';
 export const showToast = {
-  success: (message: string) => toast.success(message),
-  error: (message: string) => toast.error(message),
-  loading: (message: string) => toast.loading(message),
-  dismiss: (id?: string) => toast.dismiss(id),    
+  success: (message: string, options?: ToastOptions) => toast.success(message, options),
+  error: (message: string, options?: ToastOptions) => toast.error(message, options),
+  loading: (message: string, options?: ToastOptions) => toast.loading(message, options),
+  dismiss: (id?: string) => toast.dismiss(id),
 };
