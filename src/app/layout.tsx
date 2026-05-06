@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import StyledComponentsRegistry from './registry';
 import GlobalStyle from '@/src/styles/GlobalStyle';
+import Toast from '@/src/components/common/Toast'; 
 
 export const metadata: Metadata = {
   title: 'Taskify',
@@ -23,6 +24,7 @@ export default function RootLayout({
         <StyledComponentsRegistry>
           <GlobalStyle />
           {children}
+          <Toast />
         </StyledComponentsRegistry>
       </body>
     </html>
