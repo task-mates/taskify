@@ -1,9 +1,10 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { DragDropContext, type DropResult } from '@hello-pangea/dnd';
 import * as S from './styles';
 import ColumnSection from '../ColumnSection';
+import ColumnCreateModal from '@/src/components/modals/ColumnCreateModal';
 import { getDashboardById } from '@/src/apis/dashboards';
 import { columnsApi } from '@/src/apis/columns';
 import { cardsApi } from '@/src/apis/cards';
@@ -25,6 +26,9 @@ export default function DashboardView({ dashboardId }: DashboardViewProps) {
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+  const loadRef = useRef<(() => Promise<void>) | undefined>(undefined);
 
   useEffect(() => {
     let cancelled = false;
@@ -68,6 +72,7 @@ export default function DashboardView({ dashboardId }: DashboardViewProps) {
       }
     };
 
+    loadRef.current = load;
     void load();
 
     return () => {
@@ -75,11 +80,15 @@ export default function DashboardView({ dashboardId }: DashboardViewProps) {
     };
   }, [dashboardId]);
 
+  const handleRefresh = () => {
+    void loadRef.current?.();
+  };
+
   const handleDragEnd = useCallback((result: DropResult) => {
     if (!result.destination) return;
 
-    const sourceColId = Number(result.source.droppableId);
     const destColId = Number(result.destination.droppableId);
+    const sourceColId = Number(result.source.droppableId);
     const cardId = Number(result.draggableId);
 
     let previous: ColumnWithCards[] | null = null;
@@ -131,15 +140,28 @@ export default function DashboardView({ dashboardId }: DashboardViewProps) {
               title={column.title}
               totalCount={column.totalCount}
               cards={column.cards}
+              onUpdated={handleRefresh}
             />
           ))}
-          <S.AddButton>
+          <S.AddButton
+            type="button"
+            onClick={() => setIsCreateModalOpen(true)}
+            aria-label="새 칼럼 추가"
+          >
             <S.IconContainer>
               <PlusIcon aria-hidden="true" />
             </S.IconContainer>
           </S.AddButton>
         </S.ColumnList>
       </DragDropContext>
+
+      {isCreateModalOpen && (
+        <ColumnCreateModal
+          dashboardId={dashboardId}
+          onClose={() => setIsCreateModalOpen(false)}
+          onCreated={handleRefresh}
+        />
+      )}
     </S.PageMain>
   );
 }

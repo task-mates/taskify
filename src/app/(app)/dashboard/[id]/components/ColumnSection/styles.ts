@@ -66,7 +66,7 @@ export const Count = styled.span`
 `;
 
 export const Setting = styled.div`
-  cursor: pointer;
+  position: relative;
   margin-top: 4px;
   display: flex;
   align-items: center;
@@ -80,6 +80,63 @@ export const Setting = styled.div`
 
   @media ${DEVICE.mobile} {
     margin-top: 0;
+  }
+`;
+
+export const SettingButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+`;
+
+export const ActionButtonPopup = styled.div`
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  white-space: nowrap;
+  padding: 12px 10px;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #d9d9d9;
+  z-index: 100;
+`;
+
+export const ActionButtonList = styled.ul``;
+
+export const ActionButtonItem = styled.li`
+  & + & {
+    margin-top: 5px;
+    padding-top: 5px;
+    position: relative;
+  }
+  & + &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 93px;
+    height: 1px;
+    background: #d6d5d9;
+  }
+`;
+
+export const ActionButton = styled.button<{ $variant?: 'default' | 'delete' }>`
+  padding: 10px 12px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 6px;
+  color: ${({ $variant }) =>
+    $variant === 'delete' ? 'var(--color-red)' : 'var(--color-black-200)'};
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  transition: background 0.3s;
+  width: 100%;
+
+  &:hover {
+    background: rgba(243, 245, 248, 0.5);
   }
 `;
 
