@@ -1,6 +1,5 @@
 'use client';
 
-import axios from 'axios';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import dayjs from 'dayjs';
 import DatePicker, { registerLocale } from 'react-datepicker';
@@ -157,28 +156,11 @@ export default function TodoCreateModal({
         }),
       };
 
-      console.log('카드 생성 요청 body:', requestBody);
-
       await cardsApi.create(requestBody);
 
       onClose(); //추후 토스트로 대체하면 좋을 것 같음
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.log('요청 body:', {
-          dashboardId,
-          columnId,
-          title,
-          description,
-          dueDate: dueDate ? dueDate.toISOString() : '',
-          assigneeUserId: selectedAssignee?.userId,
-          tags: tags.map((tag) => tag.name),
-          imageUrl: imageUrl ?? '',
-        });
-
-        console.log('서버 에러 응답:', error.response?.data);
-        console.log('상태 코드:', error.response?.status);
-      }
-      // console.error('카드 생성 실패:', error);
+      console.error('카드 생성 실패:', error);
       alert('카드 생성에 실패했습니다.');
     }
   };
@@ -223,8 +205,6 @@ export default function TodoCreateModal({
     const fetchMembers = async () => {
       try {
         const data = await membersApi.getList(dashboardId);
-
-        // console.log('멤버 목록:', data.members);
 
         setMembers(data.members);
       } catch (error) {
@@ -487,8 +467,6 @@ export default function TodoCreateModal({
                             type="button"
                             role="option"
                             onClick={() => {
-                              // console.log('선택한 담당자:', member);
-
                               setSelectedAssignee(member);
                               setIsAssigneeOpen(false);
                             }}

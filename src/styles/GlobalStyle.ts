@@ -171,10 +171,6 @@ const GlobalStyle = createGlobalStyle`
     color:inherit;
   }
 
-  html, body {
-    height: 100%;
-  }
-
   body {
     display: flex;
     flex-direction: column;

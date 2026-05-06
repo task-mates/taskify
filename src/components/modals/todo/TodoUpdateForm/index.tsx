@@ -174,8 +174,8 @@ export default function TodoUpdateForm({
       onSuccess();
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.log('서버 에러 응답:', error.response?.data);
-        console.log('상태 코드:', error.response?.status);
+        console.error('서버 에러 응답:', error.response?.data);
+        console.error('상태 코드:', error.response?.status);
       }
 
       alert('카드 수정에 실패했습니다.');
