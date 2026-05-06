@@ -3,7 +3,11 @@ import { DEVICE } from '@/src/styles/Breakpoints';
 
 export const Wrapper = styled.aside<{ $isOpen: boolean }>`
   width: 360px;
-  height: 100vh;
+  flex-shrink: 0;
+  align-self: stretch;
+  min-height: 0;
+  height: 100%;
+  max-height: 100%;
 
   background: #f8f9fb;
 
@@ -16,6 +20,9 @@ export const Wrapper = styled.aside<{ $isOpen: boolean }>`
   }
 
   @media ${DEVICE.mobile} {
+    height: 100vh;
+    max-height: 100vh;
+    align-self: unset;
     position: fixed;
     top: 0;
     left: 0;

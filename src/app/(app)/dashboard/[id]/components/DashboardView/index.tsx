@@ -1,25 +1,29 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { DragDropContext, type DropResult } from '@hello-pangea/dnd';
 import * as S from './styles';
 import ColumnSection from '../ColumnSection';
 import { getDashboardById } from '@/src/apis/dashboards';
 import { columnsApi } from '@/src/apis/columns';
 import { cardsApi } from '@/src/apis/cards';
-import type { Card as CardInfo } from '@/src/apis/cards/type';
 import type { Dashboard } from '@/src/apis/dashboards/type';
 import PlusIcon from '@/src/components/icons/icon-plus.svg';
-
-type ColumnWithCards = {
-  columnId: number;
-  title: string;
-  totalCount: number;
-  cards: CardInfo[];
-};
+import {
+  applyDragResult,
+  type ColumnWithCards,
+} from '../../utils/applyDragResult';
 
 type DashboardViewProps = {
   dashboardId: number;
 };
+
+function cloneColumns(cols: ColumnWithCards[]): ColumnWithCards[] {
+  return cols.map((c) => ({
+    ...c,
+    cards: c.cards.map((card) => ({ ...card })),
+  }));
+}
 
 export default function DashboardView({ dashboardId }: DashboardViewProps) {
   const [dashboard, setDashboard] = useState<Dashboard | null>(null);
@@ -78,6 +82,28 @@ export default function DashboardView({ dashboardId }: DashboardViewProps) {
     };
   }, [dashboardId]);
 
+  const handleDragEnd = useCallback((result: DropResult) => {
+    if (!result.destination) return;
+
+    const sourceColId = Number(result.source.droppableId);
+    const destColId = Number(result.destination.droppableId);
+    const cardId = Number(result.draggableId);
+
+    setColumnsWithCards((prev) => {
+      const before = cloneColumns(prev);
+      const applied = applyDragResult(prev, result);
+      if (!applied) return prev;
+
+      if (sourceColId !== destColId) {
+        cardsApi.update(cardId, { columnId: destColId }).catch(() => {
+          setColumnsWithCards(before);
+        });
+      }
+
+      return applied;
+    });
+  }, []);
+
   if (loading) {
     return (
       <S.PageMain>
@@ -100,21 +126,24 @@ export default function DashboardView({ dashboardId }: DashboardViewProps) {
         <S.ColorDot $color={dashboard.color} />
         {dashboard.title}
       </S.PageTitle>
-      <S.ColumnList>
-        {columnsWithCards.map((column) => (
-          <ColumnSection
-            key={column.columnId}
-            title={column.title}
-            totalCount={column.totalCount}
-            cards={column.cards}
-          />
-        ))}
-        <S.AddButton>
-          <S.IconContainer>
-            <PlusIcon aria-hidden="true" />
-          </S.IconContainer>
-        </S.AddButton>
-      </S.ColumnList>
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <S.ColumnList>
+          {columnsWithCards.map((column) => (
+            <ColumnSection
+              key={column.columnId}
+              columnId={column.columnId}
+              title={column.title}
+              totalCount={column.totalCount}
+              cards={column.cards}
+            />
+          ))}
+          <S.AddButton>
+            <S.IconContainer>
+              <PlusIcon aria-hidden="true" />
+            </S.IconContainer>
+          </S.AddButton>
+        </S.ColumnList>
+      </DragDropContext>
     </S.PageMain>
   );
 }

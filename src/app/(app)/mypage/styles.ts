@@ -6,13 +6,9 @@ import Button from '@/src/components/common/Button';
 export const Page = styled.main`
   box-sizing: border-box;
   width: 100%;
-  min-height: 100vh;
   padding: 24px 32px;
-  overflow-y: auto;
-  overscroll-behavior: contain;
 
   @media ${DEVICE.mobile} {
-    min-height: calc(100vh - 56px);
     padding: 24px 16px;
   }
 `;

@@ -31,7 +31,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       setIsError(false);
 
       try {
-        const { dashboards } = await getDashboardList({ size: 20 }); //TODO 추후 무한 스크롤 구현을 위한 임의의 size 설정
+        const { dashboards } = await getDashboardList({ size: 20 });
         setDashboards(dashboards);
       } catch (e) {
         console.error(e);
@@ -69,23 +69,23 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
 const Layout = styled.div`
   display: flex;
-  height: 100%;
-  min-height: 0;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
 `;
 
 const Content = styled.main`
-  display: flex;
-  flex-direction: column;
   flex: 1;
   min-width: 0;
   min-height: 0;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 `;
 
 const MainSlot = styled.div`
   flex: 1;
   min-height: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 `;

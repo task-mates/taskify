@@ -163,3 +163,13 @@ export const IconContainer = styled.div`
   align-items: center;
   justify-content: center;
 `;
+
+export const DraggableWrap = styled.div<{ $isDragging: boolean }>`
+  flex-shrink: 0;
+  ${({ $isDragging }) =>
+    $isDragging &&
+    `
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    opacity: 0.95;
+  `}
+`;
