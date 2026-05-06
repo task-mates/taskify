@@ -24,6 +24,7 @@ const dashboardLinkStyle = {
 const INVITATION_PAGE_SIZE = 20;
 const SEARCH_DEBOUNCE_MS = 250;
 const DESKTOP_MEDIA_QUERY = '(min-width: 1024px)';
+const MAX_DASHBOARD_FETCH_REQUESTS = 50;
 
 export default function MyDashboardPage() {
   const [dashboards, setDashboards] = useState<Dashboard[]>([]);
@@ -60,7 +61,7 @@ export default function MyDashboardPage() {
       let prevCursorId: number | undefined;
       const all: Dashboard[] = [];
 
-      for (let i = 0; i < 50; i += 1) {
+      for (let i = 0; i < MAX_DASHBOARD_FETCH_REQUESTS; i += 1) {
         const { dashboards: chunk, cursorId: nextCursorId } =
           await getDashboardList(cursorId ? { size, cursorId } : { size });
 
@@ -86,7 +87,11 @@ export default function MyDashboardPage() {
   }, []);
 
   useEffect(() => {
-    void loadAllDashboards();
+    const run = () => {
+      void loadAllDashboards();
+    };
+    const id = window.setTimeout(run, 0);
+    return () => window.clearTimeout(id);
   }, [loadAllDashboards]);
 
   const myDashboards = useMemo(
@@ -94,13 +99,7 @@ export default function MyDashboardPage() {
     [dashboards]
   );
 
-  const visibleInvitations = useMemo(() => {
-    const q = invitationKeyword.trim().toLowerCase();
-    if (!q) return invitations;
-    return invitations.filter((inv) =>
-      inv.dashboard.title.toLowerCase().includes(q)
-    );
-  }, [invitationKeyword, invitations]);
+  const visibleInvitations = invitations;
 
   useEffect(() => {
     const t = window.setTimeout(() => {
@@ -215,12 +214,13 @@ export default function MyDashboardPage() {
     [loadAllDashboards]
   );
 
-  const handleMyDashboardCarouselWheel = useCallback(
-    (e: React.WheelEvent<HTMLUListElement>) => {
+  useEffect(() => {
+    const el = myDashboardCarouselRef.current;
+    if (!el) return;
+
+    const onWheel = (e: WheelEvent) => {
       if (!window.matchMedia(DESKTOP_MEDIA_QUERY).matches) return;
       if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
-
-      const el = e.currentTarget;
       if (el.scrollWidth <= el.clientWidth) return;
 
       e.preventDefault();
@@ -230,9 +230,13 @@ export default function MyDashboardPage() {
         Math.min(el.scrollLeft + delta, el.scrollWidth - el.clientWidth)
       );
       el.scrollLeft = next;
-    },
-    []
-  );
+    };
+
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => {
+      el.removeEventListener('wheel', onWheel);
+    };
+  }, []);
 
   return (
     <S.Page>
@@ -252,7 +256,6 @@ export default function MyDashboardPage() {
             <S.MyDashboardsRow>
               <S.MyDashboardCards
                 ref={myDashboardCarouselRef}
-                onWheel={handleMyDashboardCarouselWheel}
               >
                 {myDashboards.length === 0 ? (
                   <S.MyDashboardCard>
