@@ -1,10 +1,42 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
 import LandingHeader from '@/src/components/layout/LandingHeader';
 import LandingFooter from '@/src/components/layout/LandingFooter';
+import { getAccessToken } from '@/src/utils/authTokenStorage';
+import { getDashboardList } from '@/src/apis/dashboards';
 import * as S from './styles';
 
 export default function Home() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const moveToFirstDashboard = async () => {
+      const accessToken = getAccessToken();
+
+      if (!accessToken) return;
+
+      try {
+        const data = await getDashboardList({
+          page: 1,
+          size: 1,
+        });
+
+        const firstDashboardId = data.dashboards[0]?.id;
+
+        if (firstDashboardId) {
+          router.replace(`/dashboard/${firstDashboardId}`);
+        }
+      } catch (error) {
+        console.error('첫 번째 대시보드 조회 실패:', error);
+      }
+    };
+
+    moveToFirstDashboard();
+  }, [router]);
+
   return (
     <>
       <LandingHeader />
