@@ -38,6 +38,7 @@ export default function MemberListSection({
                 </S.Avatar>
               )}
               <S.MemberName>{member.nickname}</S.MemberName>
+              {member.userId === myUserId && <S.BadgeText>(나)</S.BadgeText>}
             </S.MemberInfo>
             {member.userId !== myUserId && (
               <S.OutlineButton onClick={() => onRemoveMember(member.id)}>
