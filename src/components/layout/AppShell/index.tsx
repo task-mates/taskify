@@ -62,4 +62,5 @@ const Layout = styled.div`
 
 const Content = styled.main`
   flex: 1;
+  min-width: 0;
 `;

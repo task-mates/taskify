@@ -115,12 +115,13 @@ export default function MyDashboardPage() {
       setIsInvitationsError(false);
 
       try {
-        const { invitations: next, cursorId: nextCursor } = await getInvitationList(
-          {
+        const { invitations: next, cursorId: nextCursor } =
+          await getInvitationList({
             size: INVITATION_PAGE_SIZE,
-            title: invitationKeyword.trim() ? invitationKeyword.trim() : undefined,
-          }
-        );
+            title: invitationKeyword.trim()
+              ? invitationKeyword.trim()
+              : undefined,
+          });
 
         setInvitations(next);
         setInvitationCursorId(nextCursor);
@@ -144,11 +145,14 @@ export default function MyDashboardPage() {
 
     setIsInvitationsFetchingMore(true);
     try {
-      const { invitations: next, cursorId: nextCursor } = await getInvitationList({
-        size: INVITATION_PAGE_SIZE,
-        cursorId: invitationCursorId,
-        title: invitationKeyword.trim() ? invitationKeyword.trim() : undefined,
-      });
+      const { invitations: next, cursorId: nextCursor } =
+        await getInvitationList({
+          size: INVITATION_PAGE_SIZE,
+          cursorId: invitationCursorId,
+          title: invitationKeyword.trim()
+            ? invitationKeyword.trim()
+            : undefined,
+        });
 
       setInvitations((prev) => [...prev, ...next]);
       setInvitationCursorId(nextCursor);
@@ -304,13 +308,11 @@ export default function MyDashboardPage() {
               {isInvitationsLoading ? (
                 <S.StatusText>불러오는 중…</S.StatusText>
               ) : isInvitationsError ? (
-                <S.StatusText>초대 목록을 불러오지 못했습니다.</S.StatusText>
+                <S.StatusText>초대 목록을 불러오지 못했어요</S.StatusText>
               ) : visibleInvitations.length === 0 ? (
                 invitationKeyword.trim() ? (
                   <S.InvitedNoResultState>
-                    <S.EmptyInvitedText>
-                      검색 결과가 없습니다.
-                    </S.EmptyInvitedText>
+                    <S.EmptyInvitedText>검색 결과가 없어요</S.EmptyInvitedText>
                   </S.InvitedNoResultState>
                 ) : (
                   <S.InvitedEmptyInner>

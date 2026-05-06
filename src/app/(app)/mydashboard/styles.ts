@@ -28,6 +28,9 @@ export const PageTitle = styled.h1`
 `;
 
 export const Section = styled.section`
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
   margin-bottom: 36px;
 
   &:last-child {
@@ -145,7 +148,7 @@ export const InvitedPanel = styled.div<{ $empty?: boolean }>`
   box-sizing: border-box;
   width: 100%;
   max-width: 1480px;
-  height: 580px;
+  height: 600px;
   overflow-x: hidden;
   overflow-y: ${({ $empty }) => ($empty ? 'hidden' : 'auto')};
   background-color: var(--color-white);
@@ -155,12 +158,10 @@ export const InvitedPanel = styled.div<{ $empty?: boolean }>`
   padding: 24px;
 
   @media ${DEVICE.tablet} {
-    height: 520px;
     padding: 20px;
   }
 
   @media ${DEVICE.mobile} {
-    height: clamp(360px, 62vh, 520px);
     padding: 16px;
   }
 
