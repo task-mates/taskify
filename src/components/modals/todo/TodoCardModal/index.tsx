@@ -1,14 +1,21 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import dayjs from 'dayjs';
 import Image from 'next/image';
 import { cardsApi } from '@/src/apis/cards';
-import { createComment, getCommentList } from '@/src/apis/comments';
+import {
+  createComment,
+  getCommentList,
+  updateComment,
+  removeComment,
+} from '@/src/apis/comments';
 import { usersApi } from '@/src/apis/users';
 import type { Card } from '@/src/apis/cards/type';
 import type { Comment } from '@/src/apis/comments/type';
 import type { User } from '@/src/apis/users/type';
 import type { TodoCardModalProps } from './type';
 import TodoBaseModal from '../common/TodoBaseModal';
+import ModalActionButtons from '../common/ModalActionButtons';
+import TodoUpdateForm, { TODO_UPDATE_FORM_ID } from '../TodoUpdateForm';
 import * as S from './styles';
 import SendIcon from '@/src/components/icons/icon-send.svg';
 import MeatballIcon from '@/src/components/icons/icon-meatball.svg';
@@ -21,6 +28,62 @@ const COMMENT_TEXTAREA_MAX_ROWS = 6;
 const COMMENT_TEXTAREA_MAX_HEIGHT =
   COMMENT_TEXTAREA_LINE_HEIGHT * COMMENT_TEXTAREA_MAX_ROWS;
 
+const TAG_COLORS = [
+  { backgroundColor: '#E5E7EB', color: '#374151' },
+  { backgroundColor: '#F4E3D7', color: '#8A4B2A' },
+  { backgroundColor: '#FADFCB', color: '#B85C2E' },
+  { backgroundColor: '#F8E7B8', color: '#A36A00' },
+  { backgroundColor: '#DDEFE3', color: '#2F6F4E' },
+  { backgroundColor: '#D8ECFF', color: '#2D6FA3' },
+  { backgroundColor: '#E7DDF7', color: '#6E4BA3' },
+  { backgroundColor: '#F7DDE8', color: '#A33E68' },
+  { backgroundColor: '#F9D9D6', color: '#B84038' },
+];
+
+const ASSIGNEE_AVATAR_COLORS = [
+  '#F44336',
+  '#E91E63',
+  '#9C27B0',
+  '#673AB7',
+  '#3F51B5',
+  '#2196F3',
+  '#03A9F4',
+  '#00BCD4',
+  '#009688',
+  '#4CAF50',
+  '#FF9800',
+  '#FF5722',
+];
+
+type AvatarColorTarget = {
+  id?: number;
+  userId?: number;
+  nickname: string;
+};
+
+const getHashFromString = (value: string) => {
+  let hash = 0;
+
+  for (let i = 0; i < value.length; i += 1) {
+    hash = value.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  return Math.abs(hash);
+};
+
+const getAssigneeAvatarColor = (member: AvatarColorTarget) => {
+  const hashKey = `${member.userId ?? member.id}-${member.nickname}`;
+  const hash = getHashFromString(hashKey);
+
+  return ASSIGNEE_AVATAR_COLORS[hash % ASSIGNEE_AVATAR_COLORS.length];
+};
+
+const getTagColorByName = (tagName: string) => {
+  const hash = [...tagName].reduce((acc, char) => acc + char.charCodeAt(0), 0);
+
+  return TAG_COLORS[hash % TAG_COLORS.length];
+};
+
 export default function TodoCardModal({
   onClose,
   cardId,
@@ -29,10 +92,11 @@ export default function TodoCardModal({
 }: TodoCardModalProps) {
   const [card, setCard] = useState<Card | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
-
   const [cursorId, setCursorId] = useState<number | null>(null);
   const [isCommentLoading, setIsCommentLoading] = useState(false);
+
   const observerRef = useRef<HTMLDivElement | null>(null);
+  const isCommentLoadingRef = useRef(false);
 
   const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
   const actionMenuRef = useRef<HTMLDivElement | null>(null);
@@ -44,6 +108,11 @@ export default function TodoCardModal({
 
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
+  const [updatingCommentId, setUpdatingCommentId] = useState<number | null>(
+    null
+  );
+  const [updatingCommentContent, setUpdatingCommentContent] = useState('');
+
   const assigneeNickname = card?.assignee?.nickname?.trim();
   const assigneeProfileImage = card?.assignee?.profileImageUrl;
   const dueDate = card?.dueDate;
@@ -52,6 +121,31 @@ export default function TodoCardModal({
 
   const currentUserNickname = currentUser?.nickname?.trim();
   const currentUserImage = currentUser?.profileImageUrl;
+
+  const [modalMode, setModalMode] = useState<'detail' | 'update'>('detail');
+
+  const assigneeBgColor = card?.assignee
+    ? getAssigneeAvatarColor({
+        userId: card.assignee.id,
+        nickname: card.assignee.nickname,
+      })
+    : '';
+
+  const currentUserBgColor = currentUser
+    ? getAssigneeAvatarColor({
+        userId: currentUser.id,
+        nickname: currentUser.nickname,
+      })
+    : '';
+
+  const fetchCard = useCallback(async () => {
+    try {
+      const data = await cardsApi.getById(cardId);
+      setCard(data);
+    } catch (e) {
+      console.error(e);
+    }
+  }, [cardId]);
 
   const handleDeleteCard = async () => {
     const isConfirmed = window.confirm('카드를 삭제하시겠습니까?');
@@ -71,11 +165,22 @@ export default function TodoCardModal({
   const badgeGroup = (
     <S.BadgeGroup>
       {columnTitle && <S.ColumnBadge>{columnTitle}</S.ColumnBadge>}
+
       {tags.length > 0 && (
         <S.TagBadgeArea>
-          {tags.map((tag) => (
-            <S.TagBadge key={tag}>{tag}</S.TagBadge>
-          ))}
+          {tags.map((tag) => {
+            const tagColor = getTagColorByName(tag);
+
+            return (
+              <S.TagBadge
+                key={tag}
+                $backgroundColor={tagColor.backgroundColor}
+                $color={tagColor.color}
+              >
+                {tag}
+              </S.TagBadge>
+            );
+          })}
         </S.TagBadgeArea>
       )}
     </S.BadgeGroup>
@@ -94,16 +199,29 @@ export default function TodoCardModal({
         <S.ActionButtonPopup>
           <S.ActionButtonList>
             <S.ActionButtonItem>
-              <S.ActionButton type="button">
+              <S.ActionButton
+                type="button"
+                onClick={() => {
+                  setIsActionMenuOpen(false);
+                  setModalMode('update');
+                }}
+              >
                 <EditIcon />
                 수정하기
               </S.ActionButton>
             </S.ActionButtonItem>
+
             <S.ActionButtonItem>
               <S.ActionButton
                 type="button"
                 $variant="delete"
-                onClick={handleDeleteCard}
+                onMouseDown={(e) => {
+                  e.stopPropagation();
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteCard();
+                }}
               >
                 <DeleteIcon />
                 삭제하기
@@ -113,6 +231,14 @@ export default function TodoCardModal({
         </S.ActionButtonPopup>
       )}
     </S.ActionMenuBox>
+  );
+
+  const updateFooterGroup = (
+    <ModalActionButtons
+      onCancel={() => setModalMode('detail')}
+      submitText="수정"
+      formId={TODO_UPDATE_FORM_ID}
+    />
   );
 
   useEffect(() => {
@@ -132,17 +258,12 @@ export default function TodoCardModal({
   }, []);
 
   useEffect(() => {
-    const fetchCard = async () => {
-      try {
-        const data = await cardsApi.getById(cardId);
-        setCard(data);
-      } catch (e) {
-        console.error(e);
-      }
+    const loadCard = async () => {
+      await fetchCard();
     };
 
-    fetchCard();
-  }, [cardId]);
+    loadCard();
+  }, [fetchCard]);
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -156,6 +277,73 @@ export default function TodoCardModal({
 
     fetchCurrentUser();
   }, []);
+
+  const COMMENT_MAX_LENGTH = 255;
+
+  // 댓글 목록 가져오는 함수 useCallback 처리
+  const fetchComments = useCallback(
+    async (nextCursorId?: number | null) => {
+      if (isCommentLoadingRef.current) return;
+
+      try {
+        isCommentLoadingRef.current = true;
+        setIsCommentLoading(true);
+
+        const data = await getCommentList({
+          cardId,
+          size: 10,
+          cursorId: nextCursorId ?? undefined,
+        });
+
+        setComments((prevComments) =>
+          nextCursorId ? [...prevComments, ...data.comments] : data.comments
+        );
+
+        setCursorId(data.cursorId);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        isCommentLoadingRef.current = false;
+        setIsCommentLoading(false);
+      }
+    },
+    [cardId]
+  );
+
+  // cardId 변경 시 초기 댓글 조회
+  useEffect(() => {
+    const initComments = async () => {
+      await fetchComments(null);
+    };
+
+    initComments();
+  }, [fetchComments]);
+
+  // 무한스크롤
+  useEffect(() => {
+    if (!observerRef.current) return;
+    if (!cursorId) return;
+    if (isCommentLoading) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const target = entries[0];
+
+        if (target.isIntersecting) {
+          fetchComments(cursorId);
+        }
+      },
+      {
+        threshold: 0.1,
+      }
+    );
+
+    observer.observe(observerRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [cursorId, isCommentLoading, fetchComments]);
 
   const submitComment = async () => {
     if (isSubmittingRef.current) return;
@@ -187,6 +375,64 @@ export default function TodoCardModal({
       console.error(e);
     } finally {
       isSubmittingRef.current = false;
+    }
+  };
+
+  // 댓글 update 모드 시작
+  const handleStartUpdateComment = (comment: Comment) => {
+    setUpdatingCommentId(comment.id);
+    setUpdatingCommentContent(comment.content);
+  };
+
+  // 댓글 update 취소
+  const handleCancelUpdateComment = () => {
+    setUpdatingCommentId(null);
+    setUpdatingCommentContent('');
+  };
+
+  // 댓글 update 저장
+  const handleUpdateComment = async (commentId: number) => {
+    const content = updatingCommentContent.trim();
+
+    if (!content) {
+      alert('댓글 내용을 입력해주세요.');
+      return;
+    }
+
+    try {
+      const updatedComment = await updateComment(commentId, {
+        content,
+      });
+
+      setComments((prevComments) =>
+        prevComments.map((comment) =>
+          comment.id === commentId ? updatedComment : comment
+        )
+      );
+
+      setUpdatingCommentId(null);
+      setUpdatingCommentContent('');
+    } catch (e) {
+      console.error(e);
+      alert('댓글 수정에 실패했습니다.');
+    }
+  };
+
+  // 댓글 삭제
+  const handleDeleteComment = async (commentId: number) => {
+    const isConfirmed = window.confirm('댓글을 삭제하시겠습니까?');
+
+    if (!isConfirmed) return;
+
+    try {
+      await removeComment(commentId);
+
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment.id !== commentId)
+      );
+    } catch (e) {
+      console.error(e);
+      alert('댓글 삭제에 실패했습니다.');
     }
   };
 
@@ -222,63 +468,9 @@ export default function TodoCardModal({
     const isExpanded =
       textarea.value.includes('\n') ||
       textarea.scrollHeight > COMMENT_TEXTAREA_MIN_HEIGHT;
+
     setIsTextareaExpanded(isExpanded);
   };
-
-  const fetchComments = async (nextCursorId?: number | null) => {
-    if (isCommentLoading) return;
-
-    try {
-      setIsCommentLoading(true);
-
-      const data = await getCommentList({
-        cardId,
-        size: 10,
-        cursorId: nextCursorId ?? undefined,
-      });
-
-      setComments((prevComments) =>
-        nextCursorId ? [...prevComments, ...data.comments] : data.comments
-      );
-
-      setCursorId(data.cursorId);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsCommentLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    setComments([]);
-    setCursorId(null);
-    fetchComments(null);
-  }, [cardId]);
-
-  useEffect(() => {
-    if (!observerRef.current) return;
-    if (!cursorId) return;
-    if (isCommentLoading) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const target = entries[0];
-
-        if (target.isIntersecting) {
-          fetchComments(cursorId);
-        }
-      },
-      {
-        threshold: 0.1,
-      }
-    );
-
-    observer.observe(observerRef.current);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [cursorId, isCommentLoading, comments.length]);
 
   const formatDate = (dateString: string) => {
     return dayjs(dateString.replace('Z', '')).format('YYYY년 M월 D일');
@@ -290,120 +482,215 @@ export default function TodoCardModal({
     return `${time.hour() < 12 ? '오전' : '오후'} ${time.format('h:mm')}`;
   };
 
+  const getAvatarText = (nickname: string) => {
+    const trimmedNickname = nickname.trim();
+    if (!trimmedNickname) return '';
+
+    const isKorean = /[ㄱ-ㅎㅏ-ㅣ가-힣]/.test(trimmedNickname);
+
+    return isKorean ? trimmedNickname.slice(1, 3) : trimmedNickname.slice(0, 1);
+  };
+
   return (
     <TodoBaseModal
-      title={card?.title ?? ''}
-      labelId="할 일 카드 모달"
+      title={modalMode === 'detail' ? (card?.title ?? '') : '할 일 수정'}
+      labelId={modalMode === 'detail' ? '할 일 카드 모달' : '할 일 수정 모달'}
       onClose={onClose}
-      badgeGroup={badgeGroup}
-      actionMenu={actionMenu}
-      headerVariant="card"
+      badgeGroup={modalMode === 'detail' ? badgeGroup : undefined}
+      actionMenu={modalMode === 'detail' ? actionMenu : undefined}
+      footerGroup={modalMode === 'update' ? updateFooterGroup : undefined}
+      headerVariant={modalMode === 'detail' ? 'card' : 'default'}
       overlayVariant="full"
+      layoutVariant={modalMode === 'detail' ? 'card' : 'default'}
     >
-      <S.TaskInfo>
-        {assigneeNickname && (
-          <S.TaskInfoItem>
-            <S.TaskInfoLabel>담당자</S.TaskInfoLabel>
-            <S.TaskInfoValue>
-              <S.TaskInfoNameBadge>
-                {' '}
-                {assigneeProfileImage ? (
+      {modalMode === 'detail' ? (
+        <>
+          <S.TaskInfo>
+            {assigneeNickname && (
+              <S.TaskInfoItem>
+                <S.TaskInfoLabel>담당자</S.TaskInfoLabel>
+                <S.TaskInfoValue>
+                  <S.TaskInfoNameBadge $backgroundColor={assigneeBgColor}>
+                    {assigneeProfileImage ? (
+                      <Image
+                        src={assigneeProfileImage}
+                        alt={assigneeNickname}
+                        fill
+                        style={{ objectFit: 'cover' }}
+                      />
+                    ) : (
+                      getAvatarText(assigneeNickname)
+                    )}
+                  </S.TaskInfoNameBadge>
+                  {assigneeNickname}
+                </S.TaskInfoValue>
+              </S.TaskInfoItem>
+            )}
+
+            {dueDate && (
+              <S.TaskInfoItem>
+                <S.TaskInfoLabel>마감일</S.TaskInfoLabel>
+                <S.TaskInfoValue>
+                  {formatDate(dueDate)} {formatTime(dueDate)}
+                </S.TaskInfoValue>
+              </S.TaskInfoItem>
+            )}
+          </S.TaskInfo>
+
+          <S.DetailContent>
+            {cardCoverImage && (
+              <S.Thumbnail>
+                <Image
+                  src={cardCoverImage}
+                  alt="썸네일"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                />
+              </S.Thumbnail>
+            )}
+
+            {cardDescription && (
+              <S.Description>{cardDescription}</S.Description>
+            )}
+          </S.DetailContent>
+
+          <S.Divider />
+
+          <S.CommentTextareaWrapper $expanded={isTextareaExpanded}>
+            {!isTextareaExpanded && currentUserNickname && (
+              <S.CommentBadge $backgroundColor={currentUserBgColor}>
+                {currentUserImage ? (
                   <Image
-                    src={assigneeProfileImage}
-                    alt={assigneeNickname}
+                    src={currentUserImage}
+                    alt={currentUserNickname}
                     fill
                     style={{ objectFit: 'cover' }}
                   />
                 ) : (
-                  assigneeNickname
+                  getAvatarText(currentUserNickname)
                 )}
-              </S.TaskInfoNameBadge>
-              {assigneeNickname}
-            </S.TaskInfoValue>
-          </S.TaskInfoItem>
-        )}
-
-        {dueDate && (
-          <S.TaskInfoItem>
-            <S.TaskInfoLabel>마감일</S.TaskInfoLabel>
-            <S.TaskInfoValue>{formatDate(dueDate)}</S.TaskInfoValue>
-          </S.TaskInfoItem>
-        )}
-      </S.TaskInfo>
-
-      <S.DetailContent>
-        {cardCoverImage && (
-          <S.Thumbnail>
-            <Image
-              src={cardCoverImage}
-              alt="썸네일"
-              fill
-              style={{ objectFit: 'cover' }}
-            />
-          </S.Thumbnail>
-        )}
-        {cardDescription && <S.Description>{cardDescription}</S.Description>}
-      </S.DetailContent>
-
-      <S.Divider />
-
-      <S.CommentTextareaWrapper $expanded={isTextareaExpanded}>
-        {!isTextareaExpanded && currentUserNickname && (
-          <S.CommentBadge>
-            {currentUserImage ? (
-              <Image
-                src={currentUserImage}
-                alt={currentUserNickname}
-                fill
-                style={{ objectFit: 'cover' }}
-              />
-            ) : (
-              currentUserNickname
+              </S.CommentBadge>
             )}
-          </S.CommentBadge>
-        )}
 
-        <form onSubmit={handleSubmit}>
-          <S.CommentTextareaBox $expanded={isTextareaExpanded}>
-            <S.CommentTextarea
-              ref={textareaRef}
-              name="comment"
-              placeholder="댓글을 남겨보세요"
-              onChange={handleCommentChange}
-              onKeyDown={handleKeyDown}
-            />
-            <S.SendButton
-              $active={isTyping}
-              type="submit"
-              aria-label="댓글 등록"
-            >
-              <SendIcon />
-            </S.SendButton>
-          </S.CommentTextareaBox>
-        </form>
-      </S.CommentTextareaWrapper>
+            <form onSubmit={handleSubmit}>
+              <S.CommentTextareaBox $expanded={isTextareaExpanded}>
+                <S.CommentTextarea
+                  ref={textareaRef}
+                  name="comment"
+                  placeholder="댓글을 남겨보세요"
+                  maxLength={COMMENT_MAX_LENGTH}
+                  onChange={handleCommentChange}
+                  onKeyDown={handleKeyDown}
+                />
 
-      <S.CommentList>
-        {comments.map((comment) => (
-          <S.CommentItem key={comment.id}>
-            <S.CommentBadge>{comment.author.nickname}</S.CommentBadge>
-            <S.CommentContent>
-              <S.CommentInfo>
-                <S.CommentName>{comment.author.nickname}</S.CommentName>
+                <S.SendButton
+                  $active={isTyping}
+                  type="submit"
+                  aria-label="댓글 등록"
+                >
+                  <SendIcon />
+                </S.SendButton>
+              </S.CommentTextareaBox>
+            </form>
+          </S.CommentTextareaWrapper>
 
-                <S.CommentCreated>
-                  <S.CommentDate>{formatDate(comment.createdAt)}</S.CommentDate>
-                  <S.CommentTime>{formatTime(comment.createdAt)}</S.CommentTime>
-                </S.CommentCreated>
-              </S.CommentInfo>
+          <S.CommentList>
+            {comments.map((comment) => {
+              const commentAuthorBgColor = getAssigneeAvatarColor({
+                userId: comment.author.id,
+                nickname: comment.author.nickname,
+              });
 
-              <S.CommentText>{comment.content}</S.CommentText>
-            </S.CommentContent>
-          </S.CommentItem>
-        ))}
+              return (
+                <S.CommentItem key={comment.id}>
+                  <S.CommentBadge $backgroundColor={commentAuthorBgColor}>
+                    {getAvatarText(comment.author.nickname)}
+                  </S.CommentBadge>
 
-        <div ref={observerRef} style={{ height: '1px' }} />
-      </S.CommentList>
+                  <S.CommentContent>
+                    <S.CommentInfo>
+                      <S.CommentName>{comment.author.nickname}</S.CommentName>
+
+                      <S.CommentCreated>
+                        <S.CommentDate>
+                          {formatDate(comment.createdAt)}
+                        </S.CommentDate>
+                        <S.CommentTime>
+                          {formatTime(comment.createdAt)}
+                        </S.CommentTime>
+                      </S.CommentCreated>
+
+                      {currentUser?.id === comment.author.id &&
+                        updatingCommentId !== comment.id && (
+                          <S.CommentActionGroup>
+                            <S.CommentActionButton
+                              type="button"
+                              onClick={() => handleStartUpdateComment(comment)}
+                            >
+                              수정
+                            </S.CommentActionButton>
+
+                            <S.CommentActionButton
+                              type="button"
+                              onClick={() => handleDeleteComment(comment.id)}
+                            >
+                              삭제
+                            </S.CommentActionButton>
+                          </S.CommentActionGroup>
+                        )}
+                    </S.CommentInfo>
+
+                    {updatingCommentId === comment.id ? (
+                      <S.CommentUpdateBox>
+                        <S.CommentUpdateTextarea
+                          value={updatingCommentContent}
+                          maxLength={COMMENT_MAX_LENGTH}
+                          onChange={(e) =>
+                            setUpdatingCommentContent(e.target.value)
+                          }
+                        />
+
+                        <S.CommentUpdateButtonGroup>
+                          <S.CommentUpdateButton
+                            type="button"
+                            onClick={handleCancelUpdateComment}
+                          >
+                            취소
+                          </S.CommentUpdateButton>
+
+                          <S.CommentUpdateButton
+                            type="button"
+                            $variant="primary"
+                            onClick={() => handleUpdateComment(comment.id)}
+                          >
+                            저장
+                          </S.CommentUpdateButton>
+                        </S.CommentUpdateButtonGroup>
+                      </S.CommentUpdateBox>
+                    ) : (
+                      <S.CommentText>{comment.content}</S.CommentText>
+                    )}
+                  </S.CommentContent>
+                </S.CommentItem>
+              );
+            })}
+
+            <div ref={observerRef} style={{ height: '1px' }} />
+          </S.CommentList>
+        </>
+      ) : (
+        card && (
+          <TodoUpdateForm
+            cardId={cardId}
+            dashboardId={dashboardId}
+            columnId={card.columnId}
+            onSuccess={async () => {
+              await fetchCard();
+              setModalMode('detail');
+            }}
+          />
+        )
+      )}
     </TodoBaseModal>
   );
 }
