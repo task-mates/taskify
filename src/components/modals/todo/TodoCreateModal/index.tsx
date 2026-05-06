@@ -39,6 +39,10 @@ const ASSIGNEE_AVATAR_COLORS = [
 
 //태그 이름 기준으로 항상 같은 색상을 반환하는 로직
 const TAG_TEXT_COLOR = '#FFF';
+const TAG_PREVIEW_COLOR: TagColor = {
+  backgroundColor: 'var(--color-gray-200)',
+  color: '#333',
+};
 const getTagColorByName = (tagName: string): TagColor => {
   return {
     backgroundColor: getProfileColorByNickname(tagName),
@@ -284,10 +288,6 @@ export default function TodoCreateModal({
 
   const shouldShowCreateOption =
     tagInput.trim() && !tagOptions.some((tag) => tag.name === tagInput.trim());
-
-  const previewTagColor = tagInput.trim()
-    ? getTagColorByName(tagInput.trim())
-    : null;
 
   // 태그 옵션 삭제 로직
   const handleDeleteTagOption = (targetTag: string) => {
@@ -545,7 +545,7 @@ export default function TodoCreateModal({
                     >
                       <S.TagMoreButton
                         type="button"
-                        aria-label={`${tag} 태그 옵션 열기`}
+                        aria-label={`${tag.name} 태그 옵션 열기`}
                         onClick={(e) => {
                           e.stopPropagation();
                           setOpenedTagMenu((prev) =>
@@ -573,15 +573,15 @@ export default function TodoCreateModal({
                   </S.TagOptionItem>
                 ))}
 
-                {shouldShowCreateOption && previewTagColor && (
+                {shouldShowCreateOption && (
                   <S.TagCreateButton
                     type="button"
                     onClick={() => handleAddTag()}
                   >
                     생성{' '}
                     <S.TagBadge
-                      $backgroundColor={previewTagColor.backgroundColor}
-                      $color={previewTagColor.color}
+                      $backgroundColor={TAG_PREVIEW_COLOR.backgroundColor}
+                      $color={TAG_PREVIEW_COLOR.color}
                     >
                       {tagInput}
                     </S.TagBadge>
