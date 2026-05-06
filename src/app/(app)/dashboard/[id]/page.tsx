@@ -1,37 +1,17 @@
-'use client';
+import { notFound } from 'next/navigation';
+import DashboardView from './components/DashboardView';
 
-import { useEffect, useState } from 'react';
-import Card from './components/Card';
-import { cardsApi } from '@/src/apis/cards';
-import type { Card as CardType } from '@/src/apis/cards/type';
+type PageProps = {
+  params: Promise<{ id: string }>;
+};
 
-export default function DashboardPage() {
-  const [cards, setCards] = useState<CardType[]>([]);
+export default async function DashboardPage({ params }: PageProps) {
+  const { id } = await params;
+  const dashboardId = Number(id);
 
-  useEffect(() => {
-    cardsApi.getList({ columnId: 60868, size: 20 }).then((res) => {
-      setCards(res.cards);
-    });
-  }, []);
-
-  if (cards.length === 0) {
-    return <main style={{ padding: '24px' }}>카드가 없습니다.</main>;
+  if (Number.isNaN(dashboardId)) {
+    notFound();
   }
 
-  return (
-    <main
-      style={{
-        padding: '24px',
-        maxWidth: 320,
-        backgroundColor: '#E1EAF1',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '10px',
-      }}
-    >
-      {cards.map((card) => (
-        <Card key={card.id} card={card} />
-      ))}
-    </main>
-  );
+  return <DashboardView dashboardId={dashboardId} />;
 }

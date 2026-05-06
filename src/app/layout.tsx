@@ -5,6 +5,11 @@ import GlobalStyle from '@/src/styles/GlobalStyle';
 export const metadata: Metadata = {
   title: 'Taskify',
   description: 'Task management application',
+  icons: {
+    icon: '/images/favicon.svg',
+    shortcut: '/images/favicon.svg',
+    apple: '/images/favicon.svg',
+  },
 };
 
 export default function RootLayout({
