@@ -21,9 +21,6 @@ export const StyledInput = styled.input<{ $isError?: boolean }>`
   color: var(--color-black-200);
   background-color: var(--color-white);
   
-  border-radius: 8px;
-  border: 1px solid ${({ $isError }) => ($isError ? 'var(--color-red)' : 'var(--color-gray-300)')};
-  
   transition: border-color 0.2s, box-shadow 0.2s;
   outline: none;
 
