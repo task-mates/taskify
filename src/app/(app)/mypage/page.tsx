@@ -307,7 +307,7 @@ export default function MyPage() {
   return (
     <S.Page>
       <S.TopBackWrap>
-        <S.BackButton type="button" onClick={() => router.push('/dashboard')}>
+        <S.BackButton type="button" onClick={() => router.back()}>
           <S.BackIcon as={ArrowIcon} />
           돌아가기
         </S.BackButton>
