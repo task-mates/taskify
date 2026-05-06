@@ -4,6 +4,7 @@ import { DEVICE } from '@/src/styles/Breakpoints';
 export const Section = styled.section`
   min-width: 320px;
   height: 100%;
+  min-height: 0;
   padding: 16px;
   border-radius: 16px;
 
@@ -11,7 +12,7 @@ export const Section = styled.section`
   flex-direction: column;
   gap: 12px;
 
-  overflow: auto;
+  overflow: hidden;
 
   @media ${DEVICE.mobile} {
     min-width: unset;
@@ -88,6 +89,7 @@ export const CardList = styled.div<{ $isOpen: boolean }>`
   flex-direction: column;
   gap: 10px;
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
 
   @media ${DEVICE.mobile} {

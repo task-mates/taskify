@@ -171,9 +171,14 @@ const GlobalStyle = createGlobalStyle`
     color:inherit;
   }
 
+  html {
+    height: 100%;
+  }
+
   body {
     display: flex;
     flex-direction: column;
+    height: 100%;
     min-height: 100%;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

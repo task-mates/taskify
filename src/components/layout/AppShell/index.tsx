@@ -61,7 +61,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           dashboardTitle={dashboardTitle}
           createdByMe={createdByMe}
         />
-        {children}
+        <MainSlot>{children}</MainSlot>
       </Content>
     </Layout>
   );
@@ -70,10 +70,22 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 const Layout = styled.div`
   display: flex;
   height: 100%;
+  min-height: 0;
 `;
 
 const Content = styled.main`
+  display: flex;
+  flex-direction: column;
   flex: 1;
   min-width: 0;
-  overflow-y: hidden;
+  min-height: 0;
+  overflow: hidden;
+`;
+
+const MainSlot = styled.div`
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 `;
