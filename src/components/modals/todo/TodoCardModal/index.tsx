@@ -142,7 +142,6 @@ export default function TodoCardModal({
   }, [cardId]);
 
   const handleDeleteCard = async () => {
-    console.log('삭제 버튼 클릭됨');
     const isConfirmed = window.confirm('카드를 삭제하시겠습니까?');
 
     if (!isConfirmed) return;
