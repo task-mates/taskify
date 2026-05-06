@@ -22,50 +22,13 @@ import MeatballIcon from '@/src/components/icons/icon-meatball.svg';
 import EditIcon from '@/src/components/icons/icon-edit.svg';
 import DeleteIcon from '@/src/components/icons/icon-delete.svg';
 import { getTagColorByName } from '@/src/utils/tagColor';
+import { getProfileColorByNickname } from '@/src/utils/profileColor';
 
 const COMMENT_TEXTAREA_MIN_HEIGHT = 40;
 const COMMENT_TEXTAREA_LINE_HEIGHT = 24;
 const COMMENT_TEXTAREA_MAX_ROWS = 6;
 const COMMENT_TEXTAREA_MAX_HEIGHT =
   COMMENT_TEXTAREA_LINE_HEIGHT * COMMENT_TEXTAREA_MAX_ROWS;
-
-const ASSIGNEE_AVATAR_COLORS = [
-  '#F44336',
-  '#E91E63',
-  '#9C27B0',
-  '#673AB7',
-  '#3F51B5',
-  '#2196F3',
-  '#03A9F4',
-  '#00BCD4',
-  '#009688',
-  '#4CAF50',
-  '#FF9800',
-  '#FF5722',
-];
-
-type AvatarColorTarget = {
-  id?: number;
-  userId?: number;
-  nickname: string;
-};
-
-const getHashFromString = (value: string) => {
-  let hash = 0;
-
-  for (let i = 0; i < value.length; i += 1) {
-    hash = value.charCodeAt(i) + ((hash << 5) - hash);
-  }
-
-  return Math.abs(hash);
-};
-
-const getAssigneeAvatarColor = (member: AvatarColorTarget) => {
-  const hashKey = `${member.userId ?? member.id}-${member.nickname}`;
-  const hash = getHashFromString(hashKey);
-
-  return ASSIGNEE_AVATAR_COLORS[hash % ASSIGNEE_AVATAR_COLORS.length];
-};
 
 export default function TodoCardModal({
   onClose,
@@ -108,17 +71,11 @@ export default function TodoCardModal({
   const [modalMode, setModalMode] = useState<'detail' | 'update'>('detail');
 
   const assigneeBgColor = card?.assignee
-    ? getAssigneeAvatarColor({
-        userId: card.assignee.id,
-        nickname: card.assignee.nickname,
-      })
+    ? getProfileColorByNickname(card.assignee.nickname)
     : '';
 
   const currentUserBgColor = currentUser
-    ? getAssigneeAvatarColor({
-        userId: currentUser.id,
-        nickname: currentUser.nickname,
-      })
+    ? getProfileColorByNickname(currentUser.nickname)
     : '';
 
   const fetchCard = useCallback(async () => {
@@ -579,10 +536,9 @@ export default function TodoCardModal({
 
           <S.CommentList>
             {comments.map((comment) => {
-              const commentAuthorBgColor = getAssigneeAvatarColor({
-                userId: comment.author.id,
-                nickname: comment.author.nickname,
-              });
+              const commentAuthorBgColor = getProfileColorByNickname(
+                comment.author.nickname
+              );
 
               return (
                 <S.CommentItem key={comment.id}>
