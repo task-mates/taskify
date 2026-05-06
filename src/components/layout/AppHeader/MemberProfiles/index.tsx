@@ -38,6 +38,8 @@ export default function MemberProfiles({ dashboardId }: MemberProfilesProps) {
   }, []);
 
   useEffect(() => {
+    if (!isOpen) return;
+
     const handleClickOutside = (e: MouseEvent) => {
       if (
         wrapperRef.current &&
@@ -48,7 +50,7 @@ export default function MemberProfiles({ dashboardId }: MemberProfilesProps) {
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, [isOpen]);
 
   const handleToggle = () => {
     if (!isOpen && wrapperRef.current) {
