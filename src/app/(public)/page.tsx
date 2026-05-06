@@ -1,9 +1,8 @@
 'use client';
 
 import LandingHeader from '@/src/components/layout/LandingHeader';
+import LandingFooter from '@/src/components/layout/LandingFooter';
 import * as S from './styles';
-import GitHubIcon from '@/src/components/icons/icon-github.svg';
-import LogoIcon from '@/public/images/logo.svg';
 
 export default function Home() {
   return (
@@ -158,29 +157,8 @@ export default function Home() {
             </S.Inner3>
           </S.PointSection>
         </S.LandingWrapper>
-
-        <S.Footer>
-          <S.FtInner>
-            <S.LogoBox>
-              <LogoIcon />
-            </S.LogoBox>
-            <S.InfoGroup>
-              <S.FooterUtil>
-                <S.FooterUtilLink href="">Privacy Policy</S.FooterUtilLink>
-                <S.FooterUtilLink href="/faq">FAQ</S.FooterUtilLink>
-              </S.FooterUtil>
-              <S.SnsArea>
-                <S.SnsLink
-                  href="https://github.com/task-mates/taskify"
-                  target="_blank"
-                >
-                  <GitHubIcon />
-                </S.SnsLink>
-              </S.SnsArea>
-            </S.InfoGroup>
-          </S.FtInner>
-        </S.Footer>
       </S.Container>
+      <LandingFooter />
     </>
   );
 }
