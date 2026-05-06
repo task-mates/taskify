@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { FormEvent } from 'react';
+import Input from '@/src/components/common/Input';
 import { useLoginForm } from '@/src/hooks/useLoginForm';
 import { useLoginSubmit } from '@/src/hooks/useLoginSubmit';
 import * as S from './styles';
@@ -52,52 +53,46 @@ export default function LoginPage() {
         </Link>
 
         <S.LoginForm onSubmit={handleSubmit}>
-          <S.Label htmlFor='email'>이메일</S.Label>
-          {/* 인풋 공통 컴포넌트 사용 예정 */}
-          <S.TextInput
+          <Input
             id='email'
+            label='이메일'
             type='email'
-            $hasError={Boolean(errors.email)}
+            error={errors.email}
             value={email}
             onChange={(e) => handleEmailChange(e.target.value)}
             onBlur={handleEmailBlur}
             placeholder='이메일을 입력해주세요'
           />
-          <S.ErrorText>{errors.email || ' '}</S.ErrorText>
 
-          <S.Label htmlFor='password'>비밀번호</S.Label>
-          <S.PasswordField>
-            {/* 인풋 공통 컴포넌트 사용 예정 */}
-            <S.PasswordInput
-              id='password'
-              type={isPasswordVisible ? 'text' : 'password'}
-              $hasError={Boolean(errors.password)}
-              value={password}
-              onChange={(e) => handlePasswordChange(e.target.value)}
-              onBlur={handlePasswordBlur}
-              placeholder='비밀번호를 입력해주세요'
-            />
-            {/* 눈 아이콘 클릭 시 비밀번호 보기/숨기기 */}
-            <S.TogglePasswordButton
-              type='button'
-              onClick={() => setIsPasswordVisible((prev) => !prev)}
-              aria-label={
-                isPasswordVisible ? '비밀번호 숨기기' : '비밀번호 보기'
-              }
-            >
-              <Image
-                src={
-                  isPasswordVisible
-                    ? '/images/password-eye-on.svg'
-                    : '/images/password-eye-off.svg'
-                }
-                alt=''
-                width={20}
-                height={20}
-              />
-            </S.TogglePasswordButton>
-          </S.PasswordField>
-          <S.ErrorText>{errors.password || ' '}</S.ErrorText>
+          <Input
+            id='password'
+            label='비밀번호'
+            type={isPasswordVisible ? 'text' : 'password'}
+            error={errors.password}
+            value={password}
+            onChange={(e) => handlePasswordChange(e.target.value)}
+            onBlur={handlePasswordBlur}
+            placeholder='비밀번호를 입력해주세요'
+            rightIcon={
+              <button
+                type='button'
+                onClick={() => setIsPasswordVisible((prev) => !prev)}
+                aria-label={isPasswordVisible ? '비밀번호 숨기기' : '비밀번호 보기'}
+                style={{ border: 'none', background: 'transparent', padding: 0, cursor: 'pointer', display: 'inline-flex' }}
+              >
+                <Image
+                  src={
+                    isPasswordVisible
+                      ? '/images/password-eye-on.svg'
+                      : '/images/password-eye-off.svg'
+                  }
+                  alt=''
+                  width={20}
+                  height={20}
+                />
+              </button>
+            }
+          />
 
           {errors.common && <S.ErrorText>{errors.common}</S.ErrorText>}
 
