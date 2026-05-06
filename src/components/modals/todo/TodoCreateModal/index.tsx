@@ -15,6 +15,7 @@ import TodoBaseModal from '../common/TodoBaseModal';
 import * as S from './styles';
 import UploadImage from '@/src/components/icons/icon-uploadimg.svg';
 import DeleteIcon from '@/src/components/icons/icon-delete.svg';
+import { getProfileColorByNickname } from '@/src/utils/profileColor';
 
 registerLocale('ko', ko);
 
@@ -36,33 +37,13 @@ const ASSIGNEE_AVATAR_COLORS = [
   '#FF5722',
 ];
 
-// ==============================
-// 태그 색상 팔레트
-// ==============================
-const TAG_COLORS = [
-  { backgroundColor: '#E5E7EB', color: '#374151' }, // 회색
-  { backgroundColor: '#F4E3D7', color: '#8A4B2A' }, // 갈색
-  { backgroundColor: '#FADFCB', color: '#B85C2E' }, // 주황색
-  { backgroundColor: '#F8E7B8', color: '#A36A00' }, // 노란색
-  { backgroundColor: '#DDEFE3', color: '#2F6F4E' }, // 초록색
-  { backgroundColor: '#D8ECFF', color: '#2D6FA3' }, // 파란색
-  { backgroundColor: '#E7DDF7', color: '#6E4BA3' }, // 보라색
-  { backgroundColor: '#F7DDE8', color: '#A33E68' }, // 분홍색
-  { backgroundColor: '#F9D9D6', color: '#B84038' }, // 빨간색
-];
-
-// 태그 색상 선택 로직
-const getRandomTagColor = (excludeColor?: TagColor | null) => {
-  const availableColors = excludeColor
-    ? TAG_COLORS.filter(
-        (tagColor) =>
-          tagColor.backgroundColor !== excludeColor.backgroundColor ||
-          tagColor.color !== excludeColor.color
-      )
-    : TAG_COLORS;
-
-  const randomIndex = Math.floor(Math.random() * availableColors.length);
-  return availableColors[randomIndex];
+//태그 이름 기준으로 항상 같은 색상을 반환하는 로직
+const TAG_TEXT_COLOR = '#FFF';
+const getTagColorByName = (tagName: string): TagColor => {
+  return {
+    backgroundColor: getProfileColorByNickname(tagName),
+    color: TAG_TEXT_COLOR,
+  };
 };
 
 // 폼 연결용 ID
@@ -100,9 +81,6 @@ export default function TodoCreateModal({
   const [isTagOpen, setIsTagOpen] = useState(false);
   const tagBoxRef = useRef<HTMLDivElement | null>(null);
   const [openedTagMenu, setOpenedTagMenu] = useState<string | null>(null);
-  const [previewTagColor, setPreviewTagColor] = useState<TagColor | null>(null);
-  const currentInputColorRef = useRef<TagColor | null>(null);
-  const lastTagColorRef = useRef<TagColor | null>(null);
 
   // ==============================
   // 이미지 업로드 상태 (미리보기 URL, 실제 선택 파일)
@@ -261,13 +239,9 @@ export default function TodoCreateModal({
 
       const existingOption = tagOptions.find((tag) => tag.name === trimmedTag);
 
-      const tagColor =
-        currentInputColorRef.current ??
-        getRandomTagColor(lastTagColorRef.current);
-
       const newTag = existingOption ?? {
         name: trimmedTag,
-        ...tagColor,
+        ...getTagColorByName(trimmedTag),
       };
 
       setTags((prev) =>
@@ -278,25 +252,10 @@ export default function TodoCreateModal({
         prev.some((tag) => tag.name === trimmedTag) ? prev : [...prev, newTag]
       );
 
-      lastTagColorRef.current = {
-        backgroundColor: newTag.backgroundColor,
-        color: newTag.color,
-      };
-
-      currentInputColorRef.current = null;
-      setPreviewTagColor(null);
       setTagInput('');
       setIsTagOpen(true);
     },
-    [
-      tagInput,
-      tagOptions,
-      setTags,
-      setTagOptions,
-      setPreviewTagColor,
-      setTagInput,
-      setIsTagOpen,
-    ]
+    [tagInput, tagOptions]
   );
 
   // 선택된 태그 제거 로직
@@ -325,6 +284,10 @@ export default function TodoCreateModal({
 
   const shouldShowCreateOption =
     tagInput.trim() && !tagOptions.some((tag) => tag.name === tagInput.trim());
+
+  const previewTagColor = tagInput.trim()
+    ? getTagColorByName(tagInput.trim())
+    : null;
 
   // 태그 옵션 삭제 로직
   const handleDeleteTagOption = (targetTag: string) => {
@@ -535,26 +498,7 @@ export default function TodoCreateModal({
                 value={tagInput}
                 onFocus={() => setIsTagOpen(true)}
                 onChange={(e) => {
-                  const nextValue = e.target.value;
-
-                  if (!nextValue) {
-                    currentInputColorRef.current = null;
-                    setPreviewTagColor(null);
-                    setTagInput('');
-                    setIsTagOpen(true);
-                    return;
-                  }
-
-                  if (!currentInputColorRef.current) {
-                    const nextColor = getRandomTagColor(
-                      lastTagColorRef.current
-                    );
-
-                    currentInputColorRef.current = nextColor;
-                    setPreviewTagColor(nextColor);
-                  }
-
-                  setTagInput(nextValue);
+                  setTagInput(e.target.value);
                   setIsTagOpen(true);
                 }}
                 onKeyDown={handleTagKeyDown}
@@ -629,18 +573,15 @@ export default function TodoCreateModal({
                   </S.TagOptionItem>
                 ))}
 
-                {shouldShowCreateOption && (
+                {shouldShowCreateOption && previewTagColor && (
                   <S.TagCreateButton
                     type="button"
                     onClick={() => handleAddTag()}
                   >
                     생성{' '}
                     <S.TagBadge
-                      $backgroundColor={
-                        previewTagColor?.backgroundColor ??
-                        TAG_COLORS[0].backgroundColor
-                      }
-                      $color={previewTagColor?.color ?? TAG_COLORS[0].color}
+                      $backgroundColor={previewTagColor.backgroundColor}
+                      $color={previewTagColor.color}
                     >
                       {tagInput}
                     </S.TagBadge>
