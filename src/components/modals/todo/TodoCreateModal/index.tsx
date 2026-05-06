@@ -17,26 +17,9 @@ import * as S from './styles';
 import UploadImage from '@/src/components/icons/icon-uploadimg.svg';
 import DeleteIcon from '@/src/components/icons/icon-delete.svg';
 import { getTagColorByName, TAG_PREVIEW_COLOR } from '@/src/utils/tagColor';
+import { getProfileColorByNickname } from '@/src/utils/profileColor';
 
 registerLocale('ko', ko);
-
-// ==============================
-// 담당자 닉네임 색상 팔레트
-// ==============================
-const ASSIGNEE_AVATAR_COLORS = [
-  '#F44336',
-  '#E91E63',
-  '#9C27B0',
-  '#673AB7',
-  '#3F51B5',
-  '#2196F3',
-  '#03A9F4',
-  '#00BCD4',
-  '#009688',
-  '#4CAF50',
-  '#FF9800',
-  '#FF5722',
-];
 
 // 폼 연결용 ID
 const TODO_CREATE_FORM_ID = 'todo-create-form';
@@ -191,23 +174,8 @@ export default function TodoCreateModal({
     setIsAssigneeOpen(false);
   };
 
-  // 담당자 아바타 색상 생성 로직
-  const getHashFromString = (value: string) => {
-    let hash = 0;
-    for (let i = 0; i < value.length; i += 1) {
-      hash = value.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    return Math.abs(hash);
-  };
-
-  const getAssigneeAvatarColor = (member: Member) => {
-    const hashKey = `${member.userId ?? member.id}-${member.nickname}`;
-    const hash = getHashFromString(hashKey);
-    return ASSIGNEE_AVATAR_COLORS[hash % ASSIGNEE_AVATAR_COLORS.length];
-  };
-
   const selectedAssigneeBgColor = selectedAssignee
-    ? getAssigneeAvatarColor(selectedAssignee)
+    ? getProfileColorByNickname(selectedAssignee.nickname)
     : '';
 
   // 담당자 아바타 텍스트 생성 로직
@@ -411,7 +379,9 @@ export default function TodoCreateModal({
                 <S.SelectWrapper>
                   <S.SelectList role="listbox">
                     {members.map((member) => {
-                      const memberBgColor = getAssigneeAvatarColor(member);
+                      const memberBgColor = getProfileColorByNickname(
+                        member.nickname
+                      );
                       return (
                         <S.OptionItem key={member.id}>
                           <S.OptionButton
