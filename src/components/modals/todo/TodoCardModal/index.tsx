@@ -21,24 +21,13 @@ import SendIcon from '@/src/components/icons/icon-send.svg';
 import MeatballIcon from '@/src/components/icons/icon-meatball.svg';
 import EditIcon from '@/src/components/icons/icon-edit.svg';
 import DeleteIcon from '@/src/components/icons/icon-delete.svg';
+import { getTagColorByName } from '@/src/utils/tagColor';
 
 const COMMENT_TEXTAREA_MIN_HEIGHT = 40;
 const COMMENT_TEXTAREA_LINE_HEIGHT = 24;
 const COMMENT_TEXTAREA_MAX_ROWS = 6;
 const COMMENT_TEXTAREA_MAX_HEIGHT =
   COMMENT_TEXTAREA_LINE_HEIGHT * COMMENT_TEXTAREA_MAX_ROWS;
-
-const TAG_COLORS = [
-  { backgroundColor: '#E5E7EB', color: '#374151' },
-  { backgroundColor: '#F4E3D7', color: '#8A4B2A' },
-  { backgroundColor: '#FADFCB', color: '#B85C2E' },
-  { backgroundColor: '#F8E7B8', color: '#A36A00' },
-  { backgroundColor: '#DDEFE3', color: '#2F6F4E' },
-  { backgroundColor: '#D8ECFF', color: '#2D6FA3' },
-  { backgroundColor: '#E7DDF7', color: '#6E4BA3' },
-  { backgroundColor: '#F7DDE8', color: '#A33E68' },
-  { backgroundColor: '#F9D9D6', color: '#B84038' },
-];
 
 const ASSIGNEE_AVATAR_COLORS = [
   '#F44336',
@@ -76,12 +65,6 @@ const getAssigneeAvatarColor = (member: AvatarColorTarget) => {
   const hash = getHashFromString(hashKey);
 
   return ASSIGNEE_AVATAR_COLORS[hash % ASSIGNEE_AVATAR_COLORS.length];
-};
-
-const getTagColorByName = (tagName: string) => {
-  const hash = [...tagName].reduce((acc, char) => acc + char.charCodeAt(0), 0);
-
-  return TAG_COLORS[hash % TAG_COLORS.length];
 };
 
 export default function TodoCardModal({
