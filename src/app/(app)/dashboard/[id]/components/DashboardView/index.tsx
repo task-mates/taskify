@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import * as S from './styles';
 import ColumnSection from '../ColumnSection';
+import ColumnCreateModal from '@/src/components/modals/ColumnCreateModal';
 import { getDashboardById } from '@/src/apis/dashboards';
 import { columnsApi } from '@/src/apis/columns';
 import { cardsApi } from '@/src/apis/cards';
@@ -28,6 +29,7 @@ export default function DashboardView({ dashboardId }: DashboardViewProps) {
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -109,12 +111,24 @@ export default function DashboardView({ dashboardId }: DashboardViewProps) {
             cards={column.cards}
           />
         ))}
-        <S.AddButton>
+        <S.AddButton
+          type="button"
+          onClick={() => setIsCreateModalOpen(true)}
+          aria-label="새 칼럼 추가"
+        >
           <S.IconContainer>
             <PlusIcon aria-hidden="true" />
           </S.IconContainer>
         </S.AddButton>
       </S.ColumnList>
+
+      {isCreateModalOpen && (
+        <ColumnCreateModal
+          dashboardId={dashboardId}
+          onClose={() => setIsCreateModalOpen(false)}
+          onCreated={() => window.location.reload()}
+        />
+      )}
     </S.PageMain>
   );
 }
