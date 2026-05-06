@@ -1,6 +1,6 @@
 'use client';
 
-import LogoIcon from '@/public/images/logo.svg';
+import Image from 'next/image';
 import * as S from './styles';
 
 export default function LandingHeader() {
@@ -8,7 +8,12 @@ export default function LandingHeader() {
     <S.Header>
       <S.HdInner>
         <S.LogoBox>
-          <LogoIcon />
+          <Image
+            src="/images/logo.svg"
+            alt="TASKIFY 로고"
+            width={186}
+            height={48}
+          />
         </S.LogoBox>
 
         <S.Util>

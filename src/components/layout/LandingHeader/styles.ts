@@ -29,16 +29,16 @@ export const HdInner = styled.div`
 `;
 
 export const LogoBox = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 6px;
-`;
-
-export const LogoImage = styled.img`
   width: 186px;
 
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
   @media ${DEVICE.tablet} {
-    width: 130px;
+    width: 140px;
   }
 `;
 
@@ -46,6 +46,10 @@ export const Util = styled.nav`
   display: flex;
   align-items: center;
   gap: 14px;
+
+  @media ${DEVICE.mobile} {
+    gap: 12px;
+  }
 `;
 
 export const UtilLink = styled(Link)`
