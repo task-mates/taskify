@@ -18,13 +18,6 @@ type DashboardViewProps = {
   dashboardId: number;
 };
 
-function cloneColumns(cols: ColumnWithCards[]): ColumnWithCards[] {
-  return cols.map((c) => ({
-    ...c,
-    cards: c.cards.map((card) => ({ ...card })),
-  }));
-}
-
 export default function DashboardView({ dashboardId }: DashboardViewProps) {
   const [dashboard, setDashboard] = useState<Dashboard | null>(null);
   const [columnsWithCards, setColumnsWithCards] = useState<ColumnWithCards[]>(
@@ -89,18 +82,21 @@ export default function DashboardView({ dashboardId }: DashboardViewProps) {
     const destColId = Number(result.destination.droppableId);
     const cardId = Number(result.draggableId);
 
+    let previous: ColumnWithCards[] | null = null;
+
     setColumnsWithCards((prev) => {
-      const before = cloneColumns(prev);
       const applied = applyDragResult(prev, result);
       if (!applied) return prev;
-
-      if (sourceColId !== destColId) {
-        cardsApi.update(cardId, { columnId: destColId }).catch(() => {
-          setColumnsWithCards(before);
-        });
-      }
-
+      previous = prev;
       return applied;
+    });
+
+    if (sourceColId === destColId || previous === null) return;
+
+    const snapshot = previous;
+
+    cardsApi.update(cardId, { columnId: destColId }).catch(() => {
+      setColumnsWithCards(snapshot);
     });
   }, []);
 
