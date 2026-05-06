@@ -10,8 +10,8 @@ export default function Button({
   leftIcon,
   onClick,
   type = 'button',
-  width = '100%',
-  height = '100%', 
+  width = 'auto',
+  height = 'auto', 
   disabled = false,
   ...props
 }: ButtonProps) {
