@@ -13,7 +13,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const [dashboards, setDashboards] = useState<Dashboard[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [currentDashboard, setCurrentDashboard] = useState<Dashboard | null>(null);
+  const [currentDashboard, setCurrentDashboard] = useState<Dashboard | null>(
+    null
+  );
 
   const pathname = usePathname();
   const params = useParams();
