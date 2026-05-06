@@ -127,7 +127,8 @@ export const ActionButton = styled.button<{ $variant?: 'default' | 'delete' }>`
   font-size: 16px;
   font-weight: 500;
   border-radius: 6px;
-  color: ${({ $variant }) => ($variant === 'delete' ? '#E73527' : '#333236')};
+  color: ${({ $variant }) =>
+    $variant === 'delete' ? 'var(--color-red)' : 'var(--color-black-200)'};
   display: flex;
   align-items: center;
   gap: 9px;

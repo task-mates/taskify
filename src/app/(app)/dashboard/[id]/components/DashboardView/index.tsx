@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as S from './styles';
 import ColumnSection from '../ColumnSection';
 import ColumnCreateModal from '@/src/components/modals/ColumnCreateModal';
@@ -30,6 +30,8 @@ export default function DashboardView({ dashboardId }: DashboardViewProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+  const loadRef = useRef<(() => Promise<void>) | undefined>(undefined);
 
   useEffect(() => {
     let cancelled = false;
@@ -73,12 +75,17 @@ export default function DashboardView({ dashboardId }: DashboardViewProps) {
       }
     };
 
+    loadRef.current = load;
     void load();
 
     return () => {
       cancelled = true;
     };
   }, [dashboardId]);
+
+  const handleRefresh = () => {
+    void loadRef.current?.();
+  };
 
   if (loading) {
     return (
@@ -110,7 +117,7 @@ export default function DashboardView({ dashboardId }: DashboardViewProps) {
             title={column.title}
             totalCount={column.totalCount}
             cards={column.cards}
-            onUpdated={() => window.location.reload()}
+            onUpdated={handleRefresh}
           />
         ))}
         <S.AddButton
@@ -128,7 +135,7 @@ export default function DashboardView({ dashboardId }: DashboardViewProps) {
         <ColumnCreateModal
           dashboardId={dashboardId}
           onClose={() => setIsCreateModalOpen(false)}
-          onCreated={() => window.location.reload()}
+          onCreated={handleRefresh}
         />
       )}
     </S.PageMain>

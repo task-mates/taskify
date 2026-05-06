@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Modal from '@/src/components/Modal';
 import CloseIcon from '@/src/components/icons/icon-close.svg';
 import { columnsApi } from '@/src/apis/columns';
-import * as S from '../ColumnCreateModal/style';
+import * as S from './style';
 import type { ColumnEditModalProps } from './type';
 
 export default function ColumnEditModal({
