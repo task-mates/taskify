@@ -78,6 +78,12 @@ const getAssigneeAvatarColor = (member: AvatarColorTarget) => {
   return ASSIGNEE_AVATAR_COLORS[hash % ASSIGNEE_AVATAR_COLORS.length];
 };
 
+const getTagColorByName = (tagName: string) => {
+  const hash = [...tagName].reduce((acc, char) => acc + char.charCodeAt(0), 0);
+
+  return TAG_COLORS[hash % TAG_COLORS.length];
+};
+
 export default function TodoCardModal({
   onClose,
   cardId,
@@ -153,15 +159,6 @@ export default function TodoCardModal({
       console.error(e);
       alert('카드 삭제에 실패했습니다.');
     }
-  };
-
-  const getTagColorByName = (tagName: string) => {
-    const hash = [...tagName].reduce(
-      (acc, char) => acc + char.charCodeAt(0),
-      0
-    );
-
-    return TAG_COLORS[hash % TAG_COLORS.length];
   };
 
   const tags = (card?.tags ?? []).filter((tag) => tag.trim());
