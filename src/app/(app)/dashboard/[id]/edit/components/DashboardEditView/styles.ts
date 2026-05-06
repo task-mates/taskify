@@ -80,7 +80,10 @@ export const ColorPickerRow = styled.div`
   margin-top: 16px;
 `;
 
-export const ColorCircle = styled.button<{ $color: string; $selected: boolean }>`
+export const ColorCircle = styled.button<{
+  $color: string;
+  $selected: boolean;
+}>`
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -173,6 +176,12 @@ export const Avatar = styled.div<{ $bg: string }>`
 export const MemberName = styled.span`
   font-size: var(--font-md);
   color: var(--color-black-200);
+`;
+
+export const BadgeText = styled.span`
+  font: var(--xs-12px-semibold);
+  color: var(--color-gray-400);
+  margin-left: 2px;
 `;
 
 export const EmailText = styled.span`
