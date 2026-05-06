@@ -10,12 +10,13 @@ import { membersApi } from '@/src/apis/members';
 import { columnsApi } from '@/src/apis/columns';
 import type { Member } from '@/src/apis/members/type';
 import ModalActionButtons from '../common/ModalActionButtons';
-import type { Tag, TagColor, TodoCreateModalProps } from './type';
+import type { TodoCreateModalProps } from './type';
+import type { Tag } from '@/src/types/tag';
 import TodoBaseModal from '../common/TodoBaseModal';
 import * as S from './styles';
 import UploadImage from '@/src/components/icons/icon-uploadimg.svg';
 import DeleteIcon from '@/src/components/icons/icon-delete.svg';
-import { getProfileColorByNickname } from '@/src/utils/profileColor';
+import { getTagColorByName, TAG_PREVIEW_COLOR } from '@/src/utils/tagColor';
 
 registerLocale('ko', ko);
 
@@ -36,19 +37,6 @@ const ASSIGNEE_AVATAR_COLORS = [
   '#FF9800',
   '#FF5722',
 ];
-
-//태그 이름 기준으로 항상 같은 색상을 반환하는 로직
-const TAG_TEXT_COLOR = '#FFF';
-const TAG_PREVIEW_COLOR: TagColor = {
-  backgroundColor: 'var(--color-gray-200)',
-  color: '#333',
-};
-const getTagColorByName = (tagName: string): TagColor => {
-  return {
-    backgroundColor: getProfileColorByNickname(tagName),
-    color: TAG_TEXT_COLOR,
-  };
-};
 
 // 폼 연결용 ID
 const TODO_CREATE_FORM_ID = 'todo-create-form';
