@@ -15,6 +15,7 @@ import {
   getDashboardInvitationList,
   cancelDashboardInvitation,
 } from '@/src/apis/dashboard-invitations';
+import Image from 'next/image';
 import { usersApi } from '@/src/apis/users';
 import { getProfileColorByNickname } from '@/src/utils/profileColor';
 import { PROFILE_COLORS } from '@/src/styles/profileColor';
@@ -161,8 +162,7 @@ export default function DashboardEditView({
               <S.ListRow key={member.id}>
                 <S.MemberInfo>
                   {member.profileImageUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
+                    <Image
                       src={member.profileImageUrl}
                       alt={member.nickname}
                       width={34}
