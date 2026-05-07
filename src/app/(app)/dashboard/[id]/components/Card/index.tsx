@@ -13,13 +13,14 @@ export default function Card({ card, dashboardId, columnTitle }: CardProps) {
         onClick={() => setIsCardModalOpen(true)}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
             setIsCardModalOpen(true);
           }
         }}
         tabIndex={0}
         role="button"
       >
-        <S.Thumbnail src="/images/dummy.png" alt={card.title} />
+        {card.imageUrl && <S.Thumbnail src={card.imageUrl} alt={card.title} />}
         <S.Content>
           <S.Title>{card.title}</S.Title>
           <S.TagList>
