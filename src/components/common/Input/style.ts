@@ -33,7 +33,8 @@ export const StyledInput = styled.input<{ $hasError?: boolean }>`
 export const ErrorMessage = styled.span<{ $visible: boolean }>`
   visibility: ${({ $visible }) => ($visible ? 'visible' : 'hidden')};
   display: block;
+  min-height: 18px;
   margin-top: 4px;
   font: var(--xs-12px-medium);
-  color: var(--color-red);
+  color: var(--color-error);
 `;

@@ -180,7 +180,7 @@ export const Spacer = styled.div``;
 export const ErrorSpace = styled.p`
   min-height: 18px;
   font-size: 13px;
-  color: var(--color-red);
+  color: var(--color-error);
   margin: 0;
 `;
 
