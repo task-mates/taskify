@@ -124,6 +124,7 @@ const BaseButton = styled(Link)`
 
   @media ${DEVICE.mobile} {
     width: 150px;
+    font-size: 15px;
   }
 `;
 

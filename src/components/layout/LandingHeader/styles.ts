@@ -58,4 +58,8 @@ export const UtilLink = styled(Link)`
   font-size: 16px;
   color: var(--color-text-dark);
   font-weight: 500;
+
+  @media ${DEVICE.mobile} {
+    padding: 6px;
+  }
 `;

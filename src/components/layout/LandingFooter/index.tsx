@@ -1,7 +1,7 @@
 'use client';
 
 import GitHubIcon from '@/src/components/icons/icon-github.svg';
-import LogoIcon from '@/public/images/logo.svg';
+import Image from 'next/image';
 import * as S from './styles';
 
 export default function LandingFooter() {
@@ -9,7 +9,12 @@ export default function LandingFooter() {
     <S.Footer>
       <S.FtInner>
         <S.LogoBox href="/">
-          <LogoIcon />
+          <Image
+            src="/images/logo.svg"
+            alt="TASKIFY 로고"
+            width={186}
+            height={48}
+          />
         </S.LogoBox>
         <S.InfoGroup>
           <S.FooterUtil>
