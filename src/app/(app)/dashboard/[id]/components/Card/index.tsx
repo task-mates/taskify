@@ -5,6 +5,7 @@ import * as S from './styles';
 import type { CardProps } from './type';
 import TodoCardModal from '@/src/components/modals/todo/TodoCardModal';
 import { getTagColorByName } from '@/src/utils/tagColor';
+import ProfileFallback from '@/src/components/ProfileFallback';
 
 export default function Card({ card, dashboardId, columnTitle }: CardProps) {
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
@@ -50,9 +51,7 @@ export default function Card({ card, dashboardId, columnTitle }: CardProps) {
                   alt={card.assignee.nickname}
                 />
               ) : (
-                <S.ProfileFallback>
-                  {card.assignee.nickname.slice(0, 2)}
-                </S.ProfileFallback>
+                <ProfileFallback nickname={card.assignee.nickname} />
               )}
             </S.Assignee>
           )}

@@ -66,6 +66,16 @@ export const ActionButton = styled.button`
   font: var(--md-14px-medium);
   color: var(--color-gray-500);
   cursor: pointer;
+
+  @media ${DEVICE.mobile} {
+    padding: 8px;
+  }
+`;
+
+export const ButtonLabel = styled.span`
+  @media ${DEVICE.mobile} {
+    display: none;
+  }
 `;
 
 export const Divider = styled.div`
@@ -79,17 +89,6 @@ export const ProfileButton = styled.button`
   align-items: center;
   gap: 8px;
   cursor: pointer;
-`;
-
-export const ProfileFallback = styled.div`
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  color: var(--color-white);
-  font: var(--lg-14px-semibold);
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `;
 
 export const ProfileName = styled.span`

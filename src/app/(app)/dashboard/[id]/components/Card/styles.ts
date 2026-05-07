@@ -65,19 +65,6 @@ export const ProfileImage = styled.img`
   object-fit: cover;
 `;
 
-export const ProfileFallback = styled.div`
-  display: flex;
-  width: 28px;
-  height: 28px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: #00b894;
-  color: var(--color-white);
-  font-size: 10px;
-  font-weight: 700;
-`;
-
 export const Content = styled.div`
   display: flex;
   flex-direction: column;

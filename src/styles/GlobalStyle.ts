@@ -86,7 +86,7 @@ const GlobalStyle = createGlobalStyle`
 
     --color-black: #000000;
     --color-black-100: #4B4B4B;
-    --color-black-200: #333236;
+    --color-black-200: #333236;  
     --color-black-300: #262629;
     --color-black-400: #201F23;
     --color-black-500: #131215;
@@ -104,8 +104,8 @@ const GlobalStyle = createGlobalStyle`
 
     --color-red: #CA372B;
 
-    --color-blue-100: #76A5EA;
-    --color-blue-200: #83C6E5;
+    --color-blue-100: #1458BC;
+    --color-blue-200: #76A5EA;
 
     --color-brand-surface: #E1EAF1;
 
@@ -124,6 +124,12 @@ const GlobalStyle = createGlobalStyle`
     --color-profile-yellow: #BD8C00;
     --color-profile-orange: #9F4B00;
     --color-profile-cobaltblue: #1458BC;
+
+    --color-dashboard-blue: #4277C4;
+    --color-dashboard-skyblue: #92CCE7;
+    --color-dashboard-darkgray: #9FA6B2;
+    --color-dashboard-gray: #D9D9D9;
+    --color-dashboard-black: var(--color-black-200); 
 
     /* --- Font --- */
     --font-main: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;

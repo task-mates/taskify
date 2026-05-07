@@ -2,7 +2,7 @@
 
 import Input from '@/src/components/common/Input';
 import * as S from '../styles';
-import { PROFILE_COLORS } from '@/src/styles/profileColor';
+import { DASHBOARD_COLORS } from '@/src/styles/profileColor';
 import type { Dashboard } from '@/src/apis/dashboards/type';
 
 type Props = {
@@ -11,6 +11,7 @@ type Props = {
   color: string;
   isSaving: boolean;
   isUnchanged: boolean;
+  isTitleEmpty: boolean;
   onTitleChange: (title: string) => void;
   onColorChange: (color: string) => void;
   onSave: () => void;
@@ -22,6 +23,7 @@ export default function DashboardInfoSection({
   color,
   isSaving,
   isUnchanged,
+  isTitleEmpty,
   onTitleChange,
   onColorChange,
   onSave,
@@ -38,7 +40,7 @@ export default function DashboardInfoSection({
       />
 
       <S.ColorPickerRow>
-        {PROFILE_COLORS.map((c) => (
+        {DASHBOARD_COLORS.map((c) => (
           <S.ColorCircle
             key={c}
             $color={c}
@@ -51,7 +53,10 @@ export default function DashboardInfoSection({
         ))}
       </S.ColorPickerRow>
 
-      <S.ChangeButton onClick={onSave} disabled={isSaving || isUnchanged}>
+      <S.ChangeButton
+        onClick={onSave}
+        disabled={isSaving || isUnchanged || isTitleEmpty}
+      >
         변경
       </S.ChangeButton>
     </S.Card>

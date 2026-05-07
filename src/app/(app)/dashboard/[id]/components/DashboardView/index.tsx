@@ -15,6 +15,7 @@ import {
   type ColumnWithCards,
 } from '@/src/app/(app)/dashboard/[id]/utils/applyDragResult';
 import { onCardChanged } from '@/src/utils/dashboardListEvent';
+import DashboardViewSkeleton from '@/src/components/common/Skeleton/DashboardViewSkeleton';
 
 type DashboardViewProps = {
   dashboardId: number;
@@ -118,7 +119,7 @@ export default function DashboardView({ dashboardId }: DashboardViewProps) {
   if (loading) {
     return (
       <S.PageMain>
-        <p>불러오는 중...</p>
+        <DashboardViewSkeleton />
       </S.PageMain>
     );
   }

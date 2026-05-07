@@ -7,6 +7,8 @@ import DashboardCreateModal from '@/src/components/modals/DashboardCreateModal';
 import { getDashboardList } from '@/src/apis/dashboards';
 import { onDashboardChanged } from '@/src/utils/dashboardListEvent';
 import type { Dashboard } from '@/src/apis/dashboards/type';
+import MyDashboardSkeleton from '@/src/components/common/Skeleton/MyDashboardSkeleton';
+import InvitedTableSkeleton from '@/src/components/common/Skeleton/InvitedTableSkeleton';
 import { getInvitationList, updateInvitation } from '@/src/apis/invitations';
 import type { Invitation } from '@/src/apis/invitations/type';
 import { showToast } from '@/src/utils/toast';
@@ -245,7 +247,7 @@ export default function MyDashboardPage() {
     <S.Page>
       <S.PageTitle>홈</S.PageTitle>
 
-      {isDashboardsLoading && <S.StatusText>불러오는 중…</S.StatusText>}
+      {isDashboardsLoading && <MyDashboardSkeleton />}
       {isDashboardsError && !isDashboardsLoading && (
         <S.StatusText>대시보드 목록을 불러오지 못했습니다.</S.StatusText>
       )}
@@ -308,7 +310,7 @@ export default function MyDashboardPage() {
               </S.InvitedToolbar>
 
               {isInvitationsLoading ? (
-                <S.StatusText>불러오는 중…</S.StatusText>
+                <InvitedTableSkeleton />
               ) : isInvitationsError ? (
                 <S.StatusText>초대 목록을 불러오지 못했어요</S.StatusText>
               ) : visibleInvitations.length === 0 ? (

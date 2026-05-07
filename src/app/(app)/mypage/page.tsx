@@ -8,6 +8,7 @@ import ArrowIcon from '@/src/components/icons/icon-arrow.svg';
 import ProfileBoxIcon from '@/src/components/icons/profile-box.svg';
 import { putPassword } from '@/src/apis/auth';
 import { usersApi } from '@/src/apis/users';
+import { removeAccessToken } from '@/src/utils/authTokenStorage';
 import Input from '@/src/components/common/Input';
 import { MYPAGE_MESSAGES, PROFILE_BOX_SIZE } from './constants';
 import {
@@ -264,6 +265,11 @@ export default function MyPage() {
     }
   };
 
+  const handleLogout = () => {
+    removeAccessToken();
+    router.push('/');
+  };
+
   const handlePasswordSubmit = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
@@ -446,6 +452,10 @@ export default function MyPage() {
           </S.PasswordButton>
         </S.PasswordForm>
       </S.PasswordSection>
+
+      <S.LogoutButton type="button" onClick={handleLogout}>
+        로그아웃
+      </S.LogoutButton>
     </S.Page>
   );
 }

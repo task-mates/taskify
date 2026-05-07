@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import StyledComponentsRegistry from './registry';
 import GlobalStyle from '@/src/styles/GlobalStyle';
-import Toast from '@/src/components/common/Toast'; 
+import Toast from '@/src/components/common/Toast';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 export const metadata: Metadata = {
   title: 'Taskify',

@@ -7,7 +7,7 @@ import Button from '@/src/components/common/Button';
 import { createDashboard } from '@/src/apis/dashboards';
 import { showToast } from '@/src/utils/toast';
 import { emitDashboardChanged } from '@/src/utils/dashboardListEvent';
-import { PROFILE_COLORS } from '@/src/styles/profileColor';
+import { DASHBOARD_COLORS } from '@/src/styles/profileColor';
 import * as S from './style';
 import type { DashboardCreateModalProps } from './type';
 
@@ -52,7 +52,7 @@ export default function DashboardCreateModal({
         />
 
         <S.ColorSection>
-          {PROFILE_COLORS.map((eachColor) => (
+          {DASHBOARD_COLORS.map((eachColor) => (
             <S.ColorCircle
               key={eachColor}
               type="button"
