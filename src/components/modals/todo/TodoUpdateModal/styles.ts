@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { DEVICE } from '@/src/styles/Breakpoints';
+import CommonInput from '@/src/components/common/Input';
 
 export const Form = styled.form`
   display: flex;
@@ -46,24 +47,22 @@ export const Label = styled.label<{ $required?: boolean }>`
   }
 `;
 
-export const Input = styled.input`
-  width: 100%;
-  padding: 6px 20px;
-  height: 54px;
-  border-radius: 14px;
-  border: 1px solid var(--color-gray-300);
-  background: var(--color-white);
-  font-size: 16px;
-  font-weight: 500;
-  color: var(--color-black-200);
-
-  &::placeholder {
-    color: var(--color-gray-400);
+export const Input = styled(CommonInput)`
+  & > span:last-child {
+    display: none;
   }
 
-  @media ${DEVICE.mobile} {
-    height: 48px;
-    border-radius: 12px;
+  input {
+    height: 54px;
+    border-radius: 14px;
+    padding: 6px 20px;
+    font-size: 16px;
+    font-weight: 500;
+
+    @media ${DEVICE.mobile} {
+      height: 48px;
+      border-radius: 12px;
+    }
   }
 `;
 
@@ -311,10 +310,11 @@ export const DatePickerWrapper = styled.div<{ $selected: boolean }>`
 `;
 
 export const DateInput = styled(Input)`
-  position: relative;
-  padding-left: 46px;
-  cursor: pointer;
-  caret-color: transparent;
+  input {
+    padding-left: 46px;
+    cursor: pointer;
+    caret-color: transparent;
+  }
 `;
 
 export const Textarea = styled.textarea`

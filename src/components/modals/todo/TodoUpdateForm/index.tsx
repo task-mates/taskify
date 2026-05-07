@@ -24,6 +24,7 @@ type TodoUpdateFormProps = {
   dashboardId: number;
   columnId: number;
   onSuccess: () => void;
+  onValidChange?: (isValid: boolean) => void;
 };
 
 export const TODO_UPDATE_FORM_ID = 'todo-update-form';
@@ -33,6 +34,7 @@ export default function TodoUpdateForm({
   dashboardId,
   columnId,
   onSuccess,
+  onValidChange,
 }: TodoUpdateFormProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -67,6 +69,7 @@ export default function TodoUpdateForm({
         setMembers(dashboardMembers);
         setTitle(card.title);
         setDescription(card.description);
+        onValidChange?.(!!card.title.trim() && !!card.description.trim());
         setDueDate(card.dueDate ? new Date(card.dueDate) : null);
 
         const initialTags = card.tags.map((tag) => ({
@@ -86,6 +89,7 @@ export default function TodoUpdateForm({
 
         setSelectedAssignee(matchedMember ?? null);
       } catch {
+        showToast.error('카드 정보 조회에 실패했습니다.');
       }
     };
 
@@ -99,9 +103,13 @@ export default function TodoUpdateForm({
 
     if (selectedImageFile) {
       try {
-        const uploadedImage = await columnsApi.uploadCardImage(columnId, selectedImageFile);
+        const uploadedImage = await columnsApi.uploadCardImage(
+          columnId,
+          selectedImageFile
+        );
         imageUrl = uploadedImage.imageUrl;
       } catch {
+        showToast.error('이미지 업로드에 실패했습니다.');
         return;
       }
     }
@@ -120,6 +128,7 @@ export default function TodoUpdateForm({
       showToast.success('카드가 수정되었습니다.');
       onSuccess();
     } catch {
+      showToast.error('카드 수정에 실패했습니다.');
     }
   };
 
@@ -267,7 +276,11 @@ export default function TodoUpdateForm({
           placeholder="제목을 입력해주세요"
           required
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => {
+            const newTitle = e.target.value;
+            setTitle(newTitle);
+            onValidChange?.(!!newTitle.trim() && !!description.trim());
+          }}
         />
       </S.Field>
 
@@ -280,7 +293,11 @@ export default function TodoUpdateForm({
           placeholder="설명을 입력해주세요"
           required
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={(e) => {
+            const newDescription = e.target.value;
+            setDescription(newDescription);
+            onValidChange?.(!!title.trim() && !!newDescription.trim());
+          }}
         />
       </S.Field>
 

@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useCallback } from 'react';
 import ModalActionButtons from '../common/ModalActionButtons';
 import TodoBaseModal from '../common/TodoBaseModal';
 import TodoUpdateForm, { TODO_UPDATE_FORM_ID } from '../TodoUpdateForm';
@@ -11,11 +12,18 @@ export default function TodoUpdateModal({
   columnId,
   cardId,
 }: TodoUpdateModalProps) {
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+
+  const handleValidChange = useCallback((isValid: boolean) => {
+    setIsSubmitDisabled(!isValid);
+  }, []);
+
   const footerGroup = (
     <ModalActionButtons
       onCancel={onClose}
       submitText="수정"
       formId={TODO_UPDATE_FORM_ID}
+      submitDisabled={isSubmitDisabled}
     />
   );
 
@@ -31,6 +39,7 @@ export default function TodoUpdateModal({
         dashboardId={dashboardId}
         columnId={columnId}
         onSuccess={onClose}
+        onValidChange={handleValidChange}
       />
     </TodoBaseModal>
   );

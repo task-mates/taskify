@@ -68,11 +68,14 @@ export default function TodoCreateModal({
   // ==============================
   // 모달 하단 버튼 영역
   // ==============================
+  const isSubmitDisabled = !title.trim() || !description.trim();
+
   const footerGroup = (
     <ModalActionButtons
       onCancel={onClose}
       submitText="생성"
       formId={TODO_CREATE_FORM_ID}
+      submitDisabled={isSubmitDisabled}
     />
   );
 
@@ -86,9 +89,13 @@ export default function TodoCreateModal({
 
     if (selectedImageFile) {
       try {
-        const uploadedImage = await columnsApi.uploadCardImage(columnId, selectedImageFile);
+        const uploadedImage = await columnsApi.uploadCardImage(
+          columnId,
+          selectedImageFile
+        );
         imageUrl = uploadedImage.imageUrl;
       } catch {
+        showToast.error('이미지 업로드에 실패했습니다.');
         return;
       }
     }
@@ -109,6 +116,7 @@ export default function TodoCreateModal({
       onCreated?.();
       onClose();
     } catch {
+      showToast.error('카드 생성에 실패했습니다.');
     }
   };
 
@@ -155,6 +163,7 @@ export default function TodoCreateModal({
 
         setMembers(data.members);
       } catch {
+        showToast.error('담당자 목록 조회에 실패했습니다.');
       }
     };
     fetchMembers();
