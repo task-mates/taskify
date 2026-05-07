@@ -5,14 +5,11 @@ import { useState, useEffect } from 'react';
 import { usePathname, useParams } from 'next/navigation';
 import Sidebar from '@/src/components/layout/Sidebar';
 import AppHeader from '@/src/components/layout/AppHeader';
-import { getDashboardList, getDashboardById } from '@/src/apis/dashboards';
+import { getDashboardById } from '@/src/apis/dashboards';
 import type { Dashboard } from '@/src/apis/dashboards/type';
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [dashboards, setDashboards] = useState<Dashboard[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
   const [currentDashboard, setCurrentDashboard] = useState<Dashboard | null>(
     null
   );
@@ -26,25 +23,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     setIsSidebarOpen(false);
   }, [pathname]);
-
-  useEffect(() => {
-    const fetchDashboards = async () => {
-      setIsLoading(true);
-      setIsError(false);
-
-      try {
-        const { dashboards } = await getDashboardList({ size: 20 });
-        setDashboards(dashboards);
-      } catch {
-        setIsError(true);
-        setDashboards([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchDashboards();
-  }, []);
 
   useEffect(() => {
     if (!dashboardId) {
@@ -61,9 +39,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <Sidebar
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
-        dashboards={dashboards}
-        isLoading={isLoading}
-        isError={isError}
       />
       <Content>
         <AppHeader
