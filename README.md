@@ -6,7 +6,8 @@
 ## 프로젝트 기간 및 배포 주소
 - 📅 프로젝트 기간 : 2026.04.20 ~ 2026.05.08
 - 🔗 배포 주소 : https://taskify-one-lemon.vercel.app/
-  
+
+<br>
 
 ## 프로젝트 설명
 Taskify는 팀 단위 협업을 위한 일정 관리 웹 서비스입니다.<br>
@@ -47,7 +48,6 @@ Taskify는 팀 단위 협업을 위한 일정 관리 웹 서비스입니다.<br>
 - react-hot-toast
 - @hello-pangea/dnd
 - react-datepicker
-- dayjs
 - date-fns
   
 ### Development
@@ -66,7 +66,6 @@ Taskify는 팀 단위 협업을 위한 일정 관리 웹 서비스입니다.<br>
 
 <br>
 
-## 프로젝트 구조
 ## 📁 프로젝트 구조
 
 ```bash
@@ -106,7 +105,7 @@ src/
 
 <br>
 
-# 👥 팀원 소개
+## 👥 팀원 소개
 
 | 권다은 | 김유민 | 박현우 | 양채원 | 이차현 |
 | --- | --- | --- | --- | --- |
