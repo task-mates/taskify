@@ -2,14 +2,18 @@
 
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
-import { usePathname, useParams } from 'next/navigation';
+import { usePathname, useParams, useRouter } from 'next/navigation';
 import Sidebar from '@/src/components/layout/Sidebar';
 import AppHeader from '@/src/components/layout/AppHeader';
 import { getDashboardById } from '@/src/apis/dashboards';
 import type { Dashboard } from '@/src/apis/dashboards/type';
 import { onDashboardChanged } from '@/src/utils/dashboardListEvent';
+import { getAccessToken } from '@/src/utils/authTokenStorage';
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+  const [isAuthed, setIsAuthed] = useState<boolean | null>(null);
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [currentDashboard, setCurrentDashboard] = useState<Dashboard | null>(
     null
@@ -20,6 +24,14 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const dashboardId = params?.id ? Number(params.id) : undefined;
   const createdByMe = currentDashboard?.createdByMe ?? false;
   const dashboardTitle = currentDashboard?.title;
+
+  useEffect(() => {
+    if (Boolean(getAccessToken())) {
+      setIsAuthed(true);
+    } else {
+      router.replace('/');
+    }
+  }, [router]);
 
   useEffect(() => {
     setIsSidebarOpen(false);
@@ -43,6 +55,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         .catch(() => null);
     });
   }, [dashboardId]);
+
+  if (isAuthed !== true) return null;
 
   return (
     <Layout>
