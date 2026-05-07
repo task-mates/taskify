@@ -47,13 +47,47 @@ Taskify는 팀 단위 협업을 위한 일정 관리 웹 서비스입니다.<br>
 
   
 ### Development
-<img src="https://img.shields.io/badge/eslint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white">&nbsp;<img src="https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white">&nbsp;<img src="https://img.shields.io/badge/webpack-8DD6F9?style=for-the-badge&logo=webpack&logoColor=white">
+<img src="https://img.shields.io/badge/eslint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white">&nbsp;<img src="https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white">
 
 ### Collaboration
 <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">&nbsp;<img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">&nbsp;<img src="https://img.shields.io/badge/discord-5865F2?style=for-the-badge&logo=discord&logoColor=white">&nbsp;<img src="https://img.shields.io/badge/figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white">&nbsp;<img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white">&nbsp;<img src="https://camo.githubusercontent.com/5b181ba23f182ab380f76b27db116e0770ebb95a03bc8d1bc6320cdd92c839eb/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f676f6f676c652532307368656574732d2532333334413835332e7376673f267374796c653d666f722d7468652d6261646765266c6f676f3d676f6f676c65253230736865657473266c6f676f436f6c6f723d7768697465">
 
 ### Deployment
 <img src="https://img.shields.io/badge/vercel-000000?style=for-the-badge&logo=vercel&logoColor=white">
+
+<br>
+
+## 🚀 시작하기
+
+이 프로젝트를 로컬 환경에서 설정하고 실행하는 방법입니다.
+
+### 0. 필수 요구사항 
+
+프로젝트를 실행하기 위해 다음 항목들이 설치되어 있어야 합니다.
+* **Node.js**: 18.0.0 버전 이상
+* **npm** 또는 **yarn** (패키지 매니저)
+
+
+### 1. Installation
+- 프로젝트를 로컬에 복제한 후 의존성 패키지를 설치합니다.
+```bash
+git clone https://github.com/task-mates/taskify.git
+
+# 해당 디렉토리로 cd 후
+npm install
+```
+
+### 2. Development
+- 로컬 개발 서버는 기본적으로 http://localhost:3000 에서 실행됩니다. (환경에 따라 5173 등으로 변경될 수 있습니다.)
+```bash
+npm run dev
+```
+
+### 3. Build
+- 프로덕션 환경을 위한 빌드 파일을 생성합니다. 결과물은 /dist 폴더에 저장됩니다.
+```bash
+npm run build
+```
 
 <br>
 
@@ -102,3 +136,57 @@ src/
 | --- | --- | --- | --- | --- |
 | <img src="https://avatars.githubusercontent.com/u/148428665?v=4" width="160" /> | <img src="https://avatars.githubusercontent.com/u/225640245?v=4" width="160" /> | <img src="https://avatars.githubusercontent.com/u/83463918?v=4" width="160" /> | <img src="https://avatars.githubusercontent.com/u/218423054?v=4" width="160" /> | <img src="https://avatars.githubusercontent.com/u/163325051?v=4" width="160" /> |
 | <div align="center">github: [ekdmskwon](https://github.com/ekdmskwon)</div> | <div align="center">github: [Kimyum0307](https://github.com/Kimyum0307)</div> | <div align="center">github: [pho9902](https://github.com/pho9902)</div> | <div align="center">github: [devchae10](https://github.com/devchae10)</div> | <div align="center">github: [chahyunlee](https://github.com/chahyunlee)</div> |
+
+### [역할 분담]
+<table>
+  <tr>
+    <th>👤 이름</th>
+    <th align="left">💻 작업</th>
+  </tr>
+
+  <tr>
+    <td>권다은</td>
+    <td align="left">
+      - 로그인 페이지<br />
+      - 회원가입 페이지<br />
+      - 계정관리 페이지<br />
+      - 나의 대시보드 페이지<br />
+      - FAQ, 이용약관
+    </td>
+  </tr>
+
+  <tr>
+    <td>김유민</td>
+    <td align="left">
+      - 디자인 시스템<br />
+      - 공통 컴포넌트<br />
+      - 토스트
+    </td>
+  </tr>
+
+  <tr>
+    <td>박현우</td>
+    <td align="left">
+      - 대시보드 생성 / 관리<br />
+      - 헤더 컴포넌트<br />
+      - 구성원 확인 모달<br />
+      - 칼럼 추가 / 수정 / 초대하기 모달
+    </td>
+  </tr>
+
+  <tr>
+    <td>양채원</td>
+    <td align="left">
+      - 할일 카드 생성 / 수정 / 조회 모달<br />
+      - 랜딩 페이지
+    </td>
+  </tr>
+
+  <tr>
+    <td>이차현</td>
+    <td align="left">
+      - 사이드바<br />
+      - 대시보드 페이지
+    </td>
+  </tr>
+</table>
