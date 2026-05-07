@@ -25,7 +25,7 @@ export const ProfileSection = styled(Section)`
   width: min(100%, ${MYPAGE_CARD_MAX_WIDTH});
   max-width: ${MYPAGE_CARD_MAX_WIDTH};
   min-height: 366px;
-  margin-bottom: 16px;
+  margin: 0 auto 16px;
 
   @media ${DEVICE.mobile} {
     height: auto;
@@ -36,6 +36,7 @@ export const PasswordSection = styled(Section)`
   box-sizing: border-box;
   width: min(100%, ${MYPAGE_CARD_MAX_WIDTH});
   max-width: ${MYPAGE_CARD_MAX_WIDTH};
+  margin: 0 auto;
 `;
 
 export const SectionTitle = styled.h2`
@@ -47,7 +48,7 @@ export const SectionTitle = styled.h2`
 export const TopBackWrap = styled.div`
   width: min(100%, ${MYPAGE_CARD_MAX_WIDTH});
   max-width: ${MYPAGE_CARD_MAX_WIDTH};
-  margin-bottom: 8px;
+  margin: 0 auto 8px;
 `;
 
 export const BackButton = styled.button`
