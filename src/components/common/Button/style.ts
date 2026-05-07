@@ -57,7 +57,7 @@ export const StyledButton = styled.button<{
       background-color: transparent;
       color: var(--color-gray-400);
       &:hover:not(:disabled) {
-        background-color: rgba(0, 0, 0, 0.05);
+        background-color: rgba(0, 0, 0, 0.05); /* ghost hover - no token available */
       }
 
       &:disabled { 

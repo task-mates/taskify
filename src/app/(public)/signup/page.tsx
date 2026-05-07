@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
 import Modal from '@/src/components/Modal';
+import Input from '@/src/components/common/Input';
 import * as S from './styles';
 import type { ModalType } from './type';
 import { MODAL_MESSAGES } from './constants';
@@ -82,10 +83,10 @@ export default function SignupPage() {
 
         <S.SignupForm onSubmit={handleSubmit}>
           <S.Label htmlFor="email">이메일</S.Label>
-          <S.TextInput
+          <Input
             id="email"
             type="email"
-            $hasError={Boolean(emailErrorMessage)}
+            error={emailErrorMessage}
             value={email}
             onChange={(e) => {
               updateField('email', e.target.value);
@@ -96,26 +97,24 @@ export default function SignupPage() {
             onBlur={() => touchField('email')}
             placeholder="이메일을 입력해주세요"
           />
-          <S.ErrorText>{emailErrorMessage || ' '}</S.ErrorText>
 
           <S.Label htmlFor="name">이름</S.Label>
-          <S.TextInput
+          <Input
             id="name"
             type="text"
-            $hasError={Boolean(nameErrorMessage)}
+            error={nameErrorMessage}
             value={name}
             onChange={(e) => updateField('name', e.target.value)}
             onBlur={() => touchField('name')}
             placeholder="이름을 입력해주세요"
           />
-          <S.ErrorText>{nameErrorMessage || ' '}</S.ErrorText>
 
           <S.Label htmlFor="password">비밀번호</S.Label>
           <S.PasswordField>
             <S.PasswordInput
               id="password"
               type={isPasswordVisible ? 'text' : 'password'}
-              $hasError={Boolean(passwordErrorMessage)}
+              error={passwordErrorMessage}
               value={password}
               onChange={(e) => {
                 const nextPassword = e.target.value;
@@ -151,14 +150,13 @@ export default function SignupPage() {
               />
             </S.TogglePasswordButton>
           </S.PasswordField>
-          <S.ErrorText>{passwordErrorMessage || ' '}</S.ErrorText>
 
           <S.Label htmlFor="passwordCheck">비밀번호 확인</S.Label>
           <S.PasswordField>
             <S.PasswordInput
               id="passwordCheck"
               type={isPasswordCheckVisible ? 'text' : 'password'}
-              $hasError={Boolean(passwordCheckErrorMessage)}
+              error={passwordCheckErrorMessage}
               value={passwordCheck}
               onChange={(e) => {
                 const nextPasswordCheck = e.target.value;
@@ -196,7 +194,6 @@ export default function SignupPage() {
               />
             </S.TogglePasswordButton>
           </S.PasswordField>
-          <S.ErrorText>{passwordCheckErrorMessage || ' '}</S.ErrorText>
 
           <S.TermsLabel htmlFor="terms">
             <S.TermsCheckbox

@@ -29,7 +29,7 @@ export const Label = styled.label<{ $required?: boolean }>`
   margin-bottom: 12px;
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: var(--color-black-200);
 
   ${({ $required }) =>
     $required &&
@@ -51,14 +51,14 @@ export const Input = styled.input`
   padding: 6px 20px;
   height: 54px;
   border-radius: 14px;
-  border: 1px solid #d6d5d9;
-  background: #fff;
+  border: 1px solid var(--color-gray-300);
+  background: var(--color-white);
   font-size: 16px;
   font-weight: 500;
-  color: #333;
+  color: var(--color-black-200);
 
   &::placeholder {
-    color: #a39fb2;
+    color: var(--color-gray-400);
   }
 
   @media ${DEVICE.mobile} {
@@ -97,7 +97,7 @@ export const DatePickerWrapper = styled.div<{ $selected: boolean }>`
     }
     .react-datepicker__close-icon::after {
       content: '';
-      background-color: #000;
+      background-color: var(--color-black);
       background-image: url(/images/icon-close-wh.svg);
       background-size: 60%;
       background-position: center;
@@ -125,7 +125,7 @@ export const DatePickerWrapper = styled.div<{ $selected: boolean }>`
     display: flex;
     border-radius: 14px;
     overflow: hidden;
-    border: 1px solid #d6d5d9;
+    border: 1px solid var(--color-gray-300);
   }
 
   .react-datepicker__month-container {
@@ -139,12 +139,12 @@ export const DatePickerWrapper = styled.div<{ $selected: boolean }>`
   .react-datepicker__month-year-read-view--down-arrow {
     top: 10px;
     border-width: 2px 2px 0 0;
-    border-color: #d6d5d9;
+    border-color: var(--color-gray-300);
   }
 
   .react-datepicker__header {
     padding: 10px 0;
-    background-color: #fff;
+    background-color: var(--color-white);
     border-radius: 0;
     border-bottom: 1px solid #d6d5d9;
   }
@@ -169,8 +169,8 @@ export const DatePickerWrapper = styled.div<{ $selected: boolean }>`
   .react-datepicker__quarter-text--keyboard-selected,
   .react-datepicker__year-text--keyboard-selected {
     border-radius: 50%;
-    background-color: #83c6e5;
-    color: #fff;
+    background-color: var(--color-blue-200);
+    color: var(--color-white);
   }
 
   .react-datepicker__day--keyboard-selected:not([aria-disabled='true']):hover,
@@ -200,7 +200,7 @@ export const DatePickerWrapper = styled.div<{ $selected: boolean }>`
   .react-datepicker__year-text--in-selecting-range,
   .react-datepicker__year-text--in-range {
     border-radius: 50%;
-    background-color: #83c6e5;
+    background-color: var(--color-blue-200);
   }
 
   .react-datepicker__day--selected:not([aria-disabled='true']):hover,
@@ -248,7 +248,7 @@ export const DatePickerWrapper = styled.div<{ $selected: boolean }>`
     .react-datepicker__time-box
     ul.react-datepicker__time-list
     li.react-datepicker__time-list-item--selected {
-    background-color: #83c6e5;
+    background-color: var(--color-blue-200);
   }
 
   .react-datepicker__time-container
@@ -322,15 +322,15 @@ export const Textarea = styled.textarea`
   width: 100%;
   height: 160px;
   border-radius: 14px;
-  border: 1px solid #d6d5d9;
-  background: #fff;
+  border: 1px solid var(--color-gray-300);
+  background: var(--color-white);
   font-size: 16px;
   font-weight: 500;
-  color: #333;
+  color: var(--color-black-200);
   resize: none;
 
   &::placeholder {
-    color: #a39fb2;
+    color: var(--color-gray-400);
   }
 
   @media ${DEVICE.mobile} {
@@ -351,8 +351,8 @@ export const SelectButton = styled.button<{
   padding: 6px 20px;
   height: 54px;
   border-radius: 14px;
-  border: 1px solid #d6d5d9;
-  background: #fff;
+  border: 1px solid var(--color-gray-300);
+  background: var(--color-white);
   font-size: 16px;
   font-weight: 500;
   text-align: left;
@@ -398,8 +398,8 @@ export const SelectWrapper = styled.div`
   top: calc(100% + 8px);
   padding: 10px 16px 10px 4px;
   width: 100%;
-  background: #fff;
-  border: 1px solid #d6d5d9;
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-300);
   border-radius: 14px;
 
   @media ${DEVICE.mobile} {
@@ -481,7 +481,7 @@ export const AssigneeAvatar = styled.span<{
 export const AssigneeName = styled.span`
   font-size: 16px;
   font-weight: 500;
-  color: #333236;
+  color: var(--color-black-200);
 `;
 
 export const AssigneeClearButton = styled.span`
@@ -516,8 +516,8 @@ export const TagInputArea = styled.div`
   min-height: 54px;
   padding: 8px 20px;
   border-radius: 14px;
-  border: 1px solid #d6d5d9;
-  background: #fff;
+  border: 1px solid var(--color-gray-300);
+  background: var(--color-white);
 
   cursor: text;
 
@@ -537,10 +537,10 @@ export const TagInput = styled.input`
 
   font-size: 16px;
   font-weight: 500;
-  color: #333;
+  color: var(--color-black-200);
 
   &::placeholder {
-    color: #a39fb2;
+    color: var(--color-gray-400);
   }
 `;
 
@@ -581,8 +581,8 @@ export const TagOptionBox = styled.div`
   width: 100%;
   padding: 16px 18px;
   border-radius: 12px;
-  border: 1px solid #d6d5d9;
-  background: #fff;
+  border: 1px solid var(--color-gray-300);
+  background: var(--color-white);
 
   display: flex;
   flex-direction: column;
@@ -701,9 +701,9 @@ export const TagDeletePopup = styled.div`
   width: 96px;
   padding: 6px;
 
-  border: 1px solid #d6d5d9;
+  border: 1px solid var(--color-gray-300);
   border-radius: 8px;
-  background: #fff;
+  background: var(--color-white);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 `;
 
@@ -797,7 +797,7 @@ export const RemoveImageButton = styled.button`
 
     width: 12px;
     height: 2px;
-    background-color: #fff;
+    background-color: var(--color-white);
   }
   &::before {
     transform: rotate(45deg);

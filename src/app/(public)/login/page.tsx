@@ -41,11 +41,11 @@ export default function LoginPage() {
   return (
     <S.Container>
       <S.FormSection>
-        <Link href='/' aria-label='메인 페이지 이동'>
+        <Link href="/" aria-label="메인 페이지 이동">
           <S.LogoWrapper>
             <Image
-              src='/images/icon-logo.svg'
-              alt='Taskify 로고'
+              src="/images/icon-logo.svg"
+              alt="Taskify 로고"
               fill
               priority
             />
@@ -53,58 +53,59 @@ export default function LoginPage() {
         </Link>
 
         <S.LoginForm onSubmit={handleSubmit}>
+          <S.Label htmlFor="email">이메일</S.Label>
           <Input
-            id='email'
-            label='이메일'
-            type='email'
+            id="email"
+            type="email"
             error={errors.email}
             value={email}
             onChange={(e) => handleEmailChange(e.target.value)}
             onBlur={handleEmailBlur}
-            placeholder='이메일을 입력해주세요'
+            placeholder="이메일을 입력해주세요"
           />
 
-          <Input
-            id='password'
-            label='비밀번호'
-            type={isPasswordVisible ? 'text' : 'password'}
-            error={errors.password}
-            value={password}
-            onChange={(e) => handlePasswordChange(e.target.value)}
-            onBlur={handlePasswordBlur}
-            placeholder='비밀번호를 입력해주세요'
-            rightIcon={
-              <button
-                type='button'
-                onClick={() => setIsPasswordVisible((prev) => !prev)}
-                aria-label={isPasswordVisible ? '비밀번호 숨기기' : '비밀번호 보기'}
-                style={{ border: 'none', background: 'transparent', padding: 0, cursor: 'pointer', display: 'inline-flex' }}
-              >
-                <Image
-                  src={
-                    isPasswordVisible
-                      ? '/images/password-eye-on.svg'
-                      : '/images/password-eye-off.svg'
-                  }
-                  alt=''
-                  width={20}
-                  height={20}
-                />
-              </button>
-            }
-          />
+          <S.Label htmlFor="password">비밀번호</S.Label>
+          <S.PasswordField>
+            <S.PasswordInput
+              id="password"
+              type={isPasswordVisible ? 'text' : 'password'}
+              error={errors.password}
+              value={password}
+              onChange={(e) => handlePasswordChange(e.target.value)}
+              onBlur={handlePasswordBlur}
+              placeholder="비밀번호를 입력해주세요"
+            />
+            <S.TogglePasswordButton
+              type="button"
+              onClick={() => setIsPasswordVisible((prev) => !prev)}
+              aria-label={
+                isPasswordVisible ? '비밀번호 숨기기' : '비밀번호 보기'
+              }
+            >
+              <Image
+                src={
+                  isPasswordVisible
+                    ? '/images/password-eye-on.svg'
+                    : '/images/password-eye-off.svg'
+                }
+                alt=""
+                width={20}
+                height={20}
+              />
+            </S.TogglePasswordButton>
+          </S.PasswordField>
 
           {errors.common && <S.ErrorText>{errors.common}</S.ErrorText>}
 
           {/* 버튼 공통 컴포넌트 사용 예정 */}
-          <S.LoginButton type='submit' disabled={isLoginButtonDisabled}>
+          <S.LoginButton type="submit" disabled={isLoginButtonDisabled}>
             {isLoading ? '로그인 중' : '로그인'}
           </S.LoginButton>
         </S.LoginForm>
 
         <S.SignupRow>
           <S.HelperText>아직 회원이 아니신가요?</S.HelperText>
-          <S.SignupLink href='/signup'>회원가입하기</S.SignupLink>
+          <S.SignupLink href="/signup">회원가입하기</S.SignupLink>
         </S.SignupRow>
       </S.FormSection>
     </S.Container>

@@ -45,7 +45,7 @@ export const FooterUtil = styled.div`
 export const FooterUtilLink = styled(Link)`
   font-size: 16px;
   font-weight: 500;
-  color: #404040;
+  color: var(--color-text-dark);
 `;
 
 export const SnsArea = styled.div`
