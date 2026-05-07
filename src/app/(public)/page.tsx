@@ -29,8 +29,7 @@ export default function Home() {
         if (firstDashboardId) {
           router.replace(`/dashboard/${firstDashboardId}`);
         }
-      } catch {
-      }
+      } catch {}
     };
 
     moveToFirstDashboard();
@@ -56,7 +55,7 @@ export default function Home() {
 
             <S.ImageArea>
               <S.MockImage
-                src="/images/landing-dashboard.png"
+                src="/images/landing-intro.jpg"
                 alt="Taskify 대시보드 미리보기"
               />
             </S.ImageArea>
@@ -110,7 +109,7 @@ export default function Home() {
               </S.PointTextArea2>
               <S.PointImageArea2>
                 <S.PointImage
-                  src="/images/landing-todocard.png"
+                  src="/images/landing-modal.jpg"
                   alt="할 일 카드 미리보기"
                 />
               </S.PointImageArea2>

@@ -25,6 +25,17 @@ export const FtInner = styled.div`
 
 export const LogoBox = styled(Link)`
   display: block;
+  width: 186px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media ${DEVICE.tablet} {
+    width: 140px;
+  }
 `;
 
 export const InfoGroup = styled.div`
@@ -33,15 +44,20 @@ export const InfoGroup = styled.div`
   gap: 100px;
 
   @media ${DEVICE.mobile} {
-    flex-direction: column;
+    justify-content: space-between;
     align-items: flex-start;
     gap: 20px;
+    width: 100%;
   }
 `;
 
 export const FooterUtil = styled.div`
   display: flex;
   gap: 32px;
+
+  @media ${DEVICE.mobile} {
+    gap: 20px;
+  }
 `;
 
 export const FooterUtilLink = styled(Link)`
