@@ -69,6 +69,7 @@ export default function TodoUpdateForm({
         setMembers(dashboardMembers);
         setTitle(card.title);
         setDescription(card.description);
+        onValidChange?.(!!card.title.trim() && !!card.description.trim());
         setDueDate(card.dueDate ? new Date(card.dueDate) : null);
 
         const initialTags = card.tags.map((tag) => ({
@@ -92,10 +93,6 @@ export default function TodoUpdateForm({
 
     fetchUpdateFormData();
   }, [cardId, dashboardId]);
-
-  useEffect(() => {
-    onValidChange?.(!!title.trim() && !!description.trim());
-  }, [title, description, onValidChange]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -274,7 +271,11 @@ export default function TodoUpdateForm({
           placeholder="제목을 입력해주세요"
           required
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => {
+            const newTitle = e.target.value;
+            setTitle(newTitle);
+            onValidChange?.(!!newTitle.trim() && !!description.trim());
+          }}
         />
       </S.Field>
 
@@ -287,7 +288,11 @@ export default function TodoUpdateForm({
           placeholder="설명을 입력해주세요"
           required
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={(e) => {
+            const newDescription = e.target.value;
+            setDescription(newDescription);
+            onValidChange?.(!!title.trim() && !!newDescription.trim());
+          }}
         />
       </S.Field>
 
