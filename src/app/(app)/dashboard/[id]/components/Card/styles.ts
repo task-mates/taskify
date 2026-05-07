@@ -4,7 +4,7 @@ export const Card = styled.article`
   width: 100%;
   padding: 16px;
   border-radius: 20px;
-  background: #fff;
+  background: var(--color-white);
 
   display: flex;
   flex-direction: column;
@@ -22,7 +22,7 @@ export const Thumbnail = styled.img`
 export const Title = styled.h3`
   font-size: 18px;
   font-weight: 700;
-  color: #333236;
+  color: var(--color-black-200);
 `;
 
 export const TagList = styled.div`
@@ -48,7 +48,7 @@ export const Tag = styled.span<{
 export const DueDate = styled.p`
   font-size: 12px;
   font-weight: 600;
-  color: #333236;
+  color: var(--color-black-200);
 `;
 
 export const Assignee = styled.div`
@@ -73,7 +73,7 @@ export const ProfileFallback = styled.div`
   justify-content: center;
   border-radius: 50%;
   background: #00b894;
-  color: #fff;
+  color: var(--color-white);
   font-size: 10px;
   font-weight: 700;
 `;

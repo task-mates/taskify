@@ -71,7 +71,7 @@ export const EmptyMessage = styled.p`
   margin: 0;
   padding: 20px;
   font-size: 14px;
-  color: #6b7280;
+  color: var(--color-gray-500);
 `;
 
 export const LoadMoreHint = styled.p`
@@ -79,7 +79,7 @@ export const LoadMoreHint = styled.p`
   padding: 12px 20px;
   text-align: center;
   font-size: 14px;
-  color: #6b7280;
+  color: var(--color-gray-500);
 `;
 
 export const AddSection = styled.div``;
@@ -90,9 +90,9 @@ export const AddButton = styled.button`
   align-items: center;
   width: 100%;
   padding: 16px 20px;
-  border: 1px solid #f2f2f2;
+  border: 1px solid var(--color-gray-100);
   border-radius: 12px;
-  background-color: #ffffff;
+  background-color: var(--color-white);
   text-align: left;
   font-size: 17px;
   font-weight: 500;
@@ -104,7 +104,7 @@ export const AddButton = styled.button`
 `;
 
 export const IconContainer = styled.div`
-  background-color: #e1eaf1;
+  background-color: var(--color-brand-surface);
   padding: 1px 6px;
   border-radius: 4px;
 `;
@@ -119,10 +119,10 @@ export const DashboardItem = styled.li<{ $active: boolean }>`
   width: 100%;
   border-radius: 12px;
   cursor: pointer;
-  background-color: ${({ $active }) => ($active ? '#CADFE7' : 'transparent')};
+  background-color: ${({ $active }) => ($active ? 'var(--color-brand-200)' : 'transparent')};
 
   &:hover {
-    background-color: ${({ $active }) => ($active ? '#CADFE7' : '#eef3f8')};
+    background-color: ${({ $active }) => ($active ? 'var(--color-brand-200)' : 'var(--color-brand-100)')};
   }
 
   a {

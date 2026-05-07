@@ -9,8 +9,8 @@ export const Container = styled.div<{ $variant: layoutVariant }>`
   width: 100%;
   height: 80vh;
   max-height: 952px;
-  background: #f3f5f8;
-  border: 1px solid #9fa6b2;
+  background: var(--color-gray-100);
+  border: 1px solid var(--color-gray-400);
   border-radius: 24px;
   padding: 30px 0 0;
 
@@ -55,7 +55,7 @@ export const Header = styled.div<{ $variant: HeaderVariant }>`
   ${({ $variant }) =>
     $variant === 'card' &&
     `
-      border-bottom: 1px solid #D9D9D9;
+      border-bottom: 1px solid var(--color-gray-300);
       min-height: 90px;
 
       @media ${DEVICE.mobile}{
@@ -79,7 +79,7 @@ export const TitleBox = styled.div`
 export const Title = styled.h2`
   font-size: 24px;
   font-weight: 600;
-  color: #333236;
+  color: var(--color-black-200);
 
   @media ${DEVICE.mobile} {
     font-size: 20px;

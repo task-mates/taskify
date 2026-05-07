@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Modal from '@/src/components/Modal';
 import CloseIcon from '@/src/components/icons/icon-close.svg';
 import { columnsApi } from '@/src/apis/columns';
+import Input from '@/src/components/common/Input';
 import * as S from './style';
 import type { ColumnEditModalProps } from './type';
 
@@ -41,7 +42,7 @@ export default function ColumnEditModal({
         </S.Header>
 
         <S.Label htmlFor="column-edit-title">이름</S.Label>
-        <S.Input
+        <Input
           id="column-edit-title"
           type="text"
           value={title}

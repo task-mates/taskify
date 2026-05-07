@@ -1,5 +1,6 @@
 'use client';
 
+import Input from '@/src/components/common/Input';
 import * as S from '../styles';
 import { PROFILE_COLORS } from '@/src/styles/profileColor';
 import type { Dashboard } from '@/src/apis/dashboards/type';
@@ -30,7 +31,7 @@ export default function DashboardInfoSection({
       <S.CardTitle>{dashboard.title}</S.CardTitle>
 
       <S.Label htmlFor="dashboard-title">대시보드 이름</S.Label>
-      <S.TextInput
+      <Input
         id="dashboard-title"
         value={title}
         onChange={(e) => onTitleChange(e.target.value)}
