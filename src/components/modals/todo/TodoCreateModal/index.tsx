@@ -95,6 +95,7 @@ export default function TodoCreateModal({
         );
         imageUrl = uploadedImage.imageUrl;
       } catch {
+        showToast.error('이미지 업로드에 실패했습니다.');
         return;
       }
     }
@@ -114,7 +115,9 @@ export default function TodoCreateModal({
       showToast.success('카드가 생성되었습니다.');
       onCreated?.();
       onClose();
-    } catch {}
+    } catch {
+      showToast.error('카드 생성에 실패했습니다.');
+    }
   };
 
   // ==============================
@@ -159,7 +162,9 @@ export default function TodoCreateModal({
         const data = await membersApi.getList(dashboardId);
 
         setMembers(data.members);
-      } catch {}
+      } catch {
+        showToast.error('담당자 목록 조회에 실패했습니다.');
+      }
     };
     fetchMembers();
   }, [dashboardId]);

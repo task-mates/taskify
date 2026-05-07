@@ -88,7 +88,9 @@ export default function TodoUpdateForm({
           : null;
 
         setSelectedAssignee(matchedMember ?? null);
-      } catch {}
+      } catch {
+        showToast.error('카드 정보 조회에 실패했습니다.');
+      }
     };
 
     fetchUpdateFormData();
@@ -107,6 +109,7 @@ export default function TodoUpdateForm({
         );
         imageUrl = uploadedImage.imageUrl;
       } catch {
+        showToast.error('이미지 업로드에 실패했습니다.');
         return;
       }
     }
@@ -124,7 +127,9 @@ export default function TodoUpdateForm({
 
       showToast.success('카드가 수정되었습니다.');
       onSuccess();
-    } catch {}
+    } catch {
+      showToast.error('카드 수정에 실패했습니다.');
+    }
   };
 
   useEffect(() => {
