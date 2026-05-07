@@ -270,6 +270,7 @@ export const CommentTextareaBox = styled.div<{ $expanded: boolean }>`
 
   &:focus-within {
     border-color: var(--color-brand-500);
+  }
 `;
 
 export const CommentTextarea = styled.textarea`
