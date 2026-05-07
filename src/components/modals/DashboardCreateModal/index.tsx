@@ -5,6 +5,7 @@ import CloseIcon from '@/src/components/icons/icon-close.svg';
 import Input from '@/src/components/common/Input';
 import Button from '@/src/components/common/Button';
 import { createDashboard } from '@/src/apis/dashboards';
+import { showToast } from '@/src/utils/toast';
 import { PROFILE_COLORS } from '@/src/styles/profileColor';
 import * as S from './style';
 import type { DashboardCreateModalProps } from './type';
@@ -22,6 +23,7 @@ export default function DashboardCreateModal({
     setIsLoading(true);
     try {
       await createDashboard({ title: title.trim(), color });
+      showToast.success('대시보드가 생성되었습니다.');
       onCreated?.();
       onClose();
     } catch {

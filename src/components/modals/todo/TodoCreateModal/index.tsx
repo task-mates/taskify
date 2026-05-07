@@ -18,6 +18,7 @@ import UploadImage from '@/src/components/icons/icon-uploadimg.svg';
 import DeleteIcon from '@/src/components/icons/icon-delete.svg';
 import { getTagColorByName, TAG_PREVIEW_COLOR } from '@/src/utils/tagColor';
 import { getProfileColorByNickname } from '@/src/utils/profileColor';
+import { showToast } from '@/src/utils/toast';
 
 registerLocale('ko', ko);
 
@@ -103,6 +104,7 @@ export default function TodoCreateModal({
         ...(imageUrl && { imageUrl }),
       });
 
+      showToast.success('카드가 생성되었습니다.');
       onClose();
     } catch {
     }

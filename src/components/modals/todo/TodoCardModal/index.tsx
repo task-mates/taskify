@@ -98,6 +98,7 @@ export default function TodoCardModal({
       onConfirm: async () => {
         try {
           await cardsApi.remove(cardId);
+          showToast.success('카드가 삭제되었습니다.');
           onClose();
         } catch {
         }
@@ -307,6 +308,7 @@ export default function TodoCardModal({
       });
 
       setComments((prevComments) => [newComment, ...prevComments]);
+      showToast.success('댓글이 등록되었습니다.');
 
       textarea.value = '';
       textarea.style.height = `${COMMENT_TEXTAREA_MIN_HEIGHT}px`;
@@ -351,6 +353,7 @@ export default function TodoCardModal({
         )
       );
 
+      showToast.success('댓글이 수정되었습니다.');
       setUpdatingCommentId(null);
       setUpdatingCommentContent('');
     } catch {
@@ -367,6 +370,7 @@ export default function TodoCardModal({
           setComments((prevComments) =>
             prevComments.filter((comment) => comment.id !== commentId)
           );
+          showToast.success('댓글이 삭제되었습니다.');
         } catch {
         }
       },

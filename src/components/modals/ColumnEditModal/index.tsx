@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Modal from '@/src/components/Modal';
 import CloseIcon from '@/src/components/icons/icon-close.svg';
 import { columnsApi } from '@/src/apis/columns';
+import { showToast } from '@/src/utils/toast';
 import * as S from './style';
 import type { ColumnEditModalProps } from './type';
 
@@ -21,6 +22,7 @@ export default function ColumnEditModal({
     setIsLoading(true);
     try {
       await columnsApi.update(columnId, { title: title.trim() });
+      showToast.success('칼럼이 수정되었습니다.');
       onEdited?.();
       onClose();
     } catch {

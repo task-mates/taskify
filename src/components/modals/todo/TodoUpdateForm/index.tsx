@@ -12,6 +12,7 @@ import type { Member } from '@/src/apis/members/type';
 import type { Tag } from '@/src/types/tag';
 import { getTagColorByName, TAG_PREVIEW_COLOR } from '@/src/utils/tagColor';
 import { getProfileColorByNickname } from '@/src/utils/profileColor';
+import { showToast } from '@/src/utils/toast';
 import * as S from '../TodoUpdateModal/styles';
 import UploadImage from '@/src/components/icons/icon-uploadimg.svg';
 import DeleteIcon from '@/src/components/icons/icon-delete.svg';
@@ -116,6 +117,7 @@ export default function TodoUpdateForm({
         imageUrl,
       });
 
+      showToast.success('카드가 수정되었습니다.');
       onSuccess();
     } catch {
     }

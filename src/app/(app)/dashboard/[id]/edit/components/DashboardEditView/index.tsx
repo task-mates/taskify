@@ -94,11 +94,13 @@ export default function DashboardEditView({
 
   const handleRemoveMember = async (memberId: number) => {
     await membersApi.remove(memberId);
+    showToast.success('구성원이 삭제되었습니다.');
     await reloadMembers();
   };
 
   const handleCancelInvitation = async (invitationId: number) => {
     await cancelDashboardInvitation(dashboardId, invitationId);
+    showToast.success('초대가 취소되었습니다.');
     await reloadInvitations();
   };
 
