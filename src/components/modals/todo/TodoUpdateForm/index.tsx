@@ -24,6 +24,7 @@ type TodoUpdateFormProps = {
   dashboardId: number;
   columnId: number;
   onSuccess: () => void;
+  onValidChange?: (isValid: boolean) => void;
 };
 
 export const TODO_UPDATE_FORM_ID = 'todo-update-form';
@@ -33,6 +34,7 @@ export default function TodoUpdateForm({
   dashboardId,
   columnId,
   onSuccess,
+  onValidChange,
 }: TodoUpdateFormProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -85,12 +87,15 @@ export default function TodoUpdateForm({
           : null;
 
         setSelectedAssignee(matchedMember ?? null);
-      } catch {
-      }
+      } catch {}
     };
 
     fetchUpdateFormData();
   }, [cardId, dashboardId]);
+
+  useEffect(() => {
+    onValidChange?.(!!title.trim() && !!description.trim());
+  }, [title, description, onValidChange]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -99,7 +104,10 @@ export default function TodoUpdateForm({
 
     if (selectedImageFile) {
       try {
-        const uploadedImage = await columnsApi.uploadCardImage(columnId, selectedImageFile);
+        const uploadedImage = await columnsApi.uploadCardImage(
+          columnId,
+          selectedImageFile
+        );
         imageUrl = uploadedImage.imageUrl;
       } catch {
         return;
@@ -119,8 +127,7 @@ export default function TodoUpdateForm({
 
       showToast.success('카드가 수정되었습니다.');
       onSuccess();
-    } catch {
-    }
+    } catch {}
   };
 
   useEffect(() => {

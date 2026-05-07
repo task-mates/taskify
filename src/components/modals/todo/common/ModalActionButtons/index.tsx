@@ -7,13 +7,19 @@ export default function ModalActionButtons({
   onCancel,
   cancelText = '취소',
   formId,
+  submitDisabled,
 }: ModalActionButtonsProps) {
   return (
     <S.ButtonGroup>
       <Button type="button" variant="secondary" onClick={onCancel}>
         {cancelText}
       </Button>
-      <Button type="submit" variant="primary" form={formId}>
+      <Button
+        type="submit"
+        variant="primary"
+        form={formId}
+        disabled={submitDisabled}
+      >
         {submitText}
       </Button>
     </S.ButtonGroup>

@@ -20,6 +20,11 @@ export const StyledButton = styled.button<{
           background: #888787;
         `}
 
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
   @media ${DEVICE.mobile} {
     height: 50px;
     font-size: 16px;
