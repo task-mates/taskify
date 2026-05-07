@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
 import ArrowRightIcon from '@/src/components/icons/icon_arrow_right.svg';
 import DashboardCreateModal from '@/src/components/modals/DashboardCreateModal';
 import { getDashboardList } from '@/src/apis/dashboards';
@@ -27,14 +28,22 @@ const dashboardLinkStyle = {
 
 const INVITATION_PAGE_SIZE = 20;
 const SEARCH_DEBOUNCE_MS = 250;
-const DESKTOP_MEDIA_QUERY = '(min-width: 1024px)';
+const DESKTOP_MEDIA_QUERY = '(min-width: 1200px)';
 const MAX_DASHBOARD_FETCH_REQUESTS = 50;
+const CAROUSEL_CARD_GAP = 14;
+const DESKTOP_CAROUSEL_STEP_CARD_COUNT = 4;
+const MY_DASHBOARD_SKELETON_COUNT = 5;
+const INVITED_SKELETON_ROW_COUNT = 8;
 
 export default function MyDashboardPage() {
   const [dashboards, setDashboards] = useState<Dashboard[]>([]);
   const [isDashboardsLoading, setIsDashboardsLoading] = useState(true);
   const [isDashboardsError, setIsDashboardsError] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [canScrollMyDashboardsPrev, setCanScrollMyDashboardsPrev] =
+    useState(false);
+  const [canScrollMyDashboardsNext, setCanScrollMyDashboardsNext] =
+    useState(false);
 
   const [invitationKeywordInput, setInvitationKeywordInput] = useState('');
   const [invitationKeyword, setInvitationKeyword] = useState('');
@@ -54,6 +63,50 @@ export default function MyDashboardPage() {
   const invitedPanelRef = useRef<HTMLDivElement | null>(null);
   const invitedSentinelRef = useRef<HTMLDivElement | null>(null);
   const myDashboardCarouselRef = useRef<HTMLUListElement | null>(null);
+
+  const updateMyDashboardCarouselNavState = useCallback(() => {
+    const el = myDashboardCarouselRef.current;
+    if (!el) return;
+
+    if (!window.matchMedia(DESKTOP_MEDIA_QUERY).matches) {
+      setCanScrollMyDashboardsPrev(false);
+      setCanScrollMyDashboardsNext(false);
+      return;
+    }
+
+    const maxScrollLeft = Math.max(0, el.scrollWidth - el.clientWidth);
+    const scrollLeft = el.scrollLeft;
+    const epsilon = 1;
+
+    setCanScrollMyDashboardsPrev(scrollLeft > epsilon);
+    setCanScrollMyDashboardsNext(scrollLeft < maxScrollLeft - epsilon);
+  }, []);
+
+  const scrollMyDashboardsByPage = useCallback(
+    (direction: 'prev' | 'next') => {
+      const el = myDashboardCarouselRef.current;
+      if (!el) return;
+
+      const firstCard = el.firstElementChild as HTMLElement | null;
+      const oneCardStep =
+        (firstCard?.getBoundingClientRect().width ?? el.clientWidth * 0.9) +
+        CAROUSEL_CARD_GAP;
+      const step = oneCardStep * DESKTOP_CAROUSEL_STEP_CARD_COUNT;
+      const delta = direction === 'next' ? step : -step;
+      const maxScrollLeft = Math.max(0, el.scrollWidth - el.clientWidth);
+      const targetScrollLeft = Math.max(
+        0,
+        Math.min(el.scrollLeft + delta, maxScrollLeft)
+      );
+
+      el.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
+
+      // 브라우저별 smooth scroll 이벤트 타이밍 차이를 보정해서 버튼 상태를 안정적으로 갱신
+      window.setTimeout(() => updateMyDashboardCarouselNavState(), 0);
+      window.setTimeout(() => updateMyDashboardCarouselNavState(), 200);
+    },
+    [updateMyDashboardCarouselNavState]
+  );
 
   const loadAllDashboards = useCallback(async () => {
     setIsDashboardsLoading(true);
@@ -201,6 +254,9 @@ export default function MyDashboardPage() {
       try {
         await updateInvitation(invitationId, { inviteAccepted });
         setInvitations((prev) => prev.filter((i) => i.id !== invitationId));
+        toast.success(
+          inviteAccepted ? '초대를 수락했어요.' : '초대를 거절했어요.'
+        );
 
         // 수락 시 "내 대시보드" 목록도 업데이트
         if (inviteAccepted) {
@@ -243,47 +299,102 @@ export default function MyDashboardPage() {
     };
   }, []);
 
+  useEffect(() => {
+    const el = myDashboardCarouselRef.current;
+    if (!el) return;
+
+    const onScroll = () => {
+      updateMyDashboardCarouselNavState();
+    };
+    const onResize = () => {
+      updateMyDashboardCarouselNavState();
+    };
+
+    updateMyDashboardCarouselNavState();
+    el.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onResize);
+
+    return () => {
+      el.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
+    };
+  }, [updateMyDashboardCarouselNavState, myDashboards.length]);
+
   return (
     <S.Page>
       <S.PageTitle>홈</S.PageTitle>
 
-      {isDashboardsLoading && <MyDashboardSkeleton />}
       {isDashboardsError && !isDashboardsLoading && (
         <S.StatusText>대시보드 목록을 불러오지 못했습니다.</S.StatusText>
       )}
 
-      {!isDashboardsLoading && !isDashboardsError && (
+      {!isDashboardsError && (
         <>
           <S.Section aria-labelledby="my-dashboards-heading">
-            <S.SectionHeading id="my-dashboards-heading">
-              내 대시보드
-            </S.SectionHeading>
+            <S.MyDashboardsHeadingRow>
+              <S.MyDashboardsHeading id="my-dashboards-heading">
+                내 대시보드
+              </S.MyDashboardsHeading>
+              <S.DesktopCarouselControls>
+                <S.DesktopCarouselButton
+                  type="button"
+                  onClick={() => scrollMyDashboardsByPage('prev')}
+                  disabled={isDashboardsLoading || !canScrollMyDashboardsPrev}
+                  aria-label="내 대시보드 이전으로 이동"
+                >
+                  {'<'}
+                </S.DesktopCarouselButton>
+                <S.DesktopCarouselButton
+                  type="button"
+                  onClick={() => scrollMyDashboardsByPage('next')}
+                  disabled={isDashboardsLoading || !canScrollMyDashboardsNext}
+                  aria-label="내 대시보드 다음으로 이동"
+                >
+                  {'>'}
+                </S.DesktopCarouselButton>
+              </S.DesktopCarouselControls>
+            </S.MyDashboardsHeadingRow>
             <S.MyDashboardsRow>
               <S.MyDashboardCards ref={myDashboardCarouselRef}>
-                <S.MyDashboardCard>
-                  <S.NewDashboardTrigger
-                    type="button"
-                    onClick={() => setIsCreateModalOpen(true)}
-                  >
-                    <S.NewDashboardLabel>새로운 대시보드</S.NewDashboardLabel>
-                    <S.PlusIconBox>
-                      <S.StyledPlusIcon aria-hidden />
-                    </S.PlusIconBox>
-                  </S.NewDashboardTrigger>
-                </S.MyDashboardCard>
+                {isDashboardsLoading
+                  ? Array.from({ length: MY_DASHBOARD_SKELETON_COUNT }).map(
+                      (_, idx) => (
+                        <S.MyDashboardSkeletonCard key={`my-skeleton-${idx}`}>
+                          <S.MyDashboardSkeletonDot />
+                          <S.MyDashboardSkeletonTitle />
+                          <S.MyDashboardSkeletonArrow />
+                        </S.MyDashboardSkeletonCard>
+                      )
+                    )
+                  : null}
 
-                {myDashboards.map((board) => (
-                  <S.MyDashboardCard key={board.id}>
-                    <Link
-                      href={`/dashboard/${board.id}`}
-                      style={dashboardLinkStyle}
+                {!isDashboardsLoading && myDashboards.length === 0 ? (
+                  <S.MyDashboardCard>
+                    <S.NewDashboardTrigger
+                      type="button"
+                      onClick={() => setIsCreateModalOpen(true)}
                     >
-                      <S.ColorDot $color={board.color} aria-hidden />
-                      <S.DashboardTitle>{board.title}</S.DashboardTitle>
-                      <ArrowRightIcon aria-hidden="true" />
-                    </Link>
+                      <S.NewDashboardLabel>새로운 대시보드</S.NewDashboardLabel>
+                      <S.PlusIconBox>
+                        <S.StyledPlusIcon aria-hidden />
+                      </S.PlusIconBox>
+                    </S.NewDashboardTrigger>
                   </S.MyDashboardCard>
-                ))}
+                ) : null}
+
+                {!isDashboardsLoading &&
+                  myDashboards.map((board) => (
+                    <S.MyDashboardCard key={board.id}>
+                      <Link
+                        href={`/dashboard/${board.id}`}
+                        style={dashboardLinkStyle}
+                      >
+                        <S.ColorDot $color={board.color} aria-hidden />
+                        <S.DashboardTitle>{board.title}</S.DashboardTitle>
+                        <ArrowRightIcon aria-hidden="true" />
+                      </Link>
+                    </S.MyDashboardCard>
+                  ))}
               </S.MyDashboardCards>
             </S.MyDashboardsRow>
           </S.Section>
@@ -310,7 +421,31 @@ export default function MyDashboardPage() {
               </S.InvitedToolbar>
 
               {isInvitationsLoading ? (
-                <InvitedTableSkeleton />
+                <S.InvitedTable>
+                  <S.InvitedTableScroller>
+                    <S.InvitedTableHeader>
+                      <span>이름</span>
+                      <span>초대자</span>
+                      <span>수락 여부</span>
+                    </S.InvitedTableHeader>
+                    <S.InvitedSkeletonRows>
+                      {Array.from({ length: INVITED_SKELETON_ROW_COUNT }).map(
+                        (_, idx) => (
+                          <S.InvitedSkeletonRow key={`invited-skeleton-${idx}`}>
+                            <S.InvitedSkeletonCell
+                              $width={idx % 2 === 0 ? '62%' : '44%'}
+                            />
+                            <S.InvitedSkeletonCell $width="75%" />
+                            <S.InvitedSkeletonActions>
+                              <S.InvitedSkeletonAction />
+                              <S.InvitedSkeletonAction />
+                            </S.InvitedSkeletonActions>
+                          </S.InvitedSkeletonRow>
+                        )
+                      )}
+                    </S.InvitedSkeletonRows>
+                  </S.InvitedTableScroller>
+                </S.InvitedTable>
               ) : isInvitationsError ? (
                 <S.StatusText>초대 목록을 불러오지 못했어요</S.StatusText>
               ) : visibleInvitations.length === 0 ? (
@@ -328,41 +463,45 @@ export default function MyDashboardPage() {
                 )
               ) : (
                 <S.InvitedTable>
-                  <S.InvitedTableHeader>
-                    <span>이름</span>
-                    <span>초대자</span>
-                    <span>수락 여부</span>
-                  </S.InvitedTableHeader>
+                  <S.InvitedTableScroller>
+                    <S.InvitedTableHeader>
+                      <span>이름</span>
+                      <span>초대자</span>
+                      <span>수락 여부</span>
+                    </S.InvitedTableHeader>
 
-                  {visibleInvitations.map((inv) => {
-                    const isActing = actingInvitationIds.has(inv.id);
-                    return (
-                      <S.InvitedTableRow key={inv.id}>
-                        <S.InvitedTitle>{inv.dashboard.title}</S.InvitedTitle>
-                        <S.InvitedInviter>
-                          {inv.inviter.nickname}
-                        </S.InvitedInviter>
-                        <S.InvitedActions>
-                          <S.InvitedActionButton
-                            type="button"
-                            onClick={() => void actOnInvitation(inv.id, false)}
-                            disabled={isActing}
-                            $variant="secondary"
-                          >
-                            거절
-                          </S.InvitedActionButton>
-                          <S.InvitedActionButton
-                            type="button"
-                            onClick={() => void actOnInvitation(inv.id, true)}
-                            disabled={isActing}
-                            $variant="primary"
-                          >
-                            수락
-                          </S.InvitedActionButton>
-                        </S.InvitedActions>
-                      </S.InvitedTableRow>
-                    );
-                  })}
+                    {visibleInvitations.map((inv) => {
+                      const isActing = actingInvitationIds.has(inv.id);
+                      return (
+                        <S.InvitedTableRow key={inv.id}>
+                          <S.InvitedTitle>{inv.dashboard.title}</S.InvitedTitle>
+                          <S.InvitedInviter>
+                            {inv.inviter.nickname}
+                          </S.InvitedInviter>
+                          <S.InvitedActions>
+                            <S.InvitedActionButton
+                              type="button"
+                              onClick={() =>
+                                void actOnInvitation(inv.id, false)
+                              }
+                              disabled={isActing}
+                              $variant="secondary"
+                            >
+                              거절
+                            </S.InvitedActionButton>
+                            <S.InvitedActionButton
+                              type="button"
+                              onClick={() => void actOnInvitation(inv.id, true)}
+                              disabled={isActing}
+                              $variant="primary"
+                            >
+                              수락
+                            </S.InvitedActionButton>
+                          </S.InvitedActions>
+                        </S.InvitedTableRow>
+                      );
+                    })}
+                  </S.InvitedTableScroller>
 
                   <S.InvitedSentinel ref={invitedSentinelRef} />
 

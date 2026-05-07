@@ -79,7 +79,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
 const Layout = styled.div`
   display: flex;
-  height: 100dvh;
+  height: 100vh;
   max-height: 100dvh;
   overflow: hidden;
 `;
