@@ -7,6 +7,7 @@ import Sidebar from '@/src/components/layout/Sidebar';
 import AppHeader from '@/src/components/layout/AppHeader';
 import { getDashboardById } from '@/src/apis/dashboards';
 import type { Dashboard } from '@/src/apis/dashboards/type';
+import { onDashboardChanged } from '@/src/utils/dashboardListEvent';
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -32,6 +33,15 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     getDashboardById(dashboardId)
       .then(setCurrentDashboard)
       .catch(() => setCurrentDashboard(null));
+  }, [dashboardId]);
+
+  useEffect(() => {
+    if (!dashboardId) return;
+    return onDashboardChanged(() => {
+      getDashboardById(dashboardId)
+        .then(setCurrentDashboard)
+        .catch(() => null);
+    });
   }, [dashboardId]);
 
   return (
