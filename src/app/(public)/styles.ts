@@ -69,7 +69,7 @@ export const Title = styled.h2`
   gap: 10px;
   font-size: clamp(34px, 3.5vw, 60px);
   font-weight: 700;
-  color: #404040;
+  color: var(--color-text-dark);
 
   @media ${DEVICE.tablet} {
     font-size: 34px;
@@ -85,7 +85,7 @@ export const Title = styled.h2`
 
 export const ServiceName = styled.span`
   font-size: clamp(50px, 5vw, 84px);
-  color: #7ac4e8;
+  color: var(--color-blue-200);
 
   @media ${DEVICE.tablet} {
     font-size: 50px;
@@ -115,7 +115,7 @@ const BaseButton = styled(Link)`
   border-radius: 8px;
   font-size: 16px;
   font-weight: 600;
-  color: #fff;
+  color: var(--color-white);
 
   @media ${DEVICE.tablet} {
     width: 135px;
@@ -132,7 +132,7 @@ export const SignupButton = styled(BaseButton)`
 `;
 
 export const LoginButton = styled(BaseButton)`
-  background-color: #83c6e5;
+  background-color: var(--color-blue-200);
 `;
 
 export const ImageArea = styled.div`
@@ -213,7 +213,7 @@ export const PointTitle = styled.h2`
   font-size: clamp(32px, 3vw, 50px);
   line-height: 1.4;
   font-weight: 700;
-  color: #404040;
+  color: var(--color-text-dark);
 
   @media ${DEVICE.mobile} {
     font-size: 24px;
@@ -224,7 +224,7 @@ export const PointDescription = styled.p`
   font-size: 18px;
   line-height: 1.5;
   font-weight: 500;
-  color: #a39fb2;
+  color: var(--color-gray-400);
 
   @media ${DEVICE.tablet} {
     font-size: 16px;
@@ -278,13 +278,13 @@ export const PointInfoTitle = styled.h3`
   margin-bottom: 10px;
   font-size: 18px;
   font-weight: 700;
-  color: #404040;
+  color: var(--color-text-dark);
 `;
 
 export const PointInfoDescription = styled.p`
   font-size: 16px;
   font-weight: 500;
-  color: #404040;
+  color: var(--color-text-dark);
 
   @media ${DEVICE.tablet} {
     font-size: 14px;

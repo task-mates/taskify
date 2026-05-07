@@ -4,7 +4,9 @@ import { useState } from 'react';
 import Modal from '@/src/components/Modal';
 import CloseIcon from '@/src/components/icons/icon-close.svg';
 import { createDashboardInvitation } from '@/src/apis/dashboard-invitations';
+
 import { showToast } from '@/src/utils/toast';
+import Input from '@/src/components/common/Input';
 import * as S from './style';
 import type { DashboardInviteModalProps } from './type';
 
@@ -41,7 +43,7 @@ export default function DashboardInviteModal({
         </S.Header>
 
         <S.Label htmlFor="invite-email">이메일</S.Label>
-        <S.Input
+        <Input
           id="invite-email"
           type="email"
           placeholder="이메일을 입력해주세요"

@@ -9,8 +9,8 @@ export const Header = styled.header`
   left: 0;
   right: 0;
   height: 96px;
-  background: #fff;
-  border-bottom: 1px solid #1c1b20;
+  background: var(--color-white);
+  border-bottom: 1px solid var(--color-stroke);
 
   @media ${DEVICE.tablet} {
     height: 67px;
@@ -55,6 +55,6 @@ export const Util = styled.nav`
 export const UtilLink = styled(Link)`
   padding: 10px 12px;
   font-size: 16px;
-  color: #404040;
+  color: var(--color-text-dark);
   font-weight: 500;
 `;

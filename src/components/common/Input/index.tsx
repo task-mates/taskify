@@ -5,27 +5,12 @@ import * as S from './style';
 import type { InputProps } from './type';
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, id, className, leftIcon, rightIcon, ...props }, ref) => {
-    return (
-      <S.InputWrapper className={className}>
-        {label && <S.Label htmlFor={id}>{label}</S.Label>}
-        
-        <S.InputContainer $isError={!!error}>
-          {leftIcon && <S.IconWrapper $position="left">{leftIcon}</S.IconWrapper>}
-          
-          <S.StyledInput
-            id={id}
-            ref={ref}
-            {...props}
-          />
-
-          {rightIcon && <S.IconWrapper $position="right">{rightIcon}</S.IconWrapper>}
-        </S.InputContainer>
-
-        {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
-      </S.InputWrapper>
-    );
-  }
+  ({ error, className, ...props }, ref) => (
+    <S.Wrapper className={className}>
+      <S.StyledInput ref={ref} $hasError={!!error} {...props} />
+      <S.ErrorMessage $visible={!!error}>{error}</S.ErrorMessage>
+    </S.Wrapper>
+  )
 );
 
 Input.displayName = 'Input';

@@ -3,6 +3,7 @@ import NoDashboardIcon from '@/src/components/icons/icon-no-dashboard.svg';
 import PlusIcon from '@/src/components/icons/icon-plus.svg';
 import SearchIcon from '@/src/components/icons/icon-search.svg';
 import { DEVICE } from '@/src/styles/Breakpoints';
+import Button from '@/src/components/common/Button';
 
 export const Page = styled.main`
   box-sizing: border-box;
@@ -316,25 +317,14 @@ export const InvitedActions = styled.div`
   gap: 8px;
 `;
 
-export const InvitedActionButton = styled.button<{
+export const InvitedActionButton = styled(Button).attrs<{
   $variant: 'primary' | 'secondary';
-}>`
-  box-sizing: border-box;
+}>(({ $variant }) => ({
+  variant: $variant === 'primary' ? 'primary' : 'secondary',
+}))<{ $variant: 'primary' | 'secondary' }>`
   height: 30px;
   padding: 0 12px;
   border-radius: 999px;
-  border: 1px solid
-    ${({ $variant }) =>
-      $variant === 'primary'
-        ? 'var(--color-blue-300, #83C6E5)'
-        : 'var(--color-gray-200, #ececee)'};
-  background: ${({ $variant }) =>
-    $variant === 'primary'
-      ? 'var(--color-blue-300, #83C6E5)'
-      : 'var(--color-gray-700, #555)'};
-  color: ${({ $variant }) => ($variant === 'primary' ? '#fff' : '#fff')};
-  cursor: pointer;
-  font-family: var(--font-main);
   font-size: 13px;
   font-weight: 600;
 

@@ -50,7 +50,7 @@ export function useSignupSubmit() {
         email,
         nickname: name,
         password,
-      });
+      }, { _skipErrorToast: true });
       sessionStorage.removeItem(SIGNUP_DRAFT_KEY);
       setModalType('success');
     } catch (error) {

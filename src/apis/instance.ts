@@ -9,6 +9,9 @@ declare module 'axios' {
   interface InternalAxiosRequestConfig {
     _skipErrorToast?: boolean;
   }
+  interface AxiosRequestConfig {
+    _skipErrorToast?: boolean;
+  }
 }
 
 const API_ERROR_MESSAGES = {

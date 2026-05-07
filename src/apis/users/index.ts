@@ -1,4 +1,5 @@
 import instance from '@/src/apis/instance';
+import type { AxiosRequestConfig } from 'axios';
 import {
   SignUpRequest,
   UpdateMyInfoRequest,
@@ -7,8 +8,8 @@ import {
 } from '@/src/apis/users/type';
 
 export const usersApi = {
-  signUp: async (body: SignUpRequest) => {
-    const { data } = await instance.post<User>('/users', body);
+  signUp: async (body: SignUpRequest, config?: AxiosRequestConfig) => {
+    const { data } = await instance.post<User>('/users', body, config);
     return data;
   },
 

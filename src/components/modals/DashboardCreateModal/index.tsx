@@ -42,9 +42,9 @@ export default function DashboardCreateModal({
           </S.CloseButton>
         </S.Header>
 
+        <S.Label htmlFor="dashboard-title">대시보드 이름</S.Label>
         <Input
           id="dashboard-title"
-          label="대시보드 이름"
           placeholder="새로운 대시보드"
           value={title}
           onChange={(e) => setTitle(e.target.value)}

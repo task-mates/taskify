@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Button from '@/src/components/common/Button';
 
 export const Container = styled.div`
   background: var(--color-white);
@@ -43,66 +44,24 @@ export const Label = styled.label`
   margin-bottom: 10px;
 `;
 
-export const Input = styled.input`
-  width: 100%;
-  height: 48px;
-  padding: 0 16px;
-  border: 1px solid var(--color-gray-300);
-  border-radius: 8px;
-  font-size: 14px;
-  color: var(--color-black-200);
-  background: var(--color-white);
-  outline: none;
-  box-sizing: border-box;
-
-  &::placeholder {
-    color: var(--color-gray-400);
-  }
-
-  &:focus {
-    border-color: var(--color-brand-500);
-  }
-`;
-
 export const ButtonGroup = styled.div`
   display: flex;
   gap: 12px;
   margin: 28px 0 28px;
 `;
 
-export const CancelButton = styled.button`
+export const CancelButton = styled(Button).attrs({
+  variant: 'secondary',
+  height: '52px',
+})`
   flex: 1;
-  height: 52px;
-  border: none;
   border-radius: 12px;
-  background: var(--color-gray-500);
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--color-white);
-  cursor: pointer;
-
-  &:hover {
-    background: var(--color-gray-600);
-  }
 `;
 
-export const ConfirmButton = styled.button`
+export const ConfirmButton = styled(Button).attrs({
+  variant: 'primary',
+  height: '52px',
+})`
   flex: 1;
-  height: 52px;
-  border: none;
   border-radius: 12px;
-  background: var(--color-brand-300);
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--color-white);
-  cursor: pointer;
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  &:not(:disabled):hover {
-    background: var(--color-brand-400);
-  }
 `;
