@@ -26,6 +26,7 @@ const TODO_CREATE_FORM_ID = 'todo-create-form';
 
 export default function TodoCreateModal({
   onClose,
+  onCreated,
   dashboardId,
   columnId,
 }: TodoCreateModalProps) {
@@ -110,6 +111,8 @@ export default function TodoCreateModal({
       };
 
       await cardsApi.create(requestBody);
+
+      onCreated?.();
 
       onClose(); //추후 토스트로 대체하면 좋을 것 같음
     } catch (error) {
