@@ -23,7 +23,9 @@ export const FtInner = styled.div`
   }
 `;
 
-export const LogoBox = styled.div``;
+export const LogoBox = styled(Link)`
+  display: block;
+`;
 
 export const InfoGroup = styled.div`
   display: flex;

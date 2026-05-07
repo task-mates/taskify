@@ -7,7 +7,7 @@ export default function LandingHeader() {
   return (
     <S.Header>
       <S.HdInner>
-        <S.LogoBox>
+        <S.LogoBox href="/">
           <Image
             src="/images/logo.svg"
             alt="TASKIFY 로고"

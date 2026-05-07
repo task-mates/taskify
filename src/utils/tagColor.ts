@@ -1,4 +1,4 @@
-import { TAG_COLOR_VARS } from '../styles/tagColor';
+import { TAG_COLOR_VARS } from '@/src/styles/tagColor';
 import type { TagColor } from '@/src/types/tag';
 
 export const getTagColorByName = (tagName: string): TagColor => {

@@ -58,6 +58,7 @@ export default function ColumnSection({
       showToast.success('칼럼이 삭제되었습니다.');
       onUpdated?.();
     } catch {
+      showToast.error('칼럼 삭제에 실패했습니다. 다시 시도해주세요.');
     }
   };
 

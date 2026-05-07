@@ -28,7 +28,8 @@ export const HdInner = styled.div`
   align-items: center;
 `;
 
-export const LogoBox = styled.div`
+export const LogoBox = styled(Link)`
+  display: block;
   width: 186px;
 
   img {

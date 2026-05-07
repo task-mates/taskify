@@ -13,7 +13,7 @@ import type { Tag } from '@/src/types/tag';
 import { getTagColorByName, TAG_PREVIEW_COLOR } from '@/src/utils/tagColor';
 import { getProfileColorByNickname } from '@/src/utils/profileColor';
 import { showToast } from '@/src/utils/toast';
-import * as S from '../TodoUpdateModal/styles';
+import * as S from './styles';
 import UploadImage from '@/src/components/icons/icon-uploadimg.svg';
 import DeleteIcon from '@/src/components/icons/icon-delete.svg';
 

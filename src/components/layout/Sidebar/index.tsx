@@ -103,10 +103,9 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       <S.Wrapper $isOpen={isOpen}>
         <S.Header>
           <S.TopRow>
-            <S.Logo>
+            <S.Logo href="/mydashboard">
               <LogoIcon aria-label="Taskify 로고" />
             </S.Logo>
-            {/* 논의 후 아이콘으로 변경 예정 */}
             <S.CloseButton
               type="button"
               onClick={onClose}
