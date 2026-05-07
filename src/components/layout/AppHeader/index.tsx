@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { usersApi } from '@/src/apis/users';
+import { onUserChanged } from '@/src/utils/dashboardListEvent';
 import type { User } from '@/src/apis/users/type';
 import SettingIcon from '@/src/components/icons/icon-setting.svg';
 import PlusIcon from '@/src/components/icons/icon-plus.svg';
@@ -37,6 +38,12 @@ export default function AppHeader({
         setUser(user);
       })
       .catch(() => null);
+  }, []);
+
+  useEffect(() => {
+    return onUserChanged((updated) => {
+      setUser((prev) => prev ? { ...prev, nickname: updated.nickname, profileImageUrl: updated.profileImageUrl ?? '' } : prev);
+    });
   }, []);
 
   return (
