@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
 import ArrowRightIcon from '@/src/components/icons/icon_arrow_right.svg';
 import DashboardCreateModal from '@/src/components/modals/DashboardCreateModal';
 import { getDashboardList } from '@/src/apis/dashboards';
@@ -253,7 +254,7 @@ export default function MyDashboardPage() {
       try {
         await updateInvitation(invitationId, { inviteAccepted });
         setInvitations((prev) => prev.filter((i) => i.id !== invitationId));
-        window.alert(
+        toast.success(
           inviteAccepted ? '초대를 수락했어요.' : '초대를 거절했어요.'
         );
 
