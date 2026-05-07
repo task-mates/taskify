@@ -49,14 +49,14 @@ export const Title = styled.h2`
   margin: 0;
   font-size: 18px;
   font-weight: 700;
-  color: #333236;
+  color: var(--color-black-200);
 `;
 
 export const Count = styled.span`
   min-width: 20px;
   height: 20px;
   border-radius: 50%;
-  color: #333236;
+  color: var(--color-black-200);
   font-size: 12px;
   font-weight: 700;
   display: inline-flex;
@@ -96,9 +96,9 @@ export const ActionButtonPopup = styled.div`
   right: 0;
   white-space: nowrap;
   padding: 12px 10px;
-  background: #fff;
+  background: var(--color-white);
   border-radius: 12px;
-  border: 1px solid #d9d9d9;
+  border: 1px solid var(--color-gray-300);
   z-index: 100;
 `;
 
@@ -118,7 +118,7 @@ export const ActionButtonItem = styled.li`
     transform: translateX(-50%);
     width: 93px;
     height: 1px;
-    background: #d6d5d9;
+    background: var(--color-gray-300);
   }
 `;
 
@@ -177,7 +177,7 @@ export const ArrowButton = styled.button`
     }
 
     svg path {
-      fill: #a39fb2;
+      fill: var(--color-gray-400);
     }
   }
 `;
@@ -185,7 +185,7 @@ export const ArrowButton = styled.button`
 export const Empty = styled.p`
   margin: 0;
   font-size: 14px;
-  color: #6b7280;
+  color: var(--color-gray-500);
   text-align: center;
 `;
 
@@ -195,9 +195,9 @@ export const AddButton = styled.button`
   align-items: center;
   width: 100%;
   padding: 10px 20px;
-  border: 1px solid #d9d9d9;
+  border: 1px solid var(--color-gray-300);
   border-radius: 8px;
-  background-color: #ffffff;
+  background-color: var(--color-white);
   cursor: pointer;
   flex-shrink: 0;
 
@@ -211,7 +211,7 @@ export const AddButton = styled.button`
 `;
 
 export const IconContainer = styled.div`
-  background-color: #e1eaf1;
+  background-color: var(--color-brand-surface);
   padding: 5px 5px;
   border-radius: 4px;
   flex-shrink: 0;

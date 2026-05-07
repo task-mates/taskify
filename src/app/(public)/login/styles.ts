@@ -42,20 +42,20 @@ export const LoginForm = styled.form`
 export const Label = styled.label`
   font-weight: 700;
   font-size: 14px;
-  color: #303030;
+  color: var(--color-text-body);
 `;
 
 export const TextInput = styled.input<{ $hasError?: boolean }>`
   width: 100%;
   height: 44px;
   padding: 0 12px;
-  border: 1px solid ${({ $hasError }) => ($hasError ? '#e5484d' : '#d0d5dd')};
+  border: 1px solid ${({ $hasError }) => ($hasError ? 'var(--color-error)' : 'var(--color-gray-300)')};
   border-radius: 8px;
   font-size: 14px;
 
   &:focus {
     outline: none;
-    border-color: ${({ $hasError }) => ($hasError ? '#e5484d' : '#83c6e5')};
+    border-color: ${({ $hasError }) => ($hasError ? 'var(--color-error)' : 'var(--color-blue-200)')};
   }
 `;
 
@@ -91,7 +91,7 @@ export const LoginButton = styled(Button).attrs({
 export const ErrorText = styled.p`
   min-height: 18px;
   margin: 0;
-  color: #e5484d;
+  color: var(--color-error);
   font-size: 13px;
 `;
 
@@ -104,11 +104,11 @@ export const SignupRow = styled.div`
 
 export const HelperText = styled.p`
   font-size: 14px;
-  color: #667085;
+  color: var(--color-gray-muted);
 `;
 
 export const SignupLink = styled(Link)`
-  color: #4b4b4b;
+  color: var(--color-black-100);
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;

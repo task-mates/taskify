@@ -15,7 +15,7 @@ export const Card = styled.section`
   margin: 0 auto;
   padding: 20px 18px;
   border-radius: 12px;
-  background-color: #ffffff;
+  background-color: var(--color-white);
   border: 1px solid #eaecf0;
   display: flex;
   flex-direction: column;
@@ -36,7 +36,7 @@ export const Header = styled.header`
 export const Title = styled.h1`
   font-size: 20px;
   font-weight: 700;
-  color: #303030;
+  color: var(--color-text-body);
 `;
 
 export const CloseLink = styled(Link)`
@@ -61,7 +61,7 @@ export const CloseLink = styled(Link)`
 
 export const UpdatedAt = styled.p`
   font-size: 13px;
-  color: #667085;
+  color: var(--color-gray-muted);
 `;
 
 export const Content = styled.pre`

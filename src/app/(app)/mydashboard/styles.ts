@@ -332,7 +332,7 @@ export const InvitedActionButton = styled.button<{
     $variant === 'primary'
       ? 'var(--color-blue-300, #83C6E5)'
       : 'var(--color-gray-700, #555)'};
-  color: ${({ $variant }) => ($variant === 'primary' ? '#fff' : '#fff')};
+  color: var(--color-white);
   cursor: pointer;
   font-family: var(--font-main);
   font-size: 13px;

@@ -9,14 +9,14 @@ export const PageMain = styled.main`
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: #e1eaf1;
+  background: var(--color-brand-surface);
 `;
 
 export const PageTitle = styled.h1`
   margin: 0 0 20px 0;
   font-size: 32px;
   font-weight: 700;
-  color: #333236;
+  color: var(--color-black-200);
   display: flex;
   align-items: center;
 `;
@@ -57,9 +57,9 @@ export const AddButton = styled.button`
   width: 20px;
   height: 200px;
   padding: 10px 20px;
-  border: 1px solid #d9d9d9;
+  border: 1px solid var(--color-gray-300);
   border-radius: 8px;
-  background-color: #ffffff;
+  background-color: var(--color-white);
   cursor: pointer;
 
   &:hover {
@@ -77,7 +77,7 @@ export const AddButton = styled.button`
 `;
 
 export const IconContainer = styled.div`
-  background-color: #e1eaf1;
+  background-color: var(--color-brand-surface);
   padding: 1px 6px;
   border-radius: 4px;
 `;

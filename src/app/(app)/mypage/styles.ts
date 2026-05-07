@@ -14,10 +14,10 @@ export const Page = styled.main`
 `;
 
 export const Section = styled.section`
-  border: 1px solid #dfe3e8;
+  border: 1px solid var(--color-gray-200);
   border-radius: 12px;
   padding: 20px;
-  background-color: #fff;
+  background-color: var(--color-white);
 `;
 
 export const ProfileSection = styled(Section)`
@@ -119,9 +119,9 @@ export const ProfileMenu = styled.div`
   position: absolute;
   left: calc(100% + 12px);
   top: 0;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--color-gray-200);
   border-radius: 8px;
-  background-color: #fff;
+  background-color: var(--color-white);
   box-shadow: 0 8px 20px rgba(17, 24, 39, 0.12);
   padding: 6px;
   display: grid;
@@ -142,7 +142,7 @@ export const ProfileMenuButton = styled.button<{ $danger?: boolean }>`
   padding: 8px;
   text-align: left;
   cursor: pointer;
-  color: ${({ $danger }) => ($danger ? '#dc2626' : 'inherit')};
+  color: ${({ $danger }) => ($danger ? 'var(--color-red)' : 'inherit')};
 `;
 
 export const ProfileFormWrap = styled.div`
@@ -188,7 +188,7 @@ export const TextInput = styled.input`
 export const ErrorSpace = styled.p`
   min-height: 18px;
   font-size: 13px;
-  color: #dc2626;
+  color: var(--color-red);
   margin: 0;
 `;
 
@@ -208,12 +208,15 @@ export const PasswordForm = styled.form`
 
 export const PasswordInput = styled.input<{ $hasError?: boolean }>`
   padding: 10px;
-  border: 1px solid ${({ $hasError }) => ($hasError ? '#e5484d' : '#d1d5db')};
+  border: 1px solid
+    ${({ $hasError }) =>
+      $hasError ? 'var(--color-error)' : 'var(--color-gray-200)'};
   border-radius: 8px;
 
   &:focus {
     outline: none;
-    border-color: ${({ $hasError }) => ($hasError ? '#e5484d' : '#83c6e5')};
+    border-color: ${({ $hasError }) =>
+      $hasError ? 'var(--color-error)' : 'var(--color-blue-200)'};
   }
 `;
 

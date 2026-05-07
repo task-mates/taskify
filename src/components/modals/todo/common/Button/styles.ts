@@ -9,12 +9,12 @@ export const StyledButton = styled.button<{
   border-radius: 14px;
   font-size: 18px;
   font-weight: 600;
-  color: #fff;
+  color: var(--color-white);
 
   ${({ $variant }) =>
     $variant === 'primary'
       ? css`
-          background: #83c6e5;
+          background: var(--color-blue-200);
         `
       : css`
           background: #888787;
