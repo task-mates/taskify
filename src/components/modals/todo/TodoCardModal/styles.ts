@@ -124,7 +124,8 @@ export const ActionButton = styled.button<{ $variant?: 'default' | 'delete' }>`
   font-size: 16px;
   font-weight: 500;
   border-radius: 6px;
-  color: ${({ $variant }) => ($variant === 'delete' ? 'var(--color-red)' : 'var(--color-black-200)')};
+  color: ${({ $variant }) =>
+    $variant === 'delete' ? 'var(--color-red)' : 'var(--color-black-200)'};
 
   display: flex;
   align-items: center;
@@ -178,6 +179,8 @@ export const TaskInfoValue = styled.span`
 export const TaskInfoNameBadge = styled.span<{
   $backgroundColor: string;
 }>`
+  position: relative;
+  overflow: hidden;
   flex-shrink: 0;
   width: 30px;
   height: 30px;
@@ -196,19 +199,22 @@ export const TaskInfoNameBadge = styled.span<{
 export const DetailContent = styled.div``;
 
 export const Thumbnail = styled.div`
+  margin-top: 18px;
   margin-bottom: 30px;
   position: relative;
   width: 100%;
-  height: 220px;
-
-  img {
-    max-width: 360px;
-    width: 100%;
-  }
 
   @media ${DEVICE.mobile} {
+    margin-top: 8px;
     margin-bottom: 20px;
   }
+`;
+
+export const ThumbnailImage = styled.img`
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
 `;
 
 export const Description = styled.p`
@@ -234,6 +240,8 @@ export const CommentBadge = styled.span<{
   $backgroundColor: string;
 }>`
   flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
   width: 30px;
   height: 30px;
   font-size: 13px;
@@ -324,7 +332,8 @@ export const SendButton = styled.button<{ $active: boolean }>`
   cursor: pointer;
 
   svg path {
-    stroke: ${({ $active }) => ($active ? 'var(--color-black-200)' : 'var(--color-gray-400)')};
+    stroke: ${({ $active }) =>
+      $active ? 'var(--color-brand-500)' : 'var(--color-gray-300)'};
   }
 `;
 
