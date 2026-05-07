@@ -6,13 +6,13 @@ import Input from '@/src/components/common/Input';
 import Button from '@/src/components/common/Button';
 import { createDashboard } from '@/src/apis/dashboards';
 import { showToast } from '@/src/utils/toast';
+import { emitDashboardChanged } from '@/src/utils/dashboardListEvent';
 import { PROFILE_COLORS } from '@/src/styles/profileColor';
 import * as S from './style';
 import type { DashboardCreateModalProps } from './type';
 
 export default function DashboardCreateModal({
   onClose,
-  onCreated,
 }: DashboardCreateModalProps) {
   const [title, setTitle] = useState('');
   const [color, setColor] = useState('');
@@ -24,7 +24,7 @@ export default function DashboardCreateModal({
     try {
       await createDashboard({ title: title.trim(), color });
       showToast.success('대시보드가 생성되었습니다.');
-      onCreated?.();
+      emitDashboardChanged();
       onClose();
     } catch {
       showToast.error('대시보드 생성에 실패했습니다. 다시 시도해주세요.');

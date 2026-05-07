@@ -193,10 +193,7 @@ export default function ColumnSection({
           dashboardId={dashboardId}
           columnId={columnId}
           onClose={() => setIsCreateModalOpen(false)}
-          onCreated={() => {
-            setIsCreateModalOpen(false);
-            onUpdated?.();
-          }}
+          onCreated={() => setIsCreateModalOpen(false)}
         />
       )}
     </S.Section>

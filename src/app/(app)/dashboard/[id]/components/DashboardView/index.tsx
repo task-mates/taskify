@@ -14,6 +14,7 @@ import {
   applyDragResult,
   type ColumnWithCards,
 } from '@/src/app/(app)/dashboard/[id]/utils/applyDragResult';
+import { onCardChanged } from '@/src/utils/dashboardListEvent';
 
 type DashboardViewProps = {
   dashboardId: number;
@@ -80,9 +81,14 @@ export default function DashboardView({ dashboardId }: DashboardViewProps) {
     };
   }, [dashboardId]);
 
-  const handleRefresh = () => {
+  // loadRef를 통해 항상 최신 load 함수를 참조 — useCallback deps는 의도적으로 빈 배열
+  const handleRefresh = useCallback(() => {
     void loadRef.current?.();
-  };
+  }, []);
+
+  useEffect(() => {
+    return onCardChanged(dashboardId, handleRefresh);
+  }, [dashboardId, handleRefresh]);
 
   const handleDragEnd = useCallback((result: DropResult) => {
     if (!result.destination) return;

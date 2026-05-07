@@ -19,6 +19,7 @@ import DeleteIcon from '@/src/components/icons/icon-delete.svg';
 import { getTagColorByName, TAG_PREVIEW_COLOR } from '@/src/utils/tagColor';
 import { getProfileColorByNickname } from '@/src/utils/profileColor';
 import { showToast } from '@/src/utils/toast';
+import { emitCardChanged } from '@/src/utils/dashboardListEvent';
 
 registerLocale('ko', ko);
 
@@ -113,6 +114,7 @@ export default function TodoCreateModal({
       });
 
       showToast.success('카드가 생성되었습니다.');
+      emitCardChanged(dashboardId);
       onCreated?.();
       onClose();
     } catch {
