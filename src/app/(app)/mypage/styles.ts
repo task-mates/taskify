@@ -213,9 +213,9 @@ export const LogoutButton = styled(Button).attrs({
   variant: 'ghost',
   height: '52px',
 })`
-  box-sizing: border-box;
-  width: min(100%, ${MYPAGE_CARD_MAX_WIDTH});
-  max-width: ${MYPAGE_CARD_MAX_WIDTH};
+  display: block;
+  width: 100%;
+  max-width: 320px;
   margin: 16px auto 0;
   border: 1px solid var(--color-gray-300);
   border-radius: 8px;
