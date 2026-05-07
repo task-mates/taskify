@@ -86,7 +86,7 @@ const GlobalStyle = createGlobalStyle`
 
     --color-black: #000000;
     --color-black-100: #4B4B4B;
-    --color-black-200: #333236;  /* <-이 컬러는 대시보드 색상 선택에서도 같이 사용하는 색상입니다.*/
+    --color-black-200: #333236;  
     --color-black-300: #262629;
     --color-black-400: #201F23;
     --color-black-500: #131215;
@@ -129,6 +129,7 @@ const GlobalStyle = createGlobalStyle`
     --color-dashboard-skyblue: #92CCE7;
     --color-dashboard-darkgray: #9FA6B2;
     --color-dashboard-gray: #D9D9D9;
+    --color-dashboard-black: var(--color-black-200); 
 
     /* --- Font --- */
     --font-main: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
