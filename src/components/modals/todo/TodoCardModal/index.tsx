@@ -220,7 +220,9 @@ export default function TodoCardModal({
         const user = await usersApi.getMe();
         setCurrentUser(user);
       } catch {
-        showToast.error('사용자 정보를 불러오지 못했습니다. 다시 시도해주세요.');
+        showToast.error(
+          '사용자 정보를 불러오지 못했습니다. 다시 시도해주세요.'
+        );
       }
     };
 
@@ -435,221 +437,220 @@ export default function TodoCardModal({
   const getAvatarText = (nickname: string) => {
     const trimmedNickname = nickname.trim();
     if (!trimmedNickname) return '';
-
-    const isKorean = /[ㄱ-ㅎㅏ-ㅣ가-힣]/.test(trimmedNickname);
-
-    return isKorean ? trimmedNickname.slice(1, 3) : trimmedNickname.slice(0, 1);
+    return trimmedNickname[0];
   };
 
   return (
     <>
-    <TodoBaseModal
-      title={modalMode === 'detail' ? (card?.title ?? '') : '할 일 수정'}
-      labelId={modalMode === 'detail' ? '할 일 카드 모달' : '할 일 수정 모달'}
-      onClose={onClose}
-      badgeGroup={modalMode === 'detail' ? badgeGroup : undefined}
-      actionMenu={modalMode === 'detail' ? actionMenu : undefined}
-      footerGroup={modalMode === 'update' ? updateFooterGroup : undefined}
-      headerVariant={modalMode === 'detail' ? 'card' : 'default'}
-      overlayVariant="full"
-      layoutVariant={modalMode === 'detail' ? 'card' : 'default'}
-    >
-      {modalMode === 'detail' ? (
-        <>
-          <S.TaskInfo>
-            {assigneeNickname && (
-              <S.TaskInfoItem>
-                <S.TaskInfoLabel>담당자</S.TaskInfoLabel>
-                <S.TaskInfoValue>
-                  <S.TaskInfoNameBadge $backgroundColor={assigneeBgColor}>
-                    {assigneeProfileImage ? (
-                      <Image
-                        src={assigneeProfileImage}
-                        alt={assigneeNickname}
-                        fill
-                        style={{ objectFit: 'cover' }}
-                      />
-                    ) : (
-                      getAvatarText(assigneeNickname)
-                    )}
-                  </S.TaskInfoNameBadge>
-                  {assigneeNickname}
-                </S.TaskInfoValue>
-              </S.TaskInfoItem>
-            )}
+      <TodoBaseModal
+        title={modalMode === 'detail' ? (card?.title ?? '') : '할 일 수정'}
+        labelId={modalMode === 'detail' ? '할 일 카드 모달' : '할 일 수정 모달'}
+        onClose={onClose}
+        badgeGroup={modalMode === 'detail' ? badgeGroup : undefined}
+        actionMenu={modalMode === 'detail' ? actionMenu : undefined}
+        footerGroup={modalMode === 'update' ? updateFooterGroup : undefined}
+        headerVariant={modalMode === 'detail' ? 'card' : 'default'}
+        overlayVariant="full"
+        layoutVariant={modalMode === 'detail' ? 'card' : 'default'}
+      >
+        {modalMode === 'detail' ? (
+          <>
+            <S.TaskInfo>
+              {assigneeNickname && (
+                <S.TaskInfoItem>
+                  <S.TaskInfoLabel>담당자</S.TaskInfoLabel>
+                  <S.TaskInfoValue>
+                    <S.TaskInfoNameBadge $backgroundColor={assigneeBgColor}>
+                      {assigneeProfileImage ? (
+                        <Image
+                          src={assigneeProfileImage}
+                          alt={assigneeNickname}
+                          fill
+                          style={{ objectFit: 'cover' }}
+                        />
+                      ) : (
+                        getAvatarText(assigneeNickname)
+                      )}
+                    </S.TaskInfoNameBadge>
+                    {assigneeNickname}
+                  </S.TaskInfoValue>
+                </S.TaskInfoItem>
+              )}
 
-            {dueDate && (
-              <S.TaskInfoItem>
-                <S.TaskInfoLabel>마감일</S.TaskInfoLabel>
-                <S.TaskInfoValue>
-                  {formatDate(dueDate)} {formatTime(dueDate)}
-                </S.TaskInfoValue>
-              </S.TaskInfoItem>
-            )}
-          </S.TaskInfo>
+              {dueDate && (
+                <S.TaskInfoItem>
+                  <S.TaskInfoLabel>마감일</S.TaskInfoLabel>
+                  <S.TaskInfoValue>
+                    {formatDate(dueDate)} {formatTime(dueDate)}
+                  </S.TaskInfoValue>
+                </S.TaskInfoItem>
+              )}
+            </S.TaskInfo>
 
-          <S.DetailContent>
-            {cardCoverImage && (
-              <S.Thumbnail>
-                <Image
-                  src={cardCoverImage}
-                  alt="썸네일"
-                  fill
-                  style={{ objectFit: 'cover' }}
-                />
-              </S.Thumbnail>
-            )}
-
-            {cardDescription && (
-              <S.Description>{cardDescription}</S.Description>
-            )}
-          </S.DetailContent>
-
-          <S.Divider />
-
-          <S.CommentTextareaWrapper $expanded={isTextareaExpanded}>
-            {!isTextareaExpanded && currentUserNickname && (
-              <S.CommentBadge $backgroundColor={currentUserBgColor}>
-                {currentUserImage ? (
+            <S.DetailContent>
+              {cardCoverImage && (
+                <S.Thumbnail>
                   <Image
-                    src={currentUserImage}
-                    alt={currentUserNickname}
+                    src={cardCoverImage}
+                    alt="썸네일"
                     fill
                     style={{ objectFit: 'cover' }}
                   />
-                ) : (
-                  getAvatarText(currentUserNickname)
-                )}
-              </S.CommentBadge>
-            )}
+                </S.Thumbnail>
+              )}
 
-            <form onSubmit={handleSubmit}>
-              <S.CommentTextareaBox $expanded={isTextareaExpanded}>
-                <S.CommentTextarea
-                  ref={textareaRef}
-                  name="comment"
-                  placeholder="댓글을 남겨보세요"
-                  maxLength={COMMENT_MAX_LENGTH}
-                  onChange={handleCommentChange}
-                  onKeyDown={handleKeyDown}
-                />
+              {cardDescription && (
+                <S.Description>{cardDescription}</S.Description>
+              )}
+            </S.DetailContent>
 
-                <S.SendButton
-                  $active={isTyping}
-                  type="submit"
-                  aria-label="댓글 등록"
-                >
-                  <SendIcon />
-                </S.SendButton>
-              </S.CommentTextareaBox>
-            </form>
-          </S.CommentTextareaWrapper>
+            <S.Divider />
 
-          <S.CommentList>
-            {comments.map((comment) => {
-              const commentAuthorBgColor = getProfileColorByNickname(
-                comment.author.nickname
-              );
+            <S.CommentTextareaWrapper $expanded={isTextareaExpanded}>
+              {!isTextareaExpanded && currentUserNickname && (
+                <S.CommentBadge $backgroundColor={currentUserBgColor}>
+                  {currentUserImage ? (
+                    <Image
+                      src={currentUserImage}
+                      alt={currentUserNickname}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                    />
+                  ) : (
+                    getAvatarText(currentUserNickname)
+                  )}
+                </S.CommentBadge>
+              )}
 
-              return (
-                <S.CommentItem key={comment.id}>
-                  <S.CommentBadge $backgroundColor={commentAuthorBgColor}>
-                    {getAvatarText(comment.author.nickname)}
-                  </S.CommentBadge>
+              <form onSubmit={handleSubmit}>
+                <S.CommentTextareaBox $expanded={isTextareaExpanded}>
+                  <S.CommentTextarea
+                    ref={textareaRef}
+                    name="comment"
+                    placeholder="댓글을 남겨보세요"
+                    maxLength={COMMENT_MAX_LENGTH}
+                    onChange={handleCommentChange}
+                    onKeyDown={handleKeyDown}
+                  />
 
-                  <S.CommentContent>
-                    <S.CommentInfo>
-                      <S.CommentName>{comment.author.nickname}</S.CommentName>
+                  <S.SendButton
+                    $active={isTyping}
+                    type="submit"
+                    aria-label="댓글 등록"
+                  >
+                    <SendIcon />
+                  </S.SendButton>
+                </S.CommentTextareaBox>
+              </form>
+            </S.CommentTextareaWrapper>
 
-                      <S.CommentCreated>
-                        <S.CommentDate>
-                          {formatDate(comment.createdAt)}
-                        </S.CommentDate>
-                        <S.CommentTime>
-                          {formatTime(comment.createdAt)}
-                        </S.CommentTime>
-                      </S.CommentCreated>
+            <S.CommentList>
+              {comments.map((comment) => {
+                const commentAuthorBgColor = getProfileColorByNickname(
+                  comment.author.nickname
+                );
 
-                      {currentUser?.id === comment.author.id &&
-                        updatingCommentId !== comment.id && (
-                          <S.CommentActionGroup>
-                            <S.CommentActionButton
+                return (
+                  <S.CommentItem key={comment.id}>
+                    <S.CommentBadge $backgroundColor={commentAuthorBgColor}>
+                      {getAvatarText(comment.author.nickname)}
+                    </S.CommentBadge>
+
+                    <S.CommentContent>
+                      <S.CommentInfo>
+                        <S.CommentName>{comment.author.nickname}</S.CommentName>
+
+                        <S.CommentCreated>
+                          <S.CommentDate>
+                            {formatDate(comment.createdAt)}
+                          </S.CommentDate>
+                          <S.CommentTime>
+                            {formatTime(comment.createdAt)}
+                          </S.CommentTime>
+                        </S.CommentCreated>
+
+                        {currentUser?.id === comment.author.id &&
+                          updatingCommentId !== comment.id && (
+                            <S.CommentActionGroup>
+                              <S.CommentActionButton
+                                type="button"
+                                onClick={() =>
+                                  handleStartUpdateComment(comment)
+                                }
+                              >
+                                수정
+                              </S.CommentActionButton>
+
+                              <S.CommentActionButton
+                                type="button"
+                                onClick={() => handleDeleteComment(comment.id)}
+                              >
+                                삭제
+                              </S.CommentActionButton>
+                            </S.CommentActionGroup>
+                          )}
+                      </S.CommentInfo>
+
+                      {updatingCommentId === comment.id ? (
+                        <S.CommentUpdateBox>
+                          <S.CommentUpdateTextarea
+                            value={updatingCommentContent}
+                            maxLength={COMMENT_MAX_LENGTH}
+                            onChange={(e) =>
+                              setUpdatingCommentContent(e.target.value)
+                            }
+                          />
+
+                          <S.CommentUpdateButtonGroup>
+                            <S.CommentUpdateButton
                               type="button"
-                              onClick={() => handleStartUpdateComment(comment)}
+                              onClick={handleCancelUpdateComment}
                             >
-                              수정
-                            </S.CommentActionButton>
+                              취소
+                            </S.CommentUpdateButton>
 
-                            <S.CommentActionButton
+                            <S.CommentUpdateButton
                               type="button"
-                              onClick={() => handleDeleteComment(comment.id)}
+                              $variant="primary"
+                              onClick={() => handleUpdateComment(comment.id)}
                             >
-                              삭제
-                            </S.CommentActionButton>
-                          </S.CommentActionGroup>
-                        )}
-                    </S.CommentInfo>
+                              저장
+                            </S.CommentUpdateButton>
+                          </S.CommentUpdateButtonGroup>
+                        </S.CommentUpdateBox>
+                      ) : (
+                        <S.CommentText>{comment.content}</S.CommentText>
+                      )}
+                    </S.CommentContent>
+                  </S.CommentItem>
+                );
+              })}
 
-                    {updatingCommentId === comment.id ? (
-                      <S.CommentUpdateBox>
-                        <S.CommentUpdateTextarea
-                          value={updatingCommentContent}
-                          maxLength={COMMENT_MAX_LENGTH}
-                          onChange={(e) =>
-                            setUpdatingCommentContent(e.target.value)
-                          }
-                        />
+              <div ref={observerRef} style={{ height: '1px' }} />
+            </S.CommentList>
+          </>
+        ) : (
+          card && (
+            <TodoUpdateForm
+              cardId={cardId}
+              dashboardId={dashboardId}
+              columnId={card.columnId}
+              onSuccess={async () => {
+                await fetchCard();
+                setModalMode('detail');
+              }}
+            />
+          )
+        )}
+      </TodoBaseModal>
 
-                        <S.CommentUpdateButtonGroup>
-                          <S.CommentUpdateButton
-                            type="button"
-                            onClick={handleCancelUpdateComment}
-                          >
-                            취소
-                          </S.CommentUpdateButton>
-
-                          <S.CommentUpdateButton
-                            type="button"
-                            $variant="primary"
-                            onClick={() => handleUpdateComment(comment.id)}
-                          >
-                            저장
-                          </S.CommentUpdateButton>
-                        </S.CommentUpdateButtonGroup>
-                      </S.CommentUpdateBox>
-                    ) : (
-                      <S.CommentText>{comment.content}</S.CommentText>
-                    )}
-                  </S.CommentContent>
-                </S.CommentItem>
-              );
-            })}
-
-            <div ref={observerRef} style={{ height: '1px' }} />
-          </S.CommentList>
-        </>
-      ) : (
-        card && (
-          <TodoUpdateForm
-            cardId={cardId}
-            dashboardId={dashboardId}
-            columnId={card.columnId}
-            onSuccess={async () => {
-              await fetchCard();
-              setModalMode('detail');
-            }}
-          />
-        )
+      {confirmConfig && (
+        <Confirm
+          title={confirmConfig.title}
+          onConfirm={confirmConfig.onConfirm}
+          onClose={() => setConfirmConfig(null)}
+        />
       )}
-    </TodoBaseModal>
-
-    {confirmConfig && (
-      <Confirm
-        title={confirmConfig.title}
-        onConfirm={confirmConfig.onConfirm}
-        onClose={() => setConfirmConfig(null)}
-      />
-    )}
     </>
   );
 }

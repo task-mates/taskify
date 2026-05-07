@@ -173,9 +173,7 @@ export default function TodoUpdateForm({
   const getAvatarText = (nickname: string) => {
     const trimmedNickname = nickname.trim();
     if (!trimmedNickname) return '';
-
-    const isKorean = /[ㄱ-ㅎㅏ-ㅣ가-힣]/.test(trimmedNickname);
-    return isKorean ? trimmedNickname.slice(1, 3) : trimmedNickname.slice(0, 1);
+    return trimmedNickname[0];
   };
 
   const handleAddTag = useCallback(
