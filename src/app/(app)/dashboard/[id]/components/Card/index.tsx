@@ -9,9 +9,16 @@ export default function Card({ card, dashboardId, columnTitle }: CardProps) {
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
   return (
     <>
-      <S.Card onClick={() => setIsCardModalOpen(true)}>
-        {/* {card.imageUrl && <S.Thumbnail src={card.imageUrl} alt={card.title} />} */}
-
+      <S.Card
+        onClick={() => setIsCardModalOpen(true)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            setIsCardModalOpen(true);
+          }
+        }}
+        tabIndex={0}
+        role="button"
+      >
         <S.Thumbnail src="/images/dummy.png" alt={card.title} />
         <S.Content>
           <S.Title>{card.title}</S.Title>
