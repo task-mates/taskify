@@ -8,6 +8,8 @@ export const Card = styled.article`
 
   display: flex;
   flex-direction: column;
+
+  cursor: pointer;
 `;
 
 export const Thumbnail = styled.img`

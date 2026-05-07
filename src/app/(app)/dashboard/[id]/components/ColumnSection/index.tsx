@@ -152,7 +152,11 @@ export default function ColumnSection({
                       {...dragProvided.dragHandleProps}
                       $isDragging={snapshot.isDragging}
                     >
-                      <Card card={card} />
+                      <Card
+                        card={card}
+                        dashboardId={dashboardId}
+                        columnTitle={title}
+                      />
                     </S.DraggableWrap>
                   )}
                 </Draggable>
