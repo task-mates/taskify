@@ -88,6 +88,7 @@ export const ActionMenuButton = styled.button`
 `;
 
 export const ActionButtonPopup = styled.div`
+  z-index: 5;
   position: absolute;
   top: calc(100% + 20px);
   right: 0;
@@ -268,8 +269,7 @@ export const CommentTextareaBox = styled.div<{ $expanded: boolean }>`
   border-radius: 12px;
 
   &:focus-within {
-    border-color: #333;
-  }
+    border-color: var(--color-brand-500);
 `;
 
 export const CommentTextarea = styled.textarea`
@@ -422,7 +422,7 @@ export const CommentUpdateTextarea = styled.textarea`
   min-height: 90px;
   padding: 8px 12px;
   border: 1px solid var(--color-gray-300);
-  border-radius: 6px;
+  border-radius: 12px;
   resize: none;
 
   color: var(--color-black-200);
@@ -431,7 +431,7 @@ export const CommentUpdateTextarea = styled.textarea`
 
   &:focus {
     outline: none;
-    border-color: #333;
+    border-color: var(--color-brand-500);
   }
 `;
 
@@ -447,7 +447,7 @@ export const CommentUpdateButton = styled(Button).attrs<{
   variant: $variant === 'primary' ? 'primary' : 'secondary',
 }))<{ $variant?: 'primary' }>`
   padding: 6px 12px;
-  border-radius: 4px;
+  border-radius: 8px;
   font-size: 12px;
   font-weight: 500;
 `;

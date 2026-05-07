@@ -333,6 +333,12 @@ export const Textarea = styled.textarea`
     color: var(--color-gray-400);
   }
 
+  &:focus {
+    outline: none;
+    border-color: var(--color-brand-500);
+    box-shadow: none;
+  }
+
   @media ${DEVICE.mobile} {
     height: 120px;
     border-radius: 12px;
