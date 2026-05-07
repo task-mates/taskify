@@ -66,6 +66,16 @@ export const ActionButton = styled.button`
   font: var(--md-14px-medium);
   color: var(--color-gray-500);
   cursor: pointer;
+
+  @media ${DEVICE.mobile} {
+    padding: 8px;
+  }
+`;
+
+export const ButtonLabel = styled.span`
+  @media ${DEVICE.mobile} {
+    display: none;
+  }
 `;
 
 export const Divider = styled.div`
