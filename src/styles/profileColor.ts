@@ -1,3 +1,11 @@
+export const DASHBOARD_COLORS = [
+  '#4277C4',
+  '#92CCE7',
+  '#9FA6B2',
+  '#D9D9D9',
+  '#333236',
+];
+
 export const PROFILE_COLOR_VARS = [
   '--color-profile-green',
   '--color-profile-violet',
