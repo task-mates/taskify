@@ -8,6 +8,7 @@ import ArrowIcon from '@/src/components/icons/icon-arrow.svg';
 import ProfileBoxIcon from '@/src/components/icons/profile-box.svg';
 import { putPassword } from '@/src/apis/auth';
 import { usersApi } from '@/src/apis/users';
+import { emitUserChanged } from '@/src/utils/dashboardListEvent';
 import { removeAccessToken } from '@/src/utils/authTokenStorage';
 import Input from '@/src/components/common/Input';
 import { MYPAGE_MESSAGES, PROFILE_BOX_SIZE } from './constants';
@@ -257,6 +258,7 @@ export default function MyPage() {
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
+      emitUserChanged({ nickname: updated.nickname, profileImageUrl: updated.profileImageUrl ?? null });
       showToast.success(MYPAGE_MESSAGES.profileUpdateSuccess);
     } catch {
       setProfileSaveErrorMessage(MYPAGE_MESSAGES.profileUpdateFailed);
