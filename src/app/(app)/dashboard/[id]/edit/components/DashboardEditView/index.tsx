@@ -69,9 +69,11 @@ export default function DashboardEditView({
     );
   }, [dashboardId]);
 
+  const isTitleEmpty = title.trim() === '';
   const isUnchanged = title === dashboard?.title && color === dashboard?.color;
 
   const handleUpdateDashboard = async () => {
+    if (isTitleEmpty) return;
     setIsSaving(true);
     try {
       const updated = await updateDashboard(dashboardId, { title, color });
@@ -128,6 +130,7 @@ export default function DashboardEditView({
           color={color}
           isSaving={isSaving}
           isUnchanged={isUnchanged}
+          isTitleEmpty={isTitleEmpty}
           onTitleChange={setTitle}
           onColorChange={setColor}
           onSave={handleUpdateDashboard}
