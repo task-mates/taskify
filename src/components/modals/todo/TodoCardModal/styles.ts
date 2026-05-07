@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { DEVICE } from '@/src/styles/Breakpoints';
+import Button from '@/src/components/common/Button';
 
 export const BadgeGroup = styled.div`
   margin-top: 12px;
@@ -19,7 +20,7 @@ export const ColumnBadge = styled.span`
   font-size: 13px;
   font-weight: 600;
   color: #cfe1fd;
-  background: #76a5ea;
+  background: var(--color-blue-100);
 
   @media ${DEVICE.mobile} {
     padding: 4px 8px;
@@ -40,7 +41,7 @@ export const TagBadgeArea = styled.div`
     top: 2px;
     width: 1px;
     height: 18px;
-    background: #9fa6b2;
+    background: var(--color-gray-400);
   }
 
   @media ${DEVICE.mobile} {
@@ -92,9 +93,9 @@ export const ActionButtonPopup = styled.div`
   right: 0;
   white-space: nowrap;
   padding: 12px 10px;
-  background: #fff;
+  background: var(--color-white);
   border-radius: 12px;
-  border: 1px solid #d9d9d9;
+  border: 1px solid var(--color-gray-300);
 `;
 
 export const ActionButtonList = styled.ul``;
@@ -113,7 +114,7 @@ export const ActionButtonItem = styled.li`
     transform: translateX(-50%);
     width: 93px;
     height: 1px;
-    background: #d6d5d9;
+    background: var(--color-gray-300);
   }
 `;
 
@@ -123,7 +124,7 @@ export const ActionButton = styled.button<{ $variant?: 'default' | 'delete' }>`
   font-size: 16px;
   font-weight: 500;
   border-radius: 6px;
-  color: ${({ $variant }) => ($variant === 'delete' ? '#E73527' : '#333236')};
+  color: ${({ $variant }) => ($variant === 'delete' ? 'var(--color-red)' : 'var(--color-black-200)')};
 
   display: flex;
   align-items: center;
@@ -151,7 +152,7 @@ export const TaskInfoItem = styled.div`
 export const TaskInfoLabel = styled.span`
   min-width: 50px;
   font-size: 14px;
-  color: #333236;
+  color: var(--color-black-200);
   font-weight: 600;
   position: relative;
   top: -1px;
@@ -167,7 +168,7 @@ export const TaskInfoValue = styled.span`
   gap: 6px;
   font-size: 16px;
   font-weight: 500;
-  color: #333236;
+  color: var(--color-black-200);
 
   @media ${DEVICE.mobile} {
     font-size: 14px;
@@ -186,15 +187,13 @@ export const TaskInfoNameBadge = styled.span<{
   justify-content: center;
   align-items: center;
   background: ${({ $backgroundColor }) => $backgroundColor};
-  color: #fff;
+  color: var(--color-white);
   border-radius: 50%;
   white-space: nowrap;
   overflow: hidden;
 `;
 
-export const DetailContent = styled.div`
-  margin-top: 18px;
-`;
+export const DetailContent = styled.div``;
 
 export const Thumbnail = styled.div`
   margin-bottom: 30px;
@@ -215,7 +214,7 @@ export const Thumbnail = styled.div`
 export const Description = styled.p`
   font-size: 16px;
   line-height: 1.6;
-  color: #333236;
+  color: var(--color-black-200);
   font-weight: 500;
 `;
 
@@ -243,7 +242,7 @@ export const CommentBadge = styled.span<{
   justify-content: center;
   align-items: center;
   background: ${({ $backgroundColor }) => $backgroundColor};
-  color: #fff;
+  color: var(--color-white);
   border-radius: 50%;
   white-space: nowrap;
   overflow: hidden;
@@ -256,8 +255,8 @@ export const CommentTextareaBox = styled.div<{ $expanded: boolean }>`
 
   padding: ${({ $expanded }) =>
     $expanded ? '8px 30px 38px 20px' : '0 30px 0 20px'};
-  background: #fff;
-  border: 1px solid #a39fb2;
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-400);
   border-radius: 12px;
 
   &:focus-within {
@@ -272,7 +271,7 @@ export const CommentTextarea = styled.textarea`
   padding: 8px 0;
 
   font-weight: 500;
-  color: #333236;
+  color: var(--color-black-200);
 
   resize: none;
   overflow-y: hidden;
@@ -287,7 +286,7 @@ export const CommentTextarea = styled.textarea`
   }
 
   &::placeholder {
-    color: #9fa6b2;
+    color: var(--color-gray-400);
   }
 
   &::-webkit-scrollbar {
@@ -325,7 +324,7 @@ export const SendButton = styled.button<{ $active: boolean }>`
   cursor: pointer;
 
   svg path {
-    stroke: ${({ $active }) => ($active ? '#333236' : '#9fa6b2')};
+    stroke: ${({ $active }) => ($active ? 'var(--color-black-200)' : 'var(--color-gray-400)')};
   }
 `;
 
@@ -359,7 +358,7 @@ export const CommentInfo = styled.div`
 export const CommentName = styled.span`
   font-size: 14px;
   font-weight: 600;
-  color: #333236;
+  color: var(--color-black-200);
 `;
 
 export const CommentCreated = styled.div`
@@ -372,14 +371,14 @@ export const CommentCreated = styled.div`
 
 export const CommentDate = styled.span``;
 export const CommentTime = styled.span`
-  color: #a39fb2;
+  color: var(--color-gray-400);
 `;
 
 export const CommentText = styled.p`
   font-size: 16px;
   line-height: 1.6;
   font-weight: 500;
-  color: #333236;
+  color: var(--color-black-200);
   white-space: pre-wrap;
 `;
 
@@ -392,14 +391,14 @@ export const CommentActionGroup = styled.div`
 export const CommentActionButton = styled.button`
   border: 0;
   background: none;
-  color: #a39fb2;
+  color: var(--color-gray-400);
   font-size: 14px;
   font-weight: 400;
   cursor: pointer;
   text-decoration: underline;
 
   &:hover {
-    color: #333236;
+    color: var(--color-black-200);
   }
 `;
 
@@ -413,11 +412,11 @@ export const CommentUpdateTextarea = styled.textarea`
   width: 100%;
   min-height: 90px;
   padding: 8px 12px;
-  border: 1px solid #d9d9d9;
+  border: 1px solid var(--color-gray-300);
   border-radius: 6px;
   resize: none;
 
-  color: #333236;
+  color: var(--color-black-200);
   font-size: 14px;
   line-height: 20px;
 
@@ -433,15 +432,13 @@ export const CommentUpdateButtonGroup = styled.div`
   gap: 8px;
 `;
 
-export const CommentUpdateButton = styled.button<{ $variant?: 'primary' }>`
+export const CommentUpdateButton = styled(Button).attrs<{
+  $variant?: 'primary';
+}>(({ $variant }) => ({
+  variant: $variant === 'primary' ? 'primary' : 'secondary',
+}))<{ $variant?: 'primary' }>`
   padding: 6px 12px;
-  border: 1px solid
-    ${({ $variant }) => ($variant === 'primary' ? '#83c6e5' : '#888787')};
   border-radius: 4px;
-  background-color: ${({ $variant }) =>
-    $variant === 'primary' ? '#83c6e5' : '#888787'};
-  color: ${({ $variant }) => ($variant === 'primary' ? '#ffffff' : '#fff')};
   font-size: 12px;
   font-weight: 500;
-  cursor: pointer;
 `;

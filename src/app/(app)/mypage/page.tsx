@@ -2,11 +2,14 @@
 
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { showToast } from '@/src/utils/toast';
 import { useEffect, useRef, useState } from 'react';
 import ArrowIcon from '@/src/components/icons/icon-arrow.svg';
 import ProfileBoxIcon from '@/src/components/icons/profile-box.svg';
 import { putPassword } from '@/src/apis/auth';
 import { usersApi } from '@/src/apis/users';
+import { removeAccessToken } from '@/src/utils/authTokenStorage';
+import Input from '@/src/components/common/Input';
 import { MYPAGE_MESSAGES, PROFILE_BOX_SIZE } from './constants';
 import {
   getNameError,
@@ -235,14 +238,14 @@ export default function MyPage() {
 
       let nextProfileImageUrl = profileImageUrl;
       if (selectedProfileImage) {
-        const uploaded = await usersApi.uploadMyImage(selectedProfileImage);
+        const uploaded = await usersApi.uploadMyImage(selectedProfileImage, { _skipErrorToast: true });
         nextProfileImageUrl = uploaded.profileImageUrl;
       }
 
       const updated = await usersApi.updateMe({
         nickname: trimmedName || initialName,
         profileImageUrl: nextProfileImageUrl ?? null,
-      });
+      }, { _skipErrorToast: true });
 
       setName(updated.nickname);
       setInitialName(updated.nickname);
@@ -254,12 +257,17 @@ export default function MyPage() {
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
-      window.alert(MYPAGE_MESSAGES.profileUpdateSuccess);
+      showToast.success(MYPAGE_MESSAGES.profileUpdateSuccess);
     } catch {
       setProfileSaveErrorMessage(MYPAGE_MESSAGES.profileUpdateFailed);
     } finally {
       setIsSavingProfile(false);
     }
+  };
+
+  const handleLogout = () => {
+    removeAccessToken();
+    router.push('/');
   };
 
   const handlePasswordSubmit = async (
@@ -284,12 +292,12 @@ export default function MyPage() {
       await putPassword({
         password: currentPassword,
         newPassword,
-      });
+      }, { _skipErrorToast: true });
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
       setIsNewPasswordTouched(false);
-      window.alert(MYPAGE_MESSAGES.passwordChangeSuccess);
+      showToast.success(MYPAGE_MESSAGES.passwordChangeSuccess);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const status = error.response?.status;
@@ -298,7 +306,6 @@ export default function MyPage() {
           return;
         }
       }
-      window.alert(MYPAGE_MESSAGES.passwordChangeFailed);
     } finally {
       setIsSubmittingPassword(false);
     }
@@ -366,16 +373,16 @@ export default function MyPage() {
               <S.Spacer />
 
               <S.Label htmlFor="name">이름</S.Label>
-              <S.TextInput
+              <Input
                 id="name"
                 type="text"
                 value={name}
+                error={nameErrorMessage}
                 onChange={(event) => setName(event.target.value)}
                 placeholder="이름을 입력해주세요"
               />
             </S.ProfileFields>
 
-            <S.ErrorSpace>{nameErrorMessage || ' '}</S.ErrorSpace>
             <S.SaveButton
               type="button"
               onClick={handleProfileSave}
@@ -396,52 +403,38 @@ export default function MyPage() {
         <S.SectionTitle>비밀번호 변경</S.SectionTitle>
         <S.PasswordForm onSubmit={handlePasswordSubmit}>
           <S.Label htmlFor="currentPassword">현재 비밀번호</S.Label>
-          <S.PasswordInput
+          <Input
             id="currentPassword"
             type="password"
             value={currentPassword}
+            error={currentPasswordErrorMessage}
             onChange={(event) => {
               setCurrentPassword(event.target.value);
               setCurrentPasswordServerError('');
             }}
             placeholder="비밀번호 입력"
-            $hasError={Boolean(currentPasswordErrorMessage)}
           />
-          <S.ErrorSpace>{currentPasswordErrorMessage || ' '}</S.ErrorSpace>
 
           <S.Label htmlFor="newPassword">새 비밀번호</S.Label>
-          <S.PasswordInput
+          <Input
             id="newPassword"
             type="password"
             value={newPassword}
-            onChange={(event) => {
-              const nextValue = event.target.value;
-              setNewPassword(nextValue);
-            }}
+            error={newPasswordErrorMessage || passwordMismatchMessage}
+            onChange={(event) => setNewPassword(event.target.value)}
             onBlur={() => setIsNewPasswordTouched(true)}
             placeholder="새 비밀번호 입력"
-            $hasError={
-              Boolean(newPasswordErrorMessage) ||
-              Boolean(passwordMismatchMessage)
-            }
           />
-          <S.ErrorSpace>
-            {newPasswordErrorMessage || passwordMismatchMessage || ' '}
-          </S.ErrorSpace>
 
           <S.Label htmlFor="confirmPassword">새 비밀번호 확인</S.Label>
-          <S.PasswordInput
+          <Input
             id="confirmPassword"
             type="password"
             value={confirmPassword}
-            onChange={(event) => {
-              const nextValue = event.target.value;
-              setConfirmPassword(nextValue);
-            }}
+            error={passwordMismatchMessage}
+            onChange={(event) => setConfirmPassword(event.target.value)}
             placeholder="새 비밀번호 입력"
-            $hasError={Boolean(passwordMismatchMessage)}
           />
-          <S.ErrorSpace>{passwordMismatchMessage || ' '}</S.ErrorSpace>
 
           <S.PasswordButton
             type="submit"
@@ -459,6 +452,10 @@ export default function MyPage() {
           </S.PasswordButton>
         </S.PasswordForm>
       </S.PasswordSection>
+
+      <S.LogoutButton type="button" onClick={handleLogout}>
+        로그아웃
+      </S.LogoutButton>
     </S.Page>
   );
 }

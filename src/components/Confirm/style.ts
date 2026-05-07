@@ -16,7 +16,7 @@ export const Container = styled.div`
 export const Title = styled.h2`
   font-size: 20px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-white);
   text-align: center;
 `;
 
@@ -39,7 +39,7 @@ export const CancelButton = styled.button`
   height: 54px;
   border-radius: 12px;
   background: #6b6b7b;
-  color: #ffffff;
+  color: var(--color-white);
   font-size: 16px;
   font-weight: 600;
 `;
@@ -49,7 +49,7 @@ export const ConfirmButton = styled.button`
   height: 54px;
   border-radius: 12px;
   background: #d94f4f;
-  color: #ffffff;
+  color: var(--color-white);
   font-size: 16px;
   font-weight: 600;
 `;

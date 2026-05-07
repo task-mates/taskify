@@ -23,7 +23,9 @@ export const FtInner = styled.div`
   }
 `;
 
-export const LogoBox = styled.div``;
+export const LogoBox = styled(Link)`
+  display: block;
+`;
 
 export const InfoGroup = styled.div`
   display: flex;
@@ -45,7 +47,7 @@ export const FooterUtil = styled.div`
 export const FooterUtilLink = styled(Link)`
   font-size: 16px;
   font-weight: 500;
-  color: #404040;
+  color: var(--color-text-dark);
 `;
 
 export const SnsArea = styled.div`

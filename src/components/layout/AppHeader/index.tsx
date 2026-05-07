@@ -36,7 +36,7 @@ export default function AppHeader({
       .then((user) => {
         setUser(user);
       })
-      .catch((err) => console.error(err));
+      .catch(() => null);
   }, []);
 
   return (
@@ -54,10 +54,10 @@ export default function AppHeader({
         {isMyDashboard && '내 대시보드'}
         {isMyPage && '계정관리'}
         {isDashboardPage && (
-          <>
+          <S.TitleLink href={`/dashboard/${dashboardId}`}>
             {dashboardTitle}
             {createdByMe && <CrownIcon aria-hidden="true" />}
-          </>
+          </S.TitleLink>
         )}
       </S.Title>
 
@@ -69,14 +69,14 @@ export default function AppHeader({
               onClick={() => router.push(`/dashboard/${dashboardId}/edit`)}
             >
               <SettingIcon aria-hidden="true" />
-              관리
+              <S.ButtonLabel>관리</S.ButtonLabel>
             </S.ActionButton>
             <S.ActionButton
               type="button"
               onClick={() => setIsInviteModalOpen(true)}
             >
               <PlusIcon aria-hidden="true" />
-              초대하기
+              <S.ButtonLabel>초대하기</S.ButtonLabel>
             </S.ActionButton>
           </>
         )}

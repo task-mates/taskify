@@ -24,7 +24,7 @@ export const Title = styled.h1`
   margin-top: 16px;
   margin-bottom: 12px;
   font-size: 36px;
-  color: #333236;
+  color: var(--color-black-200);
 `;
 
 export const Description = styled.p`
@@ -38,7 +38,7 @@ export const ListSection = styled.section`
 `;
 
 export const Item = styled.article`
-  background-color: #ffffff;
+  background-color: var(--color-white);
   border: 1px solid #ebe9f4;
   border-radius: 12px;
   padding: 20px;
@@ -62,11 +62,11 @@ export const QuestionText = styled.span`
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #333236;
+  color: var(--color-black-200);
 `;
 
 export const LeftToggleIcon = styled.span`
-  color: #83c6e5;
+  color: var(--color-blue-200);
   font-size: 18px;
   line-height: 1;
 `;

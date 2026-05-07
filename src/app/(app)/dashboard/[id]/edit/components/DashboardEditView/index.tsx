@@ -12,6 +12,8 @@ import {
   updateDashboard,
   removeDashboard,
 } from '@/src/apis/dashboards';
+import { showToast } from '@/src/utils/toast';
+import { emitDashboardChanged } from '@/src/utils/dashboardListEvent';
 import { membersApi } from '@/src/apis/members';
 import {
   getDashboardInvitationList,
@@ -35,7 +37,9 @@ export default function DashboardEditView({
   const [isSaving, setIsSaving] = useState(false);
   const [myUserId, setMyUserId] = useState<number | null>(null);
   const [members, setMembers] = useState<Member[]>([]);
-  const [invitations, setInvitations] = useState<DashboardInvitationResponse[]>([]);
+  const [invitations, setInvitations] = useState<DashboardInvitationResponse[]>(
+    []
+  );
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
   useEffect(() => {
@@ -65,16 +69,19 @@ export default function DashboardEditView({
     );
   }, [dashboardId]);
 
+  const isTitleEmpty = title.trim() === '';
   const isUnchanged = title === dashboard?.title && color === dashboard?.color;
 
   const handleUpdateDashboard = async () => {
+    if (isTitleEmpty) return;
     setIsSaving(true);
     try {
       const updated = await updateDashboard(dashboardId, { title, color });
       setDashboard(updated);
-      alert('대시보드가 수정되었습니다.');
+      showToast.success('대시보드가 수정되었습니다.');
+      emitDashboardChanged();
     } catch {
-      alert('수정에 실패했습니다. 다시 시도해 주세요.');
+      showToast.error('대시보드 수정에 실패했습니다. 다시 시도해주세요.');
     } finally {
       setIsSaving(false);
     }
@@ -92,16 +99,19 @@ export default function DashboardEditView({
 
   const handleRemoveMember = async (memberId: number) => {
     await membersApi.remove(memberId);
+    showToast.success('구성원이 삭제되었습니다.');
     await reloadMembers();
   };
 
   const handleCancelInvitation = async (invitationId: number) => {
     await cancelDashboardInvitation(dashboardId, invitationId);
+    showToast.success('초대가 취소되었습니다.');
     await reloadInvitations();
   };
 
   const handleDeleteDashboard = async () => {
     await removeDashboard(dashboardId);
+    emitDashboardChanged();
     router.push('/mydashboard');
   };
 
@@ -120,6 +130,7 @@ export default function DashboardEditView({
           color={color}
           isSaving={isSaving}
           isUnchanged={isUnchanged}
+          isTitleEmpty={isTitleEmpty}
           onTitleChange={setTitle}
           onColorChange={setColor}
           onSave={handleUpdateDashboard}

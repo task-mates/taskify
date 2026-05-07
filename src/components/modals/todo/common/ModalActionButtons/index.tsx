@@ -1,4 +1,3 @@
-import Button from '../Button';
 import type { ModalActionButtonsProps } from './type';
 import * as S from './styles';
 
@@ -7,15 +6,21 @@ export default function ModalActionButtons({
   onCancel,
   cancelText = '취소',
   formId,
+  submitDisabled,
 }: ModalActionButtonsProps) {
   return (
     <S.ButtonGroup>
-      <Button type="button" variant="secondary" onClick={onCancel}>
+      <S.ActionButton type="button" variant="secondary" onClick={onCancel}>
         {cancelText}
-      </Button>
-      <Button type="submit" variant="primary" form={formId}>
+      </S.ActionButton>
+      <S.ActionButton
+        type="submit"
+        variant="primary"
+        form={formId}
+        disabled={submitDisabled}
+      >
         {submitText}
-      </Button>
+      </S.ActionButton>
     </S.ButtonGroup>
   );
 }

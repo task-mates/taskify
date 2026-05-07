@@ -3,4 +3,5 @@ export interface ModalActionButtonsProps {
   onCancel: () => void;
   cancelText?: string;
   formId?: string;
+  submitDisabled?: boolean;
 }

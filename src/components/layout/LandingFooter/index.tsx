@@ -8,7 +8,7 @@ export default function LandingFooter() {
   return (
     <S.Footer>
       <S.FtInner>
-        <S.LogoBox>
+        <S.LogoBox href="/">
           <LogoIcon />
         </S.LogoBox>
         <S.InfoGroup>

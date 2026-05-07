@@ -8,7 +8,7 @@ export const Overlay = styled.div<{ $overlayVariant: ModalVariant }>`
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--color-overlay);
   z-index: 999;
   display: flex;
   justify-content: center;

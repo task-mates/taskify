@@ -4,6 +4,9 @@ import { useState } from 'react';
 import Modal from '@/src/components/Modal';
 import CloseIcon from '@/src/components/icons/icon-close.svg';
 import { createDashboardInvitation } from '@/src/apis/dashboard-invitations';
+
+import { showToast } from '@/src/utils/toast';
+import Input from '@/src/components/common/Input';
 import * as S from './style';
 import type { DashboardInviteModalProps } from './type';
 
@@ -20,10 +23,11 @@ export default function DashboardInviteModal({
     setIsLoading(true);
     try {
       await createDashboardInvitation(dashboardId, { email: email.trim() });
+      showToast.success('초대가 완료되었습니다.');
       onInvited?.();
       onClose();
     } catch {
-      alert('초대에 실패했습니다. 다시 시도해 주세요.');
+      showToast.error('초대에 실패했습니다. 다시 시도해주세요.');
     } finally {
       setIsLoading(false);
     }
@@ -40,7 +44,7 @@ export default function DashboardInviteModal({
         </S.Header>
 
         <S.Label htmlFor="invite-email">이메일</S.Label>
-        <S.Input
+        <Input
           id="invite-email"
           type="email"
           placeholder="이메일을 입력해주세요"

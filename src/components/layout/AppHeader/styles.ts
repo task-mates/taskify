@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Link from 'next/link';
 import { DEVICE } from '@/src/styles/Breakpoints';
 
 export const Wrapper = styled.header`
@@ -35,6 +36,19 @@ export const Title = styled.h1`
   margin-right: auto;
 `;
 
+export const TitleLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: var(--2lg-18px-bold);
+  color: var(--color-gray-900);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
+`;
+
 export const RightSection = styled.div`
   display: flex;
   align-items: center;
@@ -52,6 +66,16 @@ export const ActionButton = styled.button`
   font: var(--md-14px-medium);
   color: var(--color-gray-500);
   cursor: pointer;
+
+  @media ${DEVICE.mobile} {
+    padding: 8px;
+  }
+`;
+
+export const ButtonLabel = styled.span`
+  @media ${DEVICE.mobile} {
+    display: none;
+  }
 `;
 
 export const Divider = styled.div`

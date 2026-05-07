@@ -1,14 +1,13 @@
 import styled from 'styled-components';
 
-// 컬러팔레트 머지되면 색상값 변경
-
 export const Container = styled.div`
-  padding: 28px;
+  background: var(--color-white);
+  border-radius: 16px;
+  padding: 28px 28px 0;
   max-width: 584px;
   min-width: 320px;
   width: 100%;
-  background: #f3f5f8;
-  border-radius: 16px;
+  overflow: hidden;
 `;
 
 export const Header = styled.div`
@@ -21,7 +20,7 @@ export const Header = styled.div`
 export const Title = styled.h2`
   font-size: 20px;
   font-weight: 700;
-  color: #333236;
+  color: var(--color-black-200);
 `;
 
 export const CloseButton = styled.button`
@@ -30,13 +29,17 @@ export const CloseButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
 `;
 
 export const Label = styled.label`
   display: block;
   font-size: 14px;
   font-weight: 600;
-  color: #333236;
+  color: var(--color-black-200);
   margin-bottom: 10px;
 `;
 
@@ -44,6 +47,12 @@ export const ColorSection = styled.div`
   display: flex;
   gap: 10px;
   margin-top: 24px;
+`;
+
+export const ButtonGroup = styled.div`
+  display: flex;
+  gap: 12px;
+  margin: 28px 0;
 `;
 
 export const ColorCircle = styled.button<{
@@ -60,5 +69,5 @@ export const ColorCircle = styled.button<{
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  opacity: ${({ $selected }) => ($selected ? 1 : 0.6)};
+  opacity: 1;
 `;

@@ -2,7 +2,9 @@ import styled from 'styled-components';
 import { DEVICE } from '@/src/styles/Breakpoints';
 
 export const Section = styled.section`
-  min-width: 320px;
+  max-width: 400px;
+  min-width: 400px;
+
   height: 100%;
   padding: 16px;
   border-radius: 16px;
@@ -11,7 +13,7 @@ export const Section = styled.section`
   flex-direction: column;
   gap: 12px;
 
-  overflow: auto;
+  overflow: hidden;
 
   @media ${DEVICE.mobile} {
     min-width: unset;
@@ -49,14 +51,14 @@ export const Title = styled.h2`
   margin: 0;
   font-size: 18px;
   font-weight: 700;
-  color: #333236;
+  color: var(--color-black-200);
 `;
 
 export const Count = styled.span`
   min-width: 20px;
   height: 20px;
   border-radius: 50%;
-  color: #333236;
+  color: var(--color-black-200);
   font-size: 12px;
   font-weight: 700;
   display: inline-flex;
@@ -66,7 +68,7 @@ export const Count = styled.span`
 `;
 
 export const Setting = styled.div`
-  cursor: pointer;
+  position: relative;
   margin-top: 4px;
   display: flex;
   align-items: center;
@@ -83,11 +85,69 @@ export const Setting = styled.div`
   }
 `;
 
+export const SettingButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+`;
+
+export const ActionButtonPopup = styled.div`
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  white-space: nowrap;
+  padding: 12px 10px;
+  background: var(--color-white);
+  border-radius: 12px;
+  border: 1px solid var(--color-gray-300);
+  z-index: 100;
+`;
+
+export const ActionButtonList = styled.ul``;
+
+export const ActionButtonItem = styled.li`
+  & + & {
+    margin-top: 5px;
+    padding-top: 5px;
+    position: relative;
+  }
+  & + &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 93px;
+    height: 1px;
+    background: var(--color-gray-300);
+  }
+`;
+
+export const ActionButton = styled.button<{ $variant?: 'default' | 'delete' }>`
+  padding: 10px 12px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 6px;
+  color: ${({ $variant }) =>
+    $variant === 'delete' ? 'var(--color-red)' : 'var(--color-black-200)'};
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  transition: background 0.3s;
+  width: 100%;
+
+  &:hover {
+    background: rgba(243, 245, 248, 0.5);
+  }
+`;
+
 export const CardList = styled.div<{ $isOpen: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 10px;
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
 
   @media ${DEVICE.mobile} {
@@ -119,7 +179,7 @@ export const ArrowButton = styled.button`
     }
 
     svg path {
-      fill: #a39fb2;
+      fill: var(--color-gray-400);
     }
   }
 `;
@@ -127,7 +187,7 @@ export const ArrowButton = styled.button`
 export const Empty = styled.p`
   margin: 0;
   font-size: 14px;
-  color: #6b7280;
+  color: var(--color-gray-500);
   text-align: center;
 `;
 
@@ -137,9 +197,9 @@ export const AddButton = styled.button`
   align-items: center;
   width: 100%;
   padding: 10px 20px;
-  border: 1px solid #d9d9d9;
+  border: 1px solid var(--color-gray-300);
   border-radius: 8px;
-  background-color: #ffffff;
+  background-color: var(--color-white);
   cursor: pointer;
   flex-shrink: 0;
 
@@ -153,11 +213,21 @@ export const AddButton = styled.button`
 `;
 
 export const IconContainer = styled.div`
-  background-color: #e1eaf1;
+  background-color: var(--color-brand-surface);
   padding: 5px 5px;
   border-radius: 4px;
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+`;
+
+export const DraggableWrap = styled.div<{ $isDragging: boolean }>`
+  flex-shrink: 0;
+  ${({ $isDragging }) =>
+    $isDragging &&
+    `
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    opacity: 0.95;
+  `}
 `;

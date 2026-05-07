@@ -1,4 +1,5 @@
 import instance from '@/src/apis/instance';
+import type { AxiosRequestConfig } from 'axios';
 import {
   SignUpRequest,
   UpdateMyInfoRequest,
@@ -7,8 +8,8 @@ import {
 } from '@/src/apis/users/type';
 
 export const usersApi = {
-  signUp: async (body: SignUpRequest) => {
-    const { data } = await instance.post<User>('/users', body);
+  signUp: async (body: SignUpRequest, config?: AxiosRequestConfig) => {
+    const { data } = await instance.post<User>('/users', body, config);
     return data;
   },
 
@@ -17,18 +18,19 @@ export const usersApi = {
     return data;
   },
 
-  updateMe: async (body: UpdateMyInfoRequest) => {
-    const { data } = await instance.put<User>('/users/me', body);
+  updateMe: async (body: UpdateMyInfoRequest, config?: AxiosRequestConfig) => {
+    const { data } = await instance.put<User>('/users/me', body, config);
     return data;
   },
 
-  uploadMyImage: async (image: File) => {
+  uploadMyImage: async (image: File, config?: AxiosRequestConfig) => {
     const formData = new FormData();
     formData.append('image', image);
 
     const { data } = await instance.post<UploadProfileImageResponse>(
       '/users/me/image',
-      formData
+      formData,
+      config
     );
     return data;
   },

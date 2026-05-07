@@ -5,9 +5,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ArrowRightIcon from '@/src/components/icons/icon_arrow_right.svg';
 import DashboardCreateModal from '@/src/components/modals/DashboardCreateModal';
 import { getDashboardList } from '@/src/apis/dashboards';
+import { onDashboardChanged } from '@/src/utils/dashboardListEvent';
 import type { Dashboard } from '@/src/apis/dashboards/type';
+import MyDashboardSkeleton from '@/src/components/common/Skeleton/MyDashboardSkeleton';
+import InvitedTableSkeleton from '@/src/components/common/Skeleton/InvitedTableSkeleton';
 import { getInvitationList, updateInvitation } from '@/src/apis/invitations';
 import type { Invitation } from '@/src/apis/invitations/type';
+import { showToast } from '@/src/utils/toast';
 import * as S from './styles';
 
 const dashboardLinkStyle = {
@@ -129,8 +133,7 @@ export default function MyDashboardPage() {
       }
 
       setDashboards(all);
-    } catch (e) {
-      console.error(e);
+    } catch {
       setIsDashboardsError(true);
       setDashboards([]);
     } finally {
@@ -144,6 +147,10 @@ export default function MyDashboardPage() {
     };
     const id = window.setTimeout(run, 0);
     return () => window.clearTimeout(id);
+  }, [loadAllDashboards]);
+
+  useEffect(() => {
+    return onDashboardChanged(() => void loadAllDashboards());
   }, [loadAllDashboards]);
 
   const myDashboards = useMemo(
@@ -177,8 +184,7 @@ export default function MyDashboardPage() {
         setInvitations(next);
         setInvitationCursorId(nextCursor);
         setHasMoreInvitations(Boolean(nextCursor) && next.length > 0);
-      } catch (e) {
-        console.error(e);
+      } catch {
         setIsInvitationsError(true);
         setInvitations([]);
         setInvitationCursorId(null);
@@ -208,8 +214,7 @@ export default function MyDashboardPage() {
       setInvitations((prev) => [...prev, ...next]);
       setInvitationCursorId(nextCursor);
       setHasMoreInvitations(Boolean(nextCursor) && next.length > 0);
-    } catch (e) {
-      console.error(e);
+    } catch {
       setIsInvitationsError(true);
     } finally {
       setIsInvitationsFetchingMore(false);
@@ -256,8 +261,8 @@ export default function MyDashboardPage() {
         if (inviteAccepted) {
           void loadAllDashboards();
         }
-      } catch (e) {
-        console.error(e);
+      } catch {
+        showToast.error('요청에 실패했습니다. 다시 시도해주세요.');
       } finally {
         setActingInvitationIds((prev) => {
           const next = new Set(prev);
@@ -511,10 +516,7 @@ export default function MyDashboardPage() {
 
       {isCreateModalOpen ? (
         <DashboardCreateModal
-          onClose={() => {
-            setIsCreateModalOpen(false);
-            void loadAllDashboards();
-          }}
+          onClose={() => setIsCreateModalOpen(false)}
         />
       ) : null}
     </S.Page>
