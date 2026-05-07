@@ -333,6 +333,10 @@ export const Textarea = styled.textarea`
     color: var(--color-gray-400);
   }
 
+  appearance: none;
+  -webkit-appearance: none;
+  transition: border-color 0.2s ease;
+
   &:focus {
     outline: none;
     border-color: var(--color-brand-500);
@@ -363,6 +367,13 @@ export const SelectButton = styled.button<{
   font-weight: 500;
   text-align: left;
   color: ${({ $selected }) => ($selected ? '#333236' : '#a39fb2')};
+
+  ${({ $open }) =>
+    $open &&
+    `
+    outline: none;
+      border-color: var(--color-brand-500);
+    `}
 
   &::after {
     z-index: 1;
@@ -526,6 +537,10 @@ export const TagInputArea = styled.div`
   background: var(--color-white);
 
   cursor: text;
+
+  &:focus-within {
+    border-color: var(--color-brand-500);
+  }
 
   @media ${DEVICE.mobile} {
     min-height: 48px;
