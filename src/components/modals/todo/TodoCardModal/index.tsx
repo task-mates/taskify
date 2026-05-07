@@ -89,6 +89,7 @@ export default function TodoCardModal({
       const data = await cardsApi.getById(cardId);
       setCard(data);
     } catch {
+      showToast.error('카드 정보를 불러오지 못했습니다. 다시 시도해주세요.');
     }
   }, [cardId]);
 
@@ -101,6 +102,7 @@ export default function TodoCardModal({
           showToast.success('카드가 삭제되었습니다.');
           onClose();
         } catch {
+          showToast.error('카드 삭제에 실패했습니다. 다시 시도해주세요.');
         }
       },
     });
@@ -216,6 +218,7 @@ export default function TodoCardModal({
         const user = await usersApi.getMe();
         setCurrentUser(user);
       } catch {
+        showToast.error('사용자 정보를 불러오지 못했습니다. 다시 시도해주세요.');
       }
     };
 
@@ -245,6 +248,7 @@ export default function TodoCardModal({
 
         setCursorId(data.cursorId);
       } catch {
+        showToast.error('댓글을 불러오지 못했습니다. 다시 시도해주세요.');
       } finally {
         isCommentLoadingRef.current = false;
         setIsCommentLoading(false);
@@ -316,6 +320,7 @@ export default function TodoCardModal({
       setIsTextareaExpanded(false);
       setIsTyping(false);
     } catch {
+      showToast.error('댓글 등록에 실패했습니다. 다시 시도해주세요.');
     } finally {
       isSubmittingRef.current = false;
     }
@@ -357,6 +362,7 @@ export default function TodoCardModal({
       setUpdatingCommentId(null);
       setUpdatingCommentContent('');
     } catch {
+      showToast.error('댓글 수정에 실패했습니다. 다시 시도해주세요.');
     }
   };
 
@@ -372,6 +378,7 @@ export default function TodoCardModal({
           );
           showToast.success('댓글이 삭제되었습니다.');
         } catch {
+          showToast.error('댓글 삭제에 실패했습니다. 다시 시도해주세요.');
         }
       },
     });

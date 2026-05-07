@@ -27,6 +27,7 @@ export default function DashboardCreateModal({
       onCreated?.();
       onClose();
     } catch {
+      showToast.error('대시보드 생성에 실패했습니다. 다시 시도해주세요.');
     } finally {
       setIsLoading(false);
     }

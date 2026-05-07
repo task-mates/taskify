@@ -8,6 +8,7 @@ import { getDashboardList } from '@/src/apis/dashboards';
 import type { Dashboard } from '@/src/apis/dashboards/type';
 import { getInvitationList, updateInvitation } from '@/src/apis/invitations';
 import type { Invitation } from '@/src/apis/invitations/type';
+import { showToast } from '@/src/utils/toast';
 import * as S from './styles';
 
 const dashboardLinkStyle = {
@@ -199,6 +200,7 @@ export default function MyDashboardPage() {
           void loadAllDashboards();
         }
       } catch {
+        showToast.error('요청에 실패했습니다. 다시 시도해주세요.');
       } finally {
         setActingInvitationIds((prev) => {
           const next = new Set(prev);
