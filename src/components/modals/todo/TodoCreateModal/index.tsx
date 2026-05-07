@@ -111,10 +111,8 @@ export default function TodoCreateModal({
 
       await cardsApi.create(requestBody);
 
-      onClose(); //추후 토스트로 대체하면 좋을 것 같음
-    } catch (error) {
-      console.error('카드 생성 실패:', error);
-      alert('카드 생성에 실패했습니다.');
+      onClose();
+    } catch {
     }
   };
 
@@ -160,8 +158,7 @@ export default function TodoCreateModal({
         const data = await membersApi.getList(dashboardId);
 
         setMembers(data.members);
-      } catch (error) {
-        console.error('멤버 목록 조회 실패:', error);
+      } catch {
       }
     };
     fetchMembers();

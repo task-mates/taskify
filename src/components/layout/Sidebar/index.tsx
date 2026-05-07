@@ -54,8 +54,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       if (!nextCursorId) {
         setIsError(false);
       }
-    } catch (e) {
-      console.error(e);
+    } catch {
       if (!nextCursorId) {
         setIsError(true);
         setDashboards([]);

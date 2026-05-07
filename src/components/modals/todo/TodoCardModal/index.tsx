@@ -17,6 +17,7 @@ import TodoBaseModal from '../common/TodoBaseModal';
 import ModalActionButtons from '../common/ModalActionButtons';
 import TodoUpdateForm, { TODO_UPDATE_FORM_ID } from '../TodoUpdateForm';
 import Confirm from '@/src/components/Confirm';
+import { showToast } from '@/src/utils/toast';
 import * as S from './styles';
 import SendIcon from '@/src/components/icons/icon-send.svg';
 import MeatballIcon from '@/src/components/icons/icon-meatball.svg';
@@ -87,8 +88,7 @@ export default function TodoCardModal({
     try {
       const data = await cardsApi.getById(cardId);
       setCard(data);
-    } catch (e) {
-      console.error(e);
+    } catch {
     }
   }, [cardId]);
 
@@ -99,9 +99,7 @@ export default function TodoCardModal({
         try {
           await cardsApi.remove(cardId);
           onClose();
-        } catch (e) {
-          console.error(e);
-          alert('카드 삭제에 실패했습니다.');
+        } catch {
         }
       },
     });
@@ -216,8 +214,7 @@ export default function TodoCardModal({
       try {
         const user = await usersApi.getMe();
         setCurrentUser(user);
-      } catch (e) {
-        console.error(e);
+      } catch {
       }
     };
 
@@ -246,8 +243,7 @@ export default function TodoCardModal({
         );
 
         setCursorId(data.cursorId);
-      } catch (e) {
-        console.error(e);
+      } catch {
       } finally {
         isCommentLoadingRef.current = false;
         setIsCommentLoading(false);
@@ -317,8 +313,7 @@ export default function TodoCardModal({
       textarea.style.overflowY = 'hidden';
       setIsTextareaExpanded(false);
       setIsTyping(false);
-    } catch (e) {
-      console.error(e);
+    } catch {
     } finally {
       isSubmittingRef.current = false;
     }
@@ -341,7 +336,7 @@ export default function TodoCardModal({
     const content = updatingCommentContent.trim();
 
     if (!content) {
-      alert('댓글 내용을 입력해주세요.');
+      showToast.error('댓글 내용을 입력해주세요.');
       return;
     }
 
@@ -358,9 +353,7 @@ export default function TodoCardModal({
 
       setUpdatingCommentId(null);
       setUpdatingCommentContent('');
-    } catch (e) {
-      console.error(e);
-      alert('댓글 수정에 실패했습니다.');
+    } catch {
     }
   };
 
@@ -374,9 +367,7 @@ export default function TodoCardModal({
           setComments((prevComments) =>
             prevComments.filter((comment) => comment.id !== commentId)
           );
-        } catch (e) {
-          console.error(e);
-          alert('댓글 삭제에 실패했습니다.');
+        } catch {
         }
       },
     });

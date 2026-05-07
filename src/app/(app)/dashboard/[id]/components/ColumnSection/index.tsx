@@ -52,7 +52,6 @@ export default function ColumnSection({
       await columnsApi.remove(columnId);
       onUpdated?.();
     } catch {
-      alert('칼럼 삭제에 실패했습니다. 다시 시도해 주세요.');
     }
   };
 

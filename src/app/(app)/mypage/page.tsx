@@ -2,6 +2,7 @@
 
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { showToast } from '@/src/utils/toast';
 import { useEffect, useRef, useState } from 'react';
 import ArrowIcon from '@/src/components/icons/icon-arrow.svg';
 import ProfileBoxIcon from '@/src/components/icons/profile-box.svg';
@@ -254,7 +255,7 @@ export default function MyPage() {
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
-      window.alert(MYPAGE_MESSAGES.profileUpdateSuccess);
+      showToast.success(MYPAGE_MESSAGES.profileUpdateSuccess);
     } catch {
       setProfileSaveErrorMessage(MYPAGE_MESSAGES.profileUpdateFailed);
     } finally {
@@ -289,7 +290,7 @@ export default function MyPage() {
       setNewPassword('');
       setConfirmPassword('');
       setIsNewPasswordTouched(false);
-      window.alert(MYPAGE_MESSAGES.passwordChangeSuccess);
+      showToast.success(MYPAGE_MESSAGES.passwordChangeSuccess);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const status = error.response?.status;
@@ -298,7 +299,6 @@ export default function MyPage() {
           return;
         }
       }
-      window.alert(MYPAGE_MESSAGES.passwordChangeFailed);
     } finally {
       setIsSubmittingPassword(false);
     }

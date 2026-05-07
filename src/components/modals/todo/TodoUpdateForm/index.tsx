@@ -1,6 +1,5 @@
 'use client';
 
-import axios from 'axios';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import dayjs from 'dayjs';
 import DatePicker, { registerLocale } from 'react-datepicker';
@@ -85,8 +84,7 @@ export default function TodoUpdateForm({
           : null;
 
         setSelectedAssignee(matchedMember ?? null);
-      } catch (error) {
-        console.error('수정 폼 데이터 조회 실패:', error);
+      } catch {
       }
     };
 
@@ -121,13 +119,7 @@ export default function TodoUpdateForm({
       await cardsApi.update(cardId, requestBody);
 
       onSuccess();
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error('서버 에러 응답:', error.response?.data);
-        console.error('상태 코드:', error.response?.status);
-      }
-
-      alert('카드 수정에 실패했습니다.');
+    } catch {
     }
   };
 
