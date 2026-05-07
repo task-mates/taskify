@@ -181,7 +181,6 @@ export const TaskInfoNameBadge = styled.span<{
   $backgroundColor: string;
 }>`
   position: relative;
-  overflow: hidden;
   flex-shrink: 0;
   width: 30px;
   height: 30px;
@@ -242,7 +241,6 @@ export const CommentBadge = styled.span<{
 }>`
   flex-shrink: 0;
   position: relative;
-  overflow: hidden;
   width: 30px;
   height: 30px;
   font-size: 13px;
