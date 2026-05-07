@@ -6,7 +6,10 @@ import toast from 'react-hot-toast';
 import ArrowRightIcon from '@/src/components/icons/icon_arrow_right.svg';
 import DashboardCreateModal from '@/src/components/modals/DashboardCreateModal';
 import { getDashboardList } from '@/src/apis/dashboards';
-import { onDashboardChanged } from '@/src/utils/dashboardListEvent';
+import {
+  emitDashboardChanged,
+  onDashboardChanged,
+} from '@/src/utils/dashboardListEvent';
 import type { Dashboard } from '@/src/apis/dashboards/type';
 import MyDashboardSkeleton from '@/src/components/common/Skeleton/MyDashboardSkeleton';
 import InvitedTableSkeleton from '@/src/components/common/Skeleton/InvitedTableSkeleton';
@@ -258,9 +261,9 @@ export default function MyDashboardPage() {
           inviteAccepted ? '초대를 수락했어요.' : '초대를 거절했어요.'
         );
 
-        // 수락 시 "내 대시보드" 목록도 업데이트
+        // 수락 시 "내 대시보드" + 사이드바 목록도 업데이트
         if (inviteAccepted) {
-          void loadAllDashboards();
+          emitDashboardChanged();
         }
       } catch {
         showToast.error('요청에 실패했습니다. 다시 시도해주세요.');
@@ -516,9 +519,7 @@ export default function MyDashboardPage() {
       )}
 
       {isCreateModalOpen ? (
-        <DashboardCreateModal
-          onClose={() => setIsCreateModalOpen(false)}
-        />
+        <DashboardCreateModal onClose={() => setIsCreateModalOpen(false)} />
       ) : null}
     </S.Page>
   );
