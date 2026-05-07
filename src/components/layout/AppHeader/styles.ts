@@ -91,17 +91,6 @@ export const ProfileButton = styled.button`
   cursor: pointer;
 `;
 
-export const ProfileFallback = styled.div`
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  color: var(--color-white);
-  font: var(--lg-14px-semibold);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
 export const ProfileName = styled.span`
   font: var(--lg-16px-medium);
   color: var(--color-black-200);
