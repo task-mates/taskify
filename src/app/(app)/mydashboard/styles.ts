@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import NoDashboardIcon from '@/src/components/icons/icon-no-dashboard.svg';
 import PlusIcon from '@/src/components/icons/icon-plus.svg';
 import SearchIcon from '@/src/components/icons/icon-search.svg';
@@ -8,14 +8,17 @@ export const Page = styled.main`
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
-  min-height: 100vh;
+  height: calc(100vh - 60px);
+  height: calc(100dvh - 60px);
+  min-height: 0;
   padding: 24px 32px;
   overflow-y: auto;
   overscroll-behavior: contain;
   background-color: var(--color-gray-100);
 
   @media ${DEVICE.mobile} {
-    min-height: calc(100vh - 56px);
+    height: calc(100vh - 60px);
+    height: calc(100dvh - 60px);
     padding: 24px 16px;
   }
 `;
@@ -46,6 +49,47 @@ export const SectionHeading = styled.h2`
 
   @media ${DEVICE.mobile} {
     font-size: 18px;
+  }
+`;
+
+export const MyDashboardsHeadingRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+`;
+
+export const MyDashboardsHeading = styled(SectionHeading)`
+  margin: 0;
+`;
+
+export const DesktopCarouselControls = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  @media ${DEVICE.tablet} {
+    display: none;
+  }
+`;
+
+export const DesktopCarouselButton = styled.button`
+  box-sizing: border-box;
+  min-width: 44px;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--color-gray-200, #ececee);
+  background: var(--color-white);
+  cursor: pointer;
+  font-family: var(--font-main);
+  font-size: 14px;
+  color: var(--color-gray-800, #49474f);
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
   }
 `;
 
@@ -95,6 +139,55 @@ export const MyDashboardCard = styled.li`
   &:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   }
+`;
+
+const skeletonShimmer = keyframes`
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+`;
+
+const skeletonBase = css`
+  background: linear-gradient(
+    90deg,
+    #f1f3f5 25%,
+    #e6e9ed 37%,
+    #f1f3f5 63%
+  );
+  background-size: 400% 100%;
+  animation: ${skeletonShimmer} 1.5s ease-in-out infinite;
+`;
+
+export const MyDashboardSkeletonCard = styled(MyDashboardCard)`
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+`;
+
+export const MyDashboardSkeletonDot = styled.span`
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  ${skeletonBase};
+`;
+
+export const MyDashboardSkeletonTitle = styled.span`
+  height: 16px;
+  width: 52%;
+  border-radius: 8px;
+  ${skeletonBase};
+`;
+
+export const MyDashboardSkeletonArrow = styled.span`
+  margin-left: auto;
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  ${skeletonBase};
 `;
 
 export const PaginationRow = styled.div`
@@ -148,7 +241,7 @@ export const InvitedPanel = styled.div<{ $empty?: boolean }>`
   box-sizing: border-box;
   width: 100%;
   max-width: 1480px;
-  height: 600px;
+  height: 500px;
   overflow-x: hidden;
   overflow-y: ${({ $empty }) => ($empty ? 'hidden' : 'auto')};
   background-color: var(--color-white);
@@ -259,9 +352,17 @@ export const InvitedTable = styled.div`
   min-width: 0;
 `;
 
+export const InvitedTableScroller = styled.div`
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+`;
+
 export const InvitedTableHeader = styled.div`
   display: grid;
   grid-template-columns: 1fr 160px 180px;
+  min-width: 620px;
   gap: 12px;
   padding: 10px 8px;
   font-size: 13px;
@@ -283,6 +384,7 @@ export const InvitedTableHeader = styled.div`
 export const InvitedTableRow = styled.div`
   display: grid;
   grid-template-columns: 1fr 160px 180px;
+  min-width: 620px;
   gap: 12px;
   align-items: center;
   padding: 12px 8px;
@@ -291,6 +393,45 @@ export const InvitedTableRow = styled.div`
   @media ${DEVICE.mobile} {
     grid-template-columns: 1fr 120px 160px;
   }
+`;
+
+export const InvitedSkeletonRows = styled.div`
+  min-width: 620px;
+`;
+
+export const InvitedSkeletonRow = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 160px 180px;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 8px;
+  border-bottom: 1px solid var(--color-gray-200, #ececee);
+
+  @media ${DEVICE.mobile} {
+    grid-template-columns: 1fr 120px 160px;
+  }
+`;
+
+export const InvitedSkeletonCell = styled.span<{ $width?: string }>`
+  display: inline-block;
+  height: 14px;
+  width: ${({ $width }) => $width ?? '100%'};
+  border-radius: 8px;
+  ${skeletonBase};
+`;
+
+export const InvitedSkeletonActions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+`;
+
+export const InvitedSkeletonAction = styled.span`
+  display: inline-block;
+  height: 30px;
+  width: 52px;
+  border-radius: 999px;
+  ${skeletonBase};
 `;
 
 export const InvitedTitle = styled.span`
