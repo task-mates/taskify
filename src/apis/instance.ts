@@ -46,6 +46,10 @@ instance.interceptors.request.use((config) => {
 instance.interceptors.response.use(
   (response) => response,
   (error: unknown) => {
+    if (axios.isCancel(error)) {
+      return Promise.reject(error);
+    }
+
     if (!axios.isAxiosError(error)) {
       showToast.error(API_ERROR_MESSAGES.unknown);
       return Promise.reject(error);

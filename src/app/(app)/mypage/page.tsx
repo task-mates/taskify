@@ -237,14 +237,14 @@ export default function MyPage() {
 
       let nextProfileImageUrl = profileImageUrl;
       if (selectedProfileImage) {
-        const uploaded = await usersApi.uploadMyImage(selectedProfileImage);
+        const uploaded = await usersApi.uploadMyImage(selectedProfileImage, { _skipErrorToast: true });
         nextProfileImageUrl = uploaded.profileImageUrl;
       }
 
       const updated = await usersApi.updateMe({
         nickname: trimmedName || initialName,
         profileImageUrl: nextProfileImageUrl ?? null,
-      });
+      }, { _skipErrorToast: true });
 
       setName(updated.nickname);
       setInitialName(updated.nickname);
