@@ -105,7 +105,7 @@ const GlobalStyle = createGlobalStyle`
     --color-red: #CA372B;
 
     --color-blue-100: #1458BC;
-    --color-blue-200: #76A5EA;
+    --color-blue-200: #83C6E5;
 
     --color-brand-surface: #E1EAF1;
 
