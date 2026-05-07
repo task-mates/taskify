@@ -31,13 +31,16 @@ export const TagList = styled.div`
   gap: 8px;
 `;
 
-export const Tag = styled.span`
+export const Tag = styled.span<{
+  $backgroundColor: string;
+  $color: string;
+}>`
   display: inline-flex;
   align-items: center;
   padding: 4px 8px;
   border-radius: 8px;
-  background: #2563eb;
-  color: #fff;
+  background: ${({ $backgroundColor }) => $backgroundColor};
+  color: ${({ $color }) => $color};
   font-size: 12px;
   font-weight: 500;
 `;
