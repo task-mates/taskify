@@ -77,8 +77,7 @@ export default function MyDashboardPage() {
       }
 
       setDashboards(all);
-    } catch (e) {
-      console.error(e);
+    } catch {
       setIsDashboardsError(true);
       setDashboards([]);
     } finally {
@@ -125,8 +124,7 @@ export default function MyDashboardPage() {
         setInvitations(next);
         setInvitationCursorId(nextCursor);
         setHasMoreInvitations(Boolean(nextCursor) && next.length > 0);
-      } catch (e) {
-        console.error(e);
+      } catch {
         setIsInvitationsError(true);
         setInvitations([]);
         setInvitationCursorId(null);
@@ -156,8 +154,7 @@ export default function MyDashboardPage() {
       setInvitations((prev) => [...prev, ...next]);
       setInvitationCursorId(nextCursor);
       setHasMoreInvitations(Boolean(nextCursor) && next.length > 0);
-    } catch (e) {
-      console.error(e);
+    } catch {
       setIsInvitationsError(true);
     } finally {
       setIsInvitationsFetchingMore(false);
@@ -201,8 +198,7 @@ export default function MyDashboardPage() {
         if (inviteAccepted) {
           void loadAllDashboards();
         }
-      } catch (e) {
-        console.error(e);
+      } catch {
       } finally {
         setActingInvitationIds((prev) => {
           const next = new Set(prev);

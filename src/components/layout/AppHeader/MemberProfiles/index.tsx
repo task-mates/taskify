@@ -27,7 +27,7 @@ export default function MemberProfiles({ dashboardId }: MemberProfilesProps) {
     membersApi
       .getList(dashboardId)
       .then(({ members }) => setMembers(members))
-      .catch((err) => console.error(err));
+      .catch(() => null);
   }, [dashboardId]);
 
   useEffect(() => {

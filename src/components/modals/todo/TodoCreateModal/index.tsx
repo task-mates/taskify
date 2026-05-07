@@ -18,6 +18,7 @@ import UploadImage from '@/src/components/icons/icon-uploadimg.svg';
 import DeleteIcon from '@/src/components/icons/icon-delete.svg';
 import { getTagColorByName, TAG_PREVIEW_COLOR } from '@/src/utils/tagColor';
 import { getProfileColorByNickname } from '@/src/utils/profileColor';
+import { showToast } from '@/src/utils/toast';
 
 registerLocale('ko', ko);
 
@@ -83,41 +84,31 @@ export default function TodoCreateModal({
 
     let imageUrl: string | undefined;
 
-    try {
-      if (selectedImageFile) {
-        const uploadedImage = await columnsApi.uploadCardImage(
-          columnId,
-          selectedImageFile
-        );
-
+    if (selectedImageFile) {
+      try {
+        const uploadedImage = await columnsApi.uploadCardImage(columnId, selectedImageFile);
         imageUrl = uploadedImage.imageUrl;
+      } catch {
+        return;
       }
+    }
 
-      const requestBody = {
+    try {
+      await cardsApi.create({
         dashboardId,
         columnId,
         title,
         description,
         tags: tags.map((tag) => tag.name),
-        ...(dueDate && {
-          dueDate: dayjs(dueDate).format('YYYY-MM-DD HH:mm'),
-        }),
-        ...(selectedAssignee && {
-          assigneeUserId: selectedAssignee.userId,
-        }),
-        ...(imageUrl && {
-          imageUrl,
-        }),
-      };
+        ...(dueDate && { dueDate: dayjs(dueDate).format('YYYY-MM-DD HH:mm') }),
+        ...(selectedAssignee && { assigneeUserId: selectedAssignee.userId }),
+        ...(imageUrl && { imageUrl }),
+      });
 
-      await cardsApi.create(requestBody);
-
+      showToast.success('카드가 생성되었습니다.');
       onCreated?.();
-
-      onClose(); //추후 토스트로 대체하면 좋을 것 같음
-    } catch (error) {
-      console.error('카드 생성 실패:', error);
-      alert('카드 생성에 실패했습니다.');
+      onClose();
+    } catch {
     }
   };
 
@@ -163,8 +154,7 @@ export default function TodoCreateModal({
         const data = await membersApi.getList(dashboardId);
 
         setMembers(data.members);
-      } catch (error) {
-        console.error('멤버 목록 조회 실패:', error);
+      } catch {
       }
     };
     fetchMembers();

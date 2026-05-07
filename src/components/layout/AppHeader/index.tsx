@@ -36,7 +36,7 @@ export default function AppHeader({
       .then((user) => {
         setUser(user);
       })
-      .catch((err) => console.error(err));
+      .catch(() => null);
   }, []);
 
   return (

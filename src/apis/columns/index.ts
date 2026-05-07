@@ -1,4 +1,5 @@
 import instance from '@/src/apis/instance';
+import type { AxiosRequestConfig } from 'axios';
 import {
   CreateColumnRequest,
   UpdateColumnRequest,
@@ -8,12 +9,12 @@ import {
 } from '@/src/apis/columns/type';
 
 export const columnsApi = {
-  create: async (body: CreateColumnRequest) => {
-    const { data } = await instance.post<Column>('/columns', body);
+  create: async (body: CreateColumnRequest, config?: AxiosRequestConfig) => {
+    const { data } = await instance.post<Column>('/columns', body, config);
     return data;
   },
-  update: async (columnId: number, body: UpdateColumnRequest) => {
-    const { data } = await instance.put<Column>(`/columns/${columnId}`, body);
+  update: async (columnId: number, body: UpdateColumnRequest, config?: AxiosRequestConfig) => {
+    const { data } = await instance.put<Column>(`/columns/${columnId}`, body, config);
     return data;
   },
   uploadCardImage: async (columnId: number, image: File) => {

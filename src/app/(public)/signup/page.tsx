@@ -90,9 +90,7 @@ export default function SignupPage() {
             value={email}
             onChange={(e) => {
               updateField('email', e.target.value);
-              if (hasEmailDuplicateError) {
-                setHasEmailDuplicateError(false);
-              }
+              if (hasEmailDuplicateError) setHasEmailDuplicateError(false);
             }}
             onBlur={() => touchField('email')}
             placeholder="이메일을 입력해주세요"

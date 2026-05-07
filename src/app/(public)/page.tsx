@@ -29,8 +29,7 @@ export default function Home() {
         if (firstDashboardId) {
           router.replace(`/dashboard/${firstDashboardId}`);
         }
-      } catch (error) {
-        console.error('첫 번째 대시보드 조회 실패:', error);
+      } catch {
       }
     };
 

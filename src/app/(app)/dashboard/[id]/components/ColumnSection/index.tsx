@@ -8,6 +8,7 @@ import Confirm from '@/src/components/Confirm';
 import ColumnEditModal from '@/src/components/modals/ColumnEditModal';
 import TodoCreateModal from '@/src/components/modals/todo/TodoCreateModal';
 import { columnsApi } from '@/src/apis/columns';
+import { showToast } from '@/src/utils/toast';
 import type { Card as CardInfo } from '@/src/apis/cards/type';
 import PlusIcon from '@/src/components/icons/icon-plus.svg';
 import ColumnSettingIcon from '@/src/components/icons/icon-column-setting.svg';
@@ -54,9 +55,9 @@ export default function ColumnSection({
   const handleDelete = async () => {
     try {
       await columnsApi.remove(columnId);
+      showToast.success('칼럼이 삭제되었습니다.');
       onUpdated?.();
     } catch {
-      alert('칼럼 삭제에 실패했습니다. 다시 시도해 주세요.');
     }
   };
 

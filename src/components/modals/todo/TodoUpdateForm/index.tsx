@@ -1,6 +1,5 @@
 'use client';
 
-import axios from 'axios';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import dayjs from 'dayjs';
 import DatePicker, { registerLocale } from 'react-datepicker';
@@ -13,6 +12,7 @@ import type { Member } from '@/src/apis/members/type';
 import type { Tag } from '@/src/types/tag';
 import { getTagColorByName, TAG_PREVIEW_COLOR } from '@/src/utils/tagColor';
 import { getProfileColorByNickname } from '@/src/utils/profileColor';
+import { showToast } from '@/src/utils/toast';
 import * as S from '../TodoUpdateModal/styles';
 import UploadImage from '@/src/components/icons/icon-uploadimg.svg';
 import DeleteIcon from '@/src/components/icons/icon-delete.svg';
@@ -85,8 +85,7 @@ export default function TodoUpdateForm({
           : null;
 
         setSelectedAssignee(matchedMember ?? null);
-      } catch (error) {
-        console.error('수정 폼 데이터 조회 실패:', error);
+      } catch {
       }
     };
 
@@ -98,17 +97,17 @@ export default function TodoUpdateForm({
 
     let imageUrl: string | null = previewImageUrl;
 
-    try {
-      if (selectedImageFile) {
-        const uploadedImage = await columnsApi.uploadCardImage(
-          columnId,
-          selectedImageFile
-        );
-
+    if (selectedImageFile) {
+      try {
+        const uploadedImage = await columnsApi.uploadCardImage(columnId, selectedImageFile);
         imageUrl = uploadedImage.imageUrl;
+      } catch {
+        return;
       }
+    }
 
-      const requestBody = {
+    try {
+      await cardsApi.update(cardId, {
         columnId,
         title,
         description,
@@ -116,18 +115,11 @@ export default function TodoUpdateForm({
         dueDate: dueDate ? dayjs(dueDate).format('YYYY-MM-DD HH:mm') : null,
         assigneeUserId: selectedAssignee ? selectedAssignee.userId : null,
         imageUrl,
-      };
+      });
 
-      await cardsApi.update(cardId, requestBody);
-
+      showToast.success('카드가 수정되었습니다.');
       onSuccess();
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error('서버 에러 응답:', error.response?.data);
-        console.error('상태 코드:', error.response?.status);
-      }
-
-      alert('카드 수정에 실패했습니다.');
+    } catch {
     }
   };
 

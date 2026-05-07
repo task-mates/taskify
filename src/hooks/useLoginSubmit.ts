@@ -33,7 +33,7 @@ export function useLoginSubmit() {
       setIsLoading(true);
       setCommonError(undefined);
 
-      const data = await postLogin({ email, password });
+      const data = await postLogin({ email, password }, { _skipErrorToast: true });
       setAccessToken(data.accessToken);
       router.replace('/mydashboard');
     } catch (error: unknown) {

@@ -2,11 +2,13 @@
 
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { showToast } from '@/src/utils/toast';
 import { useEffect, useRef, useState } from 'react';
 import ArrowIcon from '@/src/components/icons/icon-arrow.svg';
 import ProfileBoxIcon from '@/src/components/icons/profile-box.svg';
 import { putPassword } from '@/src/apis/auth';
 import { usersApi } from '@/src/apis/users';
+import Input from '@/src/components/common/Input';
 import { MYPAGE_MESSAGES, PROFILE_BOX_SIZE } from './constants';
 import {
   getNameError,
@@ -15,7 +17,6 @@ import {
   hasProfileChanges,
   isPasswordChangeClientValid,
 } from './utils';
-import Input from '@/src/components/common/Input';
 import * as S from './styles';
 
 const useMyPageProfileState = () => {
@@ -236,14 +237,14 @@ export default function MyPage() {
 
       let nextProfileImageUrl = profileImageUrl;
       if (selectedProfileImage) {
-        const uploaded = await usersApi.uploadMyImage(selectedProfileImage);
+        const uploaded = await usersApi.uploadMyImage(selectedProfileImage, { _skipErrorToast: true });
         nextProfileImageUrl = uploaded.profileImageUrl;
       }
 
       const updated = await usersApi.updateMe({
         nickname: trimmedName || initialName,
         profileImageUrl: nextProfileImageUrl ?? null,
-      });
+      }, { _skipErrorToast: true });
 
       setName(updated.nickname);
       setInitialName(updated.nickname);
@@ -255,7 +256,7 @@ export default function MyPage() {
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
-      window.alert(MYPAGE_MESSAGES.profileUpdateSuccess);
+      showToast.success(MYPAGE_MESSAGES.profileUpdateSuccess);
     } catch {
       setProfileSaveErrorMessage(MYPAGE_MESSAGES.profileUpdateFailed);
     } finally {
@@ -285,12 +286,12 @@ export default function MyPage() {
       await putPassword({
         password: currentPassword,
         newPassword,
-      });
+      }, { _skipErrorToast: true });
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
       setIsNewPasswordTouched(false);
-      window.alert(MYPAGE_MESSAGES.passwordChangeSuccess);
+      showToast.success(MYPAGE_MESSAGES.passwordChangeSuccess);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const status = error.response?.status;
@@ -299,7 +300,6 @@ export default function MyPage() {
           return;
         }
       }
-      window.alert(MYPAGE_MESSAGES.passwordChangeFailed);
     } finally {
       setIsSubmittingPassword(false);
     }
@@ -371,11 +371,12 @@ export default function MyPage() {
                 id="name"
                 type="text"
                 value={name}
+                error={nameErrorMessage}
                 onChange={(event) => setName(event.target.value)}
                 placeholder="이름을 입력해주세요"
-                error={nameErrorMessage}
               />
             </S.ProfileFields>
+
             <S.SaveButton
               type="button"
               onClick={handleProfileSave}
@@ -400,12 +401,12 @@ export default function MyPage() {
             id="currentPassword"
             type="password"
             value={currentPassword}
+            error={currentPasswordErrorMessage}
             onChange={(event) => {
               setCurrentPassword(event.target.value);
               setCurrentPasswordServerError('');
             }}
             placeholder="비밀번호 입력"
-            error={currentPasswordErrorMessage}
           />
 
           <S.Label htmlFor="newPassword">새 비밀번호</S.Label>
@@ -413,13 +414,10 @@ export default function MyPage() {
             id="newPassword"
             type="password"
             value={newPassword}
-            onChange={(event) => {
-              const nextValue = event.target.value;
-              setNewPassword(nextValue);
-            }}
+            error={newPasswordErrorMessage || passwordMismatchMessage}
+            onChange={(event) => setNewPassword(event.target.value)}
             onBlur={() => setIsNewPasswordTouched(true)}
             placeholder="새 비밀번호 입력"
-            error={newPasswordErrorMessage || passwordMismatchMessage}
           />
 
           <S.Label htmlFor="confirmPassword">새 비밀번호 확인</S.Label>
@@ -427,12 +425,9 @@ export default function MyPage() {
             id="confirmPassword"
             type="password"
             value={confirmPassword}
-            onChange={(event) => {
-              const nextValue = event.target.value;
-              setConfirmPassword(nextValue);
-            }}
-            placeholder="새 비밀번호 입력"
             error={passwordMismatchMessage}
+            onChange={(event) => setConfirmPassword(event.target.value)}
+            placeholder="새 비밀번호 입력"
           />
 
           <S.PasswordButton

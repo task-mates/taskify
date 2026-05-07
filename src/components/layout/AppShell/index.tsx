@@ -35,8 +35,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       try {
         const { dashboards } = await getDashboardList({ size: 20 });
         setDashboards(dashboards);
-      } catch (e) {
-        console.error(e);
+      } catch {
         setIsError(true);
         setDashboards([]);
       } finally {

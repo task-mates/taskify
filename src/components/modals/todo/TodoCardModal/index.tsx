@@ -16,6 +16,8 @@ import type { TodoCardModalProps } from './type';
 import TodoBaseModal from '../common/TodoBaseModal';
 import ModalActionButtons from '../common/ModalActionButtons';
 import TodoUpdateForm, { TODO_UPDATE_FORM_ID } from '../TodoUpdateForm';
+import Confirm from '@/src/components/Confirm';
+import { showToast } from '@/src/utils/toast';
 import * as S from './styles';
 import SendIcon from '@/src/components/icons/icon-send.svg';
 import MeatballIcon from '@/src/components/icons/icon-meatball.svg';
@@ -69,6 +71,10 @@ export default function TodoCardModal({
   const currentUserImage = currentUser?.profileImageUrl;
 
   const [modalMode, setModalMode] = useState<'detail' | 'update'>('detail');
+  const [confirmConfig, setConfirmConfig] = useState<{
+    title: string;
+    onConfirm: () => void;
+  } | null>(null);
 
   const assigneeBgColor = card?.assignee
     ? getProfileColorByNickname(card.assignee.nickname)
@@ -82,23 +88,22 @@ export default function TodoCardModal({
     try {
       const data = await cardsApi.getById(cardId);
       setCard(data);
-    } catch (e) {
-      console.error(e);
+    } catch {
     }
   }, [cardId]);
 
-  const handleDeleteCard = async () => {
-    const isConfirmed = window.confirm('카드를 삭제하시겠습니까?');
-
-    if (!isConfirmed) return;
-
-    try {
-      await cardsApi.remove(cardId);
-      onClose();
-    } catch (e) {
-      console.error(e);
-      alert('카드 삭제에 실패했습니다.');
-    }
+  const handleDeleteCard = () => {
+    setConfirmConfig({
+      title: '카드를 삭제하시겠습니까?',
+      onConfirm: async () => {
+        try {
+          await cardsApi.remove(cardId);
+          showToast.success('카드가 삭제되었습니다.');
+          onClose();
+        } catch {
+        }
+      },
+    });
   };
 
   const tags = (card?.tags ?? []).filter((tag) => tag.trim());
@@ -210,8 +215,7 @@ export default function TodoCardModal({
       try {
         const user = await usersApi.getMe();
         setCurrentUser(user);
-      } catch (e) {
-        console.error(e);
+      } catch {
       }
     };
 
@@ -240,8 +244,7 @@ export default function TodoCardModal({
         );
 
         setCursorId(data.cursorId);
-      } catch (e) {
-        console.error(e);
+      } catch {
       } finally {
         isCommentLoadingRef.current = false;
         setIsCommentLoading(false);
@@ -305,14 +308,14 @@ export default function TodoCardModal({
       });
 
       setComments((prevComments) => [newComment, ...prevComments]);
+      showToast.success('댓글이 등록되었습니다.');
 
       textarea.value = '';
       textarea.style.height = `${COMMENT_TEXTAREA_MIN_HEIGHT}px`;
       textarea.style.overflowY = 'hidden';
       setIsTextareaExpanded(false);
       setIsTyping(false);
-    } catch (e) {
-      console.error(e);
+    } catch {
     } finally {
       isSubmittingRef.current = false;
     }
@@ -335,7 +338,7 @@ export default function TodoCardModal({
     const content = updatingCommentContent.trim();
 
     if (!content) {
-      alert('댓글 내용을 입력해주세요.');
+      showToast.error('댓글 내용을 입력해주세요.');
       return;
     }
 
@@ -350,30 +353,28 @@ export default function TodoCardModal({
         )
       );
 
+      showToast.success('댓글이 수정되었습니다.');
       setUpdatingCommentId(null);
       setUpdatingCommentContent('');
-    } catch (e) {
-      console.error(e);
-      alert('댓글 수정에 실패했습니다.');
+    } catch {
     }
   };
 
   // 댓글 삭제
-  const handleDeleteComment = async (commentId: number) => {
-    const isConfirmed = window.confirm('댓글을 삭제하시겠습니까?');
-
-    if (!isConfirmed) return;
-
-    try {
-      await removeComment(commentId);
-
-      setComments((prevComments) =>
-        prevComments.filter((comment) => comment.id !== commentId)
-      );
-    } catch (e) {
-      console.error(e);
-      alert('댓글 삭제에 실패했습니다.');
-    }
+  const handleDeleteComment = (commentId: number) => {
+    setConfirmConfig({
+      title: '댓글을 삭제하시겠습니까?',
+      onConfirm: async () => {
+        try {
+          await removeComment(commentId);
+          setComments((prevComments) =>
+            prevComments.filter((comment) => comment.id !== commentId)
+          );
+          showToast.success('댓글이 삭제되었습니다.');
+        } catch {
+        }
+      },
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -432,6 +433,7 @@ export default function TodoCardModal({
   };
 
   return (
+    <>
     <TodoBaseModal
       title={modalMode === 'detail' ? (card?.title ?? '') : '할 일 수정'}
       labelId={modalMode === 'detail' ? '할 일 카드 모달' : '할 일 수정 모달'}
@@ -631,5 +633,14 @@ export default function TodoCardModal({
         )
       )}
     </TodoBaseModal>
+
+    {confirmConfig && (
+      <Confirm
+        title={confirmConfig.title}
+        onConfirm={confirmConfig.onConfirm}
+        onClose={() => setConfirmConfig(null)}
+      />
+    )}
+    </>
   );
 }
