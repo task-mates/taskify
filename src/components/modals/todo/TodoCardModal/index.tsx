@@ -18,6 +18,7 @@ import ModalActionButtons from '../common/ModalActionButtons';
 import TodoUpdateForm, { TODO_UPDATE_FORM_ID } from '../TodoUpdateForm';
 import Confirm from '@/src/components/Confirm';
 import { showToast } from '@/src/utils/toast';
+import { emitCardChanged } from '@/src/utils/dashboardListEvent';
 import * as S from './styles';
 import SendIcon from '@/src/components/icons/icon-send.svg';
 import MeatballIcon from '@/src/components/icons/icon-meatball.svg';
@@ -100,6 +101,7 @@ export default function TodoCardModal({
         try {
           await cardsApi.remove(cardId);
           showToast.success('카드가 삭제되었습니다.');
+          emitCardChanged(dashboardId);
           onClose();
         } catch {
           showToast.error('카드 삭제에 실패했습니다. 다시 시도해주세요.');

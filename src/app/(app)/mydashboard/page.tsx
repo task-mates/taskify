@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ArrowRightIcon from '@/src/components/icons/icon_arrow_right.svg';
 import DashboardCreateModal from '@/src/components/modals/DashboardCreateModal';
 import { getDashboardList } from '@/src/apis/dashboards';
+import { onDashboardChanged } from '@/src/utils/dashboardListEvent';
 import type { Dashboard } from '@/src/apis/dashboards/type';
 import { getInvitationList, updateInvitation } from '@/src/apis/invitations';
 import type { Invitation } from '@/src/apis/invitations/type';
@@ -92,6 +93,10 @@ export default function MyDashboardPage() {
     };
     const id = window.setTimeout(run, 0);
     return () => window.clearTimeout(id);
+  }, [loadAllDashboards]);
+
+  useEffect(() => {
+    return onDashboardChanged(() => void loadAllDashboards());
   }, [loadAllDashboards]);
 
   const myDashboards = useMemo(
@@ -372,7 +377,6 @@ export default function MyDashboardPage() {
       {isCreateModalOpen ? (
         <DashboardCreateModal
           onClose={() => setIsCreateModalOpen(false)}
-          onCreated={() => void loadAllDashboards()}
         />
       ) : null}
     </S.Page>

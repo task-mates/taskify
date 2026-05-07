@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Link from 'next/link';
 import { DEVICE } from '@/src/styles/Breakpoints';
 
 export const Wrapper = styled.header`
@@ -33,6 +34,19 @@ export const Title = styled.h1`
   font: var(--2lg-18px-bold);
   color: var(--color-gray-900);
   margin-right: auto;
+`;
+
+export const TitleLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: var(--2lg-18px-bold);
+  color: var(--color-gray-900);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
 `;
 
 export const RightSection = styled.div`

@@ -13,6 +13,7 @@ import {
   removeDashboard,
 } from '@/src/apis/dashboards';
 import { showToast } from '@/src/utils/toast';
+import { emitDashboardChanged } from '@/src/utils/dashboardListEvent';
 import { membersApi } from '@/src/apis/members';
 import {
   getDashboardInvitationList,
@@ -76,7 +77,9 @@ export default function DashboardEditView({
       const updated = await updateDashboard(dashboardId, { title, color });
       setDashboard(updated);
       showToast.success('대시보드가 수정되었습니다.');
+      emitDashboardChanged();
     } catch {
+      showToast.error('대시보드 수정에 실패했습니다. 다시 시도해주세요.');
     } finally {
       setIsSaving(false);
     }
@@ -106,6 +109,7 @@ export default function DashboardEditView({
 
   const handleDeleteDashboard = async () => {
     await removeDashboard(dashboardId);
+    emitDashboardChanged();
     router.push('/mydashboard');
   };
 

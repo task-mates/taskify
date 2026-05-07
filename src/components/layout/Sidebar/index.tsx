@@ -11,6 +11,7 @@ import * as S from './styles';
 import type { SidebarProps } from '@/src/components/layout/Sidebar/type';
 import type { Dashboard } from '@/src/apis/dashboards/type';
 import { getDashboardList } from '@/src/apis/dashboards';
+import { onDashboardChanged } from '@/src/utils/dashboardListEvent';
 
 const PAGE_SIZE = 20;
 
@@ -70,6 +71,12 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     setDashboards([]);
     setCursorId(null);
     fetchDashboards(null);
+  }, [fetchDashboards]);
+
+  useEffect(() => {
+    return onDashboardChanged(() => {
+      fetchDashboards(null);
+    });
   }, [fetchDashboards]);
 
   useEffect(() => {
@@ -159,7 +166,6 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       {isCreateModalOpen && (
         <DashboardCreateModal
           onClose={() => setIsCreateModalOpen(false)}
-          onCreated={() => fetchDashboards(null)}
         />
       )}
     </>
