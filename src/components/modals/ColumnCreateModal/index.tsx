@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Modal from '@/src/components/Modal';
 import CloseIcon from '@/src/components/icons/icon-close.svg';
 import { columnsApi } from '@/src/apis/columns';
+import Input from '@/src/components/common/Input';
 import * as S from './style';
 import type { ColumnCreateModalProps } from './type';
 
@@ -40,7 +41,7 @@ export default function ColumnCreateModal({
         </S.Header>
 
         <S.Label htmlFor="column-create-title">이름</S.Label>
-        <S.Input
+        <Input
           id="column-create-title"
           type="text"
           placeholder="새로운 프로젝트"

@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { DEVICE } from '@/src/styles/Breakpoints';
 import Link from 'next/link';
 import Button from '@/src/components/common/Button';
+import Input from '@/src/components/common/Input';
 
 export const Container = styled.main`
   width: 100%;
@@ -47,35 +48,23 @@ export const Label = styled.label`
   color: var(--color-text-body);
 `;
 
-export const TextInput = styled.input<{ $hasError?: boolean }>`
-  width: 100%;
-  height: 44px;
-  padding: 0 12px;
-  border: 1px solid ${({ $hasError }) => ($hasError ? 'var(--color-error)' : 'var(--color-gray-300)')};
-  border-radius: 8px;
-  font-size: 14px;
-
-  &:focus {
-    outline: none;
-    border-color: ${({ $hasError }) => ($hasError ? 'var(--color-error)' : 'var(--color-blue-200)')};
-  }
-`;
-
 export const PasswordField = styled.div`
   position: relative;
 `;
 
-export const PasswordInput = styled(TextInput)`
-  padding-right: 44px;
+export const PasswordInput = styled(Input)`
+  input {
+    padding-right: 44px;
+  }
 `;
 
 export const TogglePasswordButton = styled.button`
   position: absolute;
-  top: 50%;
+  top: 0;
   right: 12px;
-  transform: translateY(-50%);
-  width: 20px;
-  height: 20px;
+  height: 48px;
+  display: flex;
+  align-items: center;
   padding: 0;
   border: none;
   background: transparent;

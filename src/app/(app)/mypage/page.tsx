@@ -15,6 +15,7 @@ import {
   hasProfileChanges,
   isPasswordChangeClientValid,
 } from './utils';
+import Input from '@/src/components/common/Input';
 import * as S from './styles';
 
 const useMyPageProfileState = () => {
@@ -366,16 +367,15 @@ export default function MyPage() {
               <S.Spacer />
 
               <S.Label htmlFor="name">이름</S.Label>
-              <S.TextInput
+              <Input
                 id="name"
                 type="text"
                 value={name}
                 onChange={(event) => setName(event.target.value)}
                 placeholder="이름을 입력해주세요"
+                error={nameErrorMessage}
               />
             </S.ProfileFields>
-
-            <S.ErrorSpace>{nameErrorMessage || ' '}</S.ErrorSpace>
             <S.SaveButton
               type="button"
               onClick={handleProfileSave}
@@ -396,7 +396,7 @@ export default function MyPage() {
         <S.SectionTitle>비밀번호 변경</S.SectionTitle>
         <S.PasswordForm onSubmit={handlePasswordSubmit}>
           <S.Label htmlFor="currentPassword">현재 비밀번호</S.Label>
-          <S.PasswordInput
+          <Input
             id="currentPassword"
             type="password"
             value={currentPassword}
@@ -405,12 +405,11 @@ export default function MyPage() {
               setCurrentPasswordServerError('');
             }}
             placeholder="비밀번호 입력"
-            $hasError={Boolean(currentPasswordErrorMessage)}
+            error={currentPasswordErrorMessage}
           />
-          <S.ErrorSpace>{currentPasswordErrorMessage || ' '}</S.ErrorSpace>
 
           <S.Label htmlFor="newPassword">새 비밀번호</S.Label>
-          <S.PasswordInput
+          <Input
             id="newPassword"
             type="password"
             value={newPassword}
@@ -420,17 +419,11 @@ export default function MyPage() {
             }}
             onBlur={() => setIsNewPasswordTouched(true)}
             placeholder="새 비밀번호 입력"
-            $hasError={
-              Boolean(newPasswordErrorMessage) ||
-              Boolean(passwordMismatchMessage)
-            }
+            error={newPasswordErrorMessage || passwordMismatchMessage}
           />
-          <S.ErrorSpace>
-            {newPasswordErrorMessage || passwordMismatchMessage || ' '}
-          </S.ErrorSpace>
 
           <S.Label htmlFor="confirmPassword">새 비밀번호 확인</S.Label>
-          <S.PasswordInput
+          <Input
             id="confirmPassword"
             type="password"
             value={confirmPassword}
@@ -439,9 +432,8 @@ export default function MyPage() {
               setConfirmPassword(nextValue);
             }}
             placeholder="새 비밀번호 입력"
-            $hasError={Boolean(passwordMismatchMessage)}
+            error={passwordMismatchMessage}
           />
-          <S.ErrorSpace>{passwordMismatchMessage || ' '}</S.ErrorSpace>
 
           <S.PasswordButton
             type="submit"

@@ -44,27 +44,6 @@ export const Label = styled.label`
   margin-bottom: 10px;
 `;
 
-export const Input = styled.input`
-  width: 100%;
-  height: 48px;
-  padding: 0 16px;
-  border: 1px solid var(--color-gray-300);
-  border-radius: 8px;
-  font-size: 14px;
-  color: var(--color-black-200);
-  background: var(--color-white);
-  outline: none;
-  box-sizing: border-box;
-
-  &::placeholder {
-    color: var(--color-gray-400);
-  }
-
-  &:focus {
-    border-color: var(--color-brand-500);
-  }
-`;
-
 export const ButtonGroup = styled.div`
   display: flex;
   gap: 12px;

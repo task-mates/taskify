@@ -59,21 +59,6 @@ export const Label = styled.label`
   margin-bottom: 8px;
 `;
 
-export const TextInput = styled.input`
-  width: 100%;
-  max-width: 500px;
-  height: 48px;
-  padding: 0 16px;
-  border: 1px solid var(--color-gray-300);
-  border-radius: 6px;
-  font-size: var(--font-md);
-  color: var(--color-black-200);
-  box-sizing: border-box;
-
-  @media ${DEVICE.mobile} {
-    max-width: 100%;
-  }
-`;
 
 export const ColorPickerRow = styled.div`
   display: flex;

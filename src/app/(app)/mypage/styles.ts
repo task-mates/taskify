@@ -177,14 +177,6 @@ export const DisabledValue = styled.div`
 
 export const Spacer = styled.div``;
 
-export const TextInput = styled.input`
-  height: 44px;
-  padding: 10px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  box-sizing: border-box;
-`;
-
 export const ErrorSpace = styled.p`
   min-height: 18px;
   font-size: 13px;
@@ -206,19 +198,6 @@ export const PasswordForm = styled.form`
   margin-top: 30px;
 `;
 
-export const PasswordInput = styled.input<{ $hasError?: boolean }>`
-  padding: 10px;
-  border: 1px solid
-    ${({ $hasError }) =>
-      $hasError ? 'var(--color-error)' : 'var(--color-gray-200)'};
-  border-radius: 8px;
-
-  &:focus {
-    outline: none;
-    border-color: ${({ $hasError }) =>
-      $hasError ? 'var(--color-error)' : 'var(--color-blue-200)'};
-  }
-`;
 
 export const PasswordButton = styled(Button).attrs({
   variant: 'primary',

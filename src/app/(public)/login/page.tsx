@@ -66,7 +66,7 @@ export default function LoginPage() {
 
           <S.Label htmlFor="password">비밀번호</S.Label>
           <S.PasswordField>
-            <Input
+            <S.PasswordInput
               id="password"
               type={isPasswordVisible ? 'text' : 'password'}
               error={errors.password}
