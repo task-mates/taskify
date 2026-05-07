@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import LogoIcon from '@/public/images/icon-logo.svg';
 import PlusIcon from '@/src/components/icons/icon-plus.svg';
 import CrownIcon from '@/src/components/icons/icon-crown.svg';
+import DashboardCreateModal from '@/src/components/modals/DashboardCreateModal';
 import * as S from './styles';
 import type { SidebarProps } from '@/src/components/layout/Sidebar/type';
 import type { Dashboard } from '@/src/apis/dashboards/type';
@@ -23,6 +24,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const [cursorId, setCursorId] = useState<number | null>(null);
   const [isListLoading, setIsListLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const fetchDashboards = useCallback(async (nextCursorId?: number | null) => {
     if (isFetchingRef.current) return;
@@ -98,63 +100,70 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   }, [cursorId, isListLoading, dashboards.length, fetchDashboards]);
 
   return (
-    <S.Wrapper $isOpen={isOpen}>
-      <S.Header>
-        <S.TopRow>
-          <S.Logo>
-            <LogoIcon aria-label="Taskify 로고" />
-          </S.Logo>
-          {/* 논의 후 아이콘으로 변경 예정 */}
-          <S.CloseButton
-            type="button"
-            onClick={onClose}
-            aria-label="사이드바 닫기"
-          >
-            ✕
-          </S.CloseButton>
-        </S.TopRow>
-        <S.AddSection>
-          <S.AddButton>
-            <span>대시보드 추가</span>
-            <S.IconContainer>
-              <PlusIcon aria-hidden="true" />
-            </S.IconContainer>
-          </S.AddButton>
-        </S.AddSection>
-      </S.Header>
+    <>
+      <S.Wrapper $isOpen={isOpen}>
+        <S.Header>
+          <S.TopRow>
+            <S.Logo>
+              <LogoIcon aria-label="Taskify 로고" />
+            </S.Logo>
+            {/* 논의 후 아이콘으로 변경 예정 */}
+            <S.CloseButton
+              type="button"
+              onClick={onClose}
+              aria-label="사이드바 닫기"
+            >
+              ✕
+            </S.CloseButton>
+          </S.TopRow>
+          <S.AddSection>
+            <S.AddButton onClick={() => setIsCreateModalOpen(true)}>
+              <span>대시보드 추가</span>
+              <S.IconContainer>
+                <PlusIcon aria-hidden="true" />
+              </S.IconContainer>
+            </S.AddButton>
+          </S.AddSection>
+        </S.Header>
 
-      <S.Body ref={bodyRef}>
-        {isListLoading && dashboards.length === 0 && (
-          <div>불러오는 중…</div>
-        )}
-        {isError && <div>목록을 불러오지 못했습니다.</div>}
+        <S.Body ref={bodyRef}>
+          {isListLoading && dashboards.length === 0 && <div>불러오는 중…</div>}
+          {isError && <div>목록을 불러오지 못했습니다.</div>}
 
-        {!isError && dashboards.length > 0 && (
-          <S.DashboardList>
-            {dashboards.map((board) => (
-              <S.DashboardItem
-                key={board.id}
-                $active={pathname === `/dashboard/${board.id}`}
-              >
-                <Link href={`/dashboard/${board.id}`}>
-                  <S.ColorDot $color={board.color} />
-                  <S.Title>{board.title}</S.Title>
-                  {board.createdByMe && <CrownIcon aria-hidden="true" />}
-                </Link>
-              </S.DashboardItem>
-            ))}
-            <div ref={observerRef} style={{ height: '1px' }} />
-          </S.DashboardList>
-        )}
+          {!isError && dashboards.length > 0 && (
+            <S.DashboardList>
+              {dashboards.map((board) => (
+                <S.DashboardItem
+                  key={board.id}
+                  $active={pathname === `/dashboard/${board.id}`}
+                >
+                  <Link href={`/dashboard/${board.id}`}>
+                    <S.ColorDot $color={board.color} />
+                    <S.Title>{board.title}</S.Title>
+                    {board.createdByMe && <CrownIcon aria-hidden="true" />}
+                  </Link>
+                </S.DashboardItem>
+              ))}
+              <div ref={observerRef} style={{ height: '1px' }} />
+            </S.DashboardList>
+          )}
 
-        {!isListLoading && !isError && dashboards.length === 0 && (
-          <S.EmptyMessage>대시보드가 없습니다.</S.EmptyMessage>
-        )}
+          {!isListLoading && !isError && dashboards.length === 0 && (
+            <S.EmptyMessage>대시보드가 없습니다.</S.EmptyMessage>
+          )}
 
-        {isListLoading && dashboards.length > 0 && (
-          <S.LoadMoreHint>더 불러오는 중…</S.LoadMoreHint>
-        )}
-      </S.Body>
-    </S.Wrapper>
+          {isListLoading && dashboards.length > 0 && (
+            <S.LoadMoreHint>더 불러오는 중…</S.LoadMoreHint>
+          )}
+        </S.Body>
+      </S.Wrapper>
+
+      {isCreateModalOpen && (
+        <DashboardCreateModal
+          onClose={() => setIsCreateModalOpen(false)}
+          onCreated={() => fetchDashboards(null)}
+        />
+      )}
+    </>
   );
 }
