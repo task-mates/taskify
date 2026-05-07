@@ -139,10 +139,14 @@ export const LoginButton = styled(BaseButton)`
 export const ImageArea = styled.div`
   width: 60%;
   margin-right: -8%;
+  border: 1px solid var(--color-dashboard-darkgray);
+  border-radius: 30px;
+  overflow: hidden;
 
   @media ${DEVICE.tablet} {
     width: 90%;
     margin-right: -35%;
+    border-radius: 20px;
   }
 
   @media ${DEVICE.mobile} {
