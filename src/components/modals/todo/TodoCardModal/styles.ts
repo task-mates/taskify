@@ -192,9 +192,7 @@ export const TaskInfoNameBadge = styled.span<{
   overflow: hidden;
 `;
 
-export const DetailContent = styled.div`
-  margin-top: 18px;
-`;
+export const DetailContent = styled.div``;
 
 export const Thumbnail = styled.div`
   margin-bottom: 30px;
