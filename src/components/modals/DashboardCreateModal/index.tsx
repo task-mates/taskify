@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import Modal from '../../Modal';
+import Modal from '@/src/components/Modal';
 import CloseIcon from '@/src/components/icons/icon-close.svg';
 import Input from '@/src/components/common/Input';
 import Button from '@/src/components/common/Button';

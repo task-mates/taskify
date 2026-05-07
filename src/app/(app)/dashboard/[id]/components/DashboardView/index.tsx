@@ -13,7 +13,7 @@ import PlusIcon from '@/src/components/icons/icon-plus.svg';
 import {
   applyDragResult,
   type ColumnWithCards,
-} from '../../utils/applyDragResult';
+} from '@/src/app/(app)/dashboard/[id]/utils/applyDragResult';
 
 type DashboardViewProps = {
   dashboardId: number;
