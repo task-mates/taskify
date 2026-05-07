@@ -222,6 +222,8 @@ export const Description = styled.p`
   line-height: 1.6;
   color: var(--color-black-200);
   font-weight: 500;
+
+  white-space: pre-wrap;
 `;
 
 export const Divider = styled.hr`

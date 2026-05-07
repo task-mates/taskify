@@ -548,7 +548,16 @@ export default function TodoCardModal({
                 return (
                   <S.CommentItem key={comment.id}>
                     <S.CommentBadge $backgroundColor={commentAuthorBgColor}>
-                      {getAvatarText(comment.author.nickname)}
+                      {comment.author.profileImageUrl ? (
+                        <Image
+                          src={comment.author.profileImageUrl}
+                          alt={comment.author.nickname}
+                          fill
+                          style={{ objectFit: 'cover' }}
+                        />
+                      ) : (
+                        getAvatarText(comment.author.nickname)
+                      )}
                     </S.CommentBadge>
 
                     <S.CommentContent>
