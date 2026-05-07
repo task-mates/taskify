@@ -254,22 +254,18 @@ export default function MyDashboardPage() {
               내 대시보드
             </S.SectionHeading>
             <S.MyDashboardsRow>
-              <S.MyDashboardCards
-                ref={myDashboardCarouselRef}
-              >
-                {myDashboards.length === 0 ? (
-                  <S.MyDashboardCard>
-                    <S.NewDashboardTrigger
-                      type="button"
-                      onClick={() => setIsCreateModalOpen(true)}
-                    >
-                      <S.NewDashboardLabel>새로운 대시보드</S.NewDashboardLabel>
-                      <S.PlusIconBox>
-                        <S.StyledPlusIcon aria-hidden />
-                      </S.PlusIconBox>
-                    </S.NewDashboardTrigger>
-                  </S.MyDashboardCard>
-                ) : null}
+              <S.MyDashboardCards ref={myDashboardCarouselRef}>
+                <S.MyDashboardCard>
+                  <S.NewDashboardTrigger
+                    type="button"
+                    onClick={() => setIsCreateModalOpen(true)}
+                  >
+                    <S.NewDashboardLabel>새로운 대시보드</S.NewDashboardLabel>
+                    <S.PlusIconBox>
+                      <S.StyledPlusIcon aria-hidden />
+                    </S.PlusIconBox>
+                  </S.NewDashboardTrigger>
+                </S.MyDashboardCard>
 
                 {myDashboards.map((board) => (
                   <S.MyDashboardCard key={board.id}>
