@@ -35,6 +35,14 @@ export const CloseButton = styled.button`
   padding: 0;
 `;
 
+export const Label = styled.label`
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-black-200);
+  margin-bottom: 10px;
+`;
+
 export const ColorSection = styled.div`
   display: flex;
   gap: 10px;
