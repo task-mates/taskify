@@ -82,34 +82,26 @@ export default function TodoCreateModal({
 
     let imageUrl: string | undefined;
 
-    try {
-      if (selectedImageFile) {
-        const uploadedImage = await columnsApi.uploadCardImage(
-          columnId,
-          selectedImageFile
-        );
-
+    if (selectedImageFile) {
+      try {
+        const uploadedImage = await columnsApi.uploadCardImage(columnId, selectedImageFile);
         imageUrl = uploadedImage.imageUrl;
+      } catch {
+        return;
       }
+    }
 
-      const requestBody = {
+    try {
+      await cardsApi.create({
         dashboardId,
         columnId,
         title,
         description,
         tags: tags.map((tag) => tag.name),
-        ...(dueDate && {
-          dueDate: dayjs(dueDate).format('YYYY-MM-DD HH:mm'),
-        }),
-        ...(selectedAssignee && {
-          assigneeUserId: selectedAssignee.userId,
-        }),
-        ...(imageUrl && {
-          imageUrl,
-        }),
-      };
-
-      await cardsApi.create(requestBody);
+        ...(dueDate && { dueDate: dayjs(dueDate).format('YYYY-MM-DD HH:mm') }),
+        ...(selectedAssignee && { assigneeUserId: selectedAssignee.userId }),
+        ...(imageUrl && { imageUrl }),
+      });
 
       onClose();
     } catch {

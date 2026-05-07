@@ -96,17 +96,17 @@ export default function TodoUpdateForm({
 
     let imageUrl: string | null = previewImageUrl;
 
-    try {
-      if (selectedImageFile) {
-        const uploadedImage = await columnsApi.uploadCardImage(
-          columnId,
-          selectedImageFile
-        );
-
+    if (selectedImageFile) {
+      try {
+        const uploadedImage = await columnsApi.uploadCardImage(columnId, selectedImageFile);
         imageUrl = uploadedImage.imageUrl;
+      } catch {
+        return;
       }
+    }
 
-      const requestBody = {
+    try {
+      await cardsApi.update(cardId, {
         columnId,
         title,
         description,
@@ -114,9 +114,7 @@ export default function TodoUpdateForm({
         dueDate: dueDate ? dayjs(dueDate).format('YYYY-MM-DD HH:mm') : null,
         assigneeUserId: selectedAssignee ? selectedAssignee.userId : null,
         imageUrl,
-      };
-
-      await cardsApi.update(cardId, requestBody);
+      });
 
       onSuccess();
     } catch {
