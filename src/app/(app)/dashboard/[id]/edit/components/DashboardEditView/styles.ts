@@ -93,13 +93,8 @@ export const ChangeButton = styled(Button).attrs({
   height: '48px',
 })`
   display: block;
-  max-width: 500px;
   margin-top: 24px;
   border-radius: 6px;
-
-  @media ${DEVICE.mobile} {
-    max-width: 100%;
-  }
 `;
 
 export const SectionHeader = styled.div`
