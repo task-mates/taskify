@@ -1,5 +1,6 @@
 # 🗂️ TASKIFY
-<img width="1920" height="1080" alt="dashboard" src="https://github.com/user-attachments/assets/c033eda1-c901-42e8-8556-d35abab780be" />
+<img width="1699" height="1034" alt="landing-intro" src="https://github.com/user-attachments/assets/784815f4-3514-4f6d-aa9c-aab1936c2884" />
+
 
 <br>
 
@@ -38,31 +39,21 @@ Taskify는 팀 단위 협업을 위한 일정 관리 웹 서비스입니다.<br>
 
 ## 🛠️ 기술 스택
 ### Frontend
-- Next.js
-- React 
-- TypeScript
-- styled-components
+<img src="https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white">&nbsp;<img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=white">&nbsp;<img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white">&nbsp;<img src="https://camo.githubusercontent.com/052ab4f2ab3eab9bf3c9d7dafb0012176462520dd251a209b390d5ef8ee6a064/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f7374796c65642d2d636f6d706f6e656e74732d2532334442373039332e7376673f267374796c653d666f722d7468652d6261646765266c6f676f3d7374796c65642d636f6d706f6e656e7473266c6f676f436f6c6f723d7768697465">
 
 ### Library
-- Axios
-- react-hot-toast
-- @hello-pangea/dnd
-- react-datepicker
-- date-fns
+<img src="https://img.shields.io/badge/axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white">&nbsp;<img src="https://img.shields.io/badge/datefns-770C56?style=for-the-badge&logo=datefns&logoColor=white"><br>
+`react-hot-toast` `@hello-pangea/dnd` `react-datepicker` `react-loading-skeleton`
+
   
 ### Development
-- ESLint
-- npm
-- Webpack
+<img src="https://img.shields.io/badge/eslint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white">&nbsp;<img src="https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white">&nbsp;<img src="https://img.shields.io/badge/webpack-8DD6F9?style=for-the-badge&logo=webpack&logoColor=white">
 
 ### Collaboration
-- GitHub
-- Discord
-- Figma
-- Notion
+<img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">&nbsp;<img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">&nbsp;<img src="https://img.shields.io/badge/discord-5865F2?style=for-the-badge&logo=discord&logoColor=white">&nbsp;<img src="https://img.shields.io/badge/figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white">&nbsp;<img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white">&nbsp;<img src="https://camo.githubusercontent.com/5b181ba23f182ab380f76b27db116e0770ebb95a03bc8d1bc6320cdd92c839eb/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f676f6f676c652532307368656574732d2532333334413835332e7376673f267374796c653d666f722d7468652d6261646765266c6f676f3d676f6f676c65253230736865657473266c6f676f436f6c6f723d7768697465">
 
 ### Deployment
-- Vercel
+<img src="https://img.shields.io/badge/vercel-000000?style=for-the-badge&logo=vercel&logoColor=white">
 
 <br>
 
