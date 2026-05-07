@@ -2,7 +2,9 @@ import styled from 'styled-components';
 import { DEVICE } from '@/src/styles/Breakpoints';
 
 export const Section = styled.section`
-  min-width: 320px;
+  max-width: 400px;
+  min-width: 400px;
+
   height: 100%;
   padding: 16px;
   border-radius: 16px;
