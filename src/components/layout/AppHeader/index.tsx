@@ -54,10 +54,10 @@ export default function AppHeader({
         {isMyDashboard && '내 대시보드'}
         {isMyPage && '계정관리'}
         {isDashboardPage && (
-          <>
+          <S.TitleLink href={`/dashboard/${dashboardId}`}>
             {dashboardTitle}
             {createdByMe && <CrownIcon aria-hidden="true" />}
-          </>
+          </S.TitleLink>
         )}
       </S.Title>
 
