@@ -11,6 +11,7 @@ type Props = {
   color: string;
   isSaving: boolean;
   isUnchanged: boolean;
+  isTitleEmpty: boolean;
   onTitleChange: (title: string) => void;
   onColorChange: (color: string) => void;
   onSave: () => void;
@@ -22,6 +23,7 @@ export default function DashboardInfoSection({
   color,
   isSaving,
   isUnchanged,
+  isTitleEmpty,
   onTitleChange,
   onColorChange,
   onSave,
@@ -51,7 +53,7 @@ export default function DashboardInfoSection({
         ))}
       </S.ColorPickerRow>
 
-      <S.ChangeButton onClick={onSave} disabled={isSaving || isUnchanged}>
+      <S.ChangeButton onClick={onSave} disabled={isSaving || isUnchanged || isTitleEmpty}>
         변경
       </S.ChangeButton>
     </S.Card>
