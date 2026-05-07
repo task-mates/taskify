@@ -12,6 +12,7 @@ import type { SidebarProps } from '@/src/components/layout/Sidebar/type';
 import type { Dashboard } from '@/src/apis/dashboards/type';
 import { getDashboardList } from '@/src/apis/dashboards';
 import { onDashboardChanged } from '@/src/utils/dashboardListEvent';
+import SidebarSkeleton from '@/src/components/common/Skeleton/SidebarSkeleton';
 
 const PAGE_SIZE = 20;
 
@@ -132,7 +133,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         </S.Header>
 
         <S.Body ref={bodyRef}>
-          {isListLoading && dashboards.length === 0 && <div>불러오는 중…</div>}
+          {isListLoading && dashboards.length === 0 && <SidebarSkeleton />}
           {isError && <div>목록을 불러오지 못했습니다.</div>}
 
           {!isError && dashboards.length > 0 && (
@@ -160,7 +161,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           )}
 
           {isListLoading && dashboards.length > 0 && (
-            <S.LoadMoreHint>더 불러오는 중…</S.LoadMoreHint>
+            <SidebarSkeleton count={3} />
           )}
         </S.Body>
       </S.Wrapper>
