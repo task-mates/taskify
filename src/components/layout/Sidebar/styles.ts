@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import styled from 'styled-components';
 import { DEVICE } from '@/src/styles/Breakpoints';
 
@@ -58,7 +59,8 @@ export const TopRow = styled.div`
   justify-content: space-between;
 `;
 
-export const Logo = styled.div`
+export const Logo = styled(Link)`
+  display: block;
   margin-bottom: 18px;
 `;
 
