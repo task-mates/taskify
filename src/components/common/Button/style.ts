@@ -36,7 +36,7 @@ export const StyledButton = styled.button<{
   ${({ $variant }) =>
     $variant === 'primary' &&
     css`
-      background-color: var(--color-blue-100); 
+      background-color: #83c6e5;
       color: var(--color-white);
       &:hover:not(:disabled) { opacity: 0.8; }
       &:disabled { background-color: var(--color-gray-300); }
@@ -45,7 +45,7 @@ export const StyledButton = styled.button<{
   ${({ $variant }) =>
     $variant === 'secondary' &&
     css`
-      background-color: var(--color-gray-500);
+      background-color: #adadad;
       color: var(--color-white);
       &:hover:not(:disabled) { opacity: 0.8; }
       &:disabled { background-color: var(--color-gray-300); }
