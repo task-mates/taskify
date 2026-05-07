@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { DEVICE } from '@/src/styles/Breakpoints';
+import Button from '@/src/components/common/Button';
 
 export const BadgeGroup = styled.div`
   margin-top: 12px;
@@ -433,15 +434,13 @@ export const CommentUpdateButtonGroup = styled.div`
   gap: 8px;
 `;
 
-export const CommentUpdateButton = styled.button<{ $variant?: 'primary' }>`
+export const CommentUpdateButton = styled(Button).attrs<{
+  $variant?: 'primary';
+}>(({ $variant }) => ({
+  variant: $variant === 'primary' ? 'primary' : 'secondary',
+}))<{ $variant?: 'primary' }>`
   padding: 6px 12px;
-  border: 1px solid
-    ${({ $variant }) => ($variant === 'primary' ? 'var(--color-blue-200)' : 'var(--color-gray-500)')};
   border-radius: 4px;
-  background-color: ${({ $variant }) =>
-    $variant === 'primary' ? 'var(--color-blue-200)' : 'var(--color-gray-500)'};
-  color: var(--color-white);
   font-size: 12px;
   font-weight: 500;
-  cursor: pointer;
 `;

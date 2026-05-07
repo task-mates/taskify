@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { DEVICE } from '@/src/styles/Breakpoints';
+import Button from '@/src/components/common/Button';
 
 export const PageMain = styled.main`
   padding: 20px 24px 40px;
@@ -101,25 +102,15 @@ export const CheckMark = styled.span<{ $visible: boolean }>`
   line-height: 1;
 `;
 
-export const ChangeButton = styled.button`
+export const ChangeButton = styled(Button).attrs({
+  variant: 'primary',
+  width: '100%',
+  height: '48px',
+})`
   display: block;
-  width: 100%;
   max-width: 500px;
-  height: 48px;
   margin-top: 24px;
-  background: var(--color-brand-300);
-  color: var(--color-white);
-  font: var(--lg-16px-semibold);
   border-radius: 6px;
-
-  &:hover {
-    background: var(--color-brand-400);
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
 
   @media ${DEVICE.mobile} {
     max-width: 100%;
@@ -189,50 +180,35 @@ export const EmailText = styled.span`
   color: var(--color-black-200);
 `;
 
-export const OutlineButton = styled.button`
-  height: 32px;
+export const OutlineButton = styled(Button).attrs({
+  variant: 'ghost',
+  height: '32px',
+})`
   padding: 0 16px;
   border: 1px solid var(--color-gray-300);
   border-radius: 4px;
-  background: var(--color-white);
-  font: var(--sm-13px-medium);
   color: var(--color-gray-500);
   flex-shrink: 0;
-
-  &:hover {
-    background: var(--color-gray-100);
-  }
 `;
 
-export const InviteButton = styled.button`
-  display: flex;
-  align-items: center;
+export const InviteButton = styled(Button).attrs({
+  variant: 'primary',
+  height: '32px',
+})`
   gap: 6px;
-  height: 32px;
   padding: 0 14px;
-  background: var(--color-brand-300);
-  color: var(--color-white);
-  font: var(--sm-13px-medium);
   border-radius: 4px;
-
-  &:hover {
-    background: var(--color-brand-400);
-  }
 `;
 
-export const DeleteButton = styled.button`
+export const DeleteButton = styled(Button).attrs({
+  variant: 'ghost',
+  width: '100%',
+  height: '52px',
+})`
   align-self: center;
-  width: 100%;
   max-width: 320px;
-  height: 52px;
-  background: var(--color-white);
   border: 1px solid var(--color-gray-300);
   border-radius: 8px;
-  font: var(--lg-16px-semibold);
   color: var(--color-black-200);
   margin-top: 8px;
-
-  &:hover {
-    background: var(--color-gray-100);
-  }
 `;
