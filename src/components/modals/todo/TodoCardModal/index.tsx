@@ -490,12 +490,7 @@ export default function TodoCardModal({
             <S.DetailContent>
               {cardCoverImage && (
                 <S.Thumbnail>
-                  <Image
-                    src={cardCoverImage}
-                    alt="썸네일"
-                    fill
-                    style={{ objectFit: 'cover' }}
-                  />
+                  <S.ThumbnailImage src={cardCoverImage} alt="썸네일" />
                 </S.Thumbnail>
               )}
 
@@ -643,7 +638,6 @@ export default function TodoCardModal({
           )
         )}
       </TodoBaseModal>
-
       {confirmConfig && (
         <Confirm
           title={confirmConfig.title}

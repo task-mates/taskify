@@ -88,6 +88,7 @@ export const ActionMenuButton = styled.button`
 `;
 
 export const ActionButtonPopup = styled.div`
+  z-index: 5;
   position: absolute;
   top: calc(100% + 20px);
   right: 0;
@@ -124,7 +125,8 @@ export const ActionButton = styled.button<{ $variant?: 'default' | 'delete' }>`
   font-size: 16px;
   font-weight: 500;
   border-radius: 6px;
-  color: ${({ $variant }) => ($variant === 'delete' ? 'var(--color-red)' : 'var(--color-black-200)')};
+  color: ${({ $variant }) =>
+    $variant === 'delete' ? 'var(--color-red)' : 'var(--color-black-200)'};
 
   display: flex;
   align-items: center;
@@ -178,6 +180,7 @@ export const TaskInfoValue = styled.span`
 export const TaskInfoNameBadge = styled.span<{
   $backgroundColor: string;
 }>`
+  position: relative;
   flex-shrink: 0;
   width: 30px;
   height: 30px;
@@ -196,19 +199,22 @@ export const TaskInfoNameBadge = styled.span<{
 export const DetailContent = styled.div``;
 
 export const Thumbnail = styled.div`
+  margin-top: 18px;
   margin-bottom: 30px;
   position: relative;
   width: 100%;
-  height: 220px;
-
-  img {
-    max-width: 360px;
-    width: 100%;
-  }
 
   @media ${DEVICE.mobile} {
+    margin-top: 8px;
     margin-bottom: 20px;
   }
+`;
+
+export const ThumbnailImage = styled.img`
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
 `;
 
 export const Description = styled.p`
@@ -234,6 +240,7 @@ export const CommentBadge = styled.span<{
   $backgroundColor: string;
 }>`
   flex-shrink: 0;
+  position: relative;
   width: 30px;
   height: 30px;
   font-size: 13px;
@@ -260,7 +267,7 @@ export const CommentTextareaBox = styled.div<{ $expanded: boolean }>`
   border-radius: 12px;
 
   &:focus-within {
-    border-color: #333;
+    border-color: var(--color-brand-500);
   }
 `;
 
@@ -324,7 +331,8 @@ export const SendButton = styled.button<{ $active: boolean }>`
   cursor: pointer;
 
   svg path {
-    stroke: ${({ $active }) => ($active ? 'var(--color-black-200)' : 'var(--color-gray-400)')};
+    stroke: ${({ $active }) =>
+      $active ? 'var(--color-brand-500)' : 'var(--color-gray-300)'};
   }
 `;
 
@@ -413,7 +421,7 @@ export const CommentUpdateTextarea = styled.textarea`
   min-height: 90px;
   padding: 8px 12px;
   border: 1px solid var(--color-gray-300);
-  border-radius: 6px;
+  border-radius: 12px;
   resize: none;
 
   color: var(--color-black-200);
@@ -422,7 +430,7 @@ export const CommentUpdateTextarea = styled.textarea`
 
   &:focus {
     outline: none;
-    border-color: #333;
+    border-color: var(--color-brand-500);
   }
 `;
 
@@ -438,7 +446,7 @@ export const CommentUpdateButton = styled(Button).attrs<{
   variant: $variant === 'primary' ? 'primary' : 'secondary',
 }))<{ $variant?: 'primary' }>`
   padding: 6px 12px;
-  border-radius: 4px;
+  border-radius: 8px;
   font-size: 12px;
   font-weight: 500;
 `;
