@@ -11,6 +11,7 @@ import type { DashboardCreateModalProps } from './type';
 
 export default function DashboardCreateModal({
   onClose,
+  onCreated,
 }: DashboardCreateModalProps) {
   const [title, setTitle] = useState('');
   const [color, setColor] = useState('');
@@ -21,6 +22,7 @@ export default function DashboardCreateModal({
     setIsLoading(true);
     try {
       await createDashboard({ title: title.trim(), color });
+      onCreated?.();
       onClose();
     } catch (error) {
       console.error(error);

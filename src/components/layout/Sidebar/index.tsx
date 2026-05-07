@@ -160,12 +160,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
       {isCreateModalOpen && (
         <DashboardCreateModal
-          onClose={() => {
-            setIsCreateModalOpen(false);
-            setDashboards([]);
-            setCursorId(null);
-            fetchDashboards(null);
-          }}
+          onClose={() => setIsCreateModalOpen(false)}
+          onCreated={() => fetchDashboards(null)}
         />
       )}
     </>

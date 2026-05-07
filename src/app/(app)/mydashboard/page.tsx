@@ -373,10 +373,8 @@ export default function MyDashboardPage() {
 
       {isCreateModalOpen ? (
         <DashboardCreateModal
-          onClose={() => {
-            setIsCreateModalOpen(false);
-            void loadAllDashboards();
-          }}
+          onClose={() => setIsCreateModalOpen(false)}
+          onCreated={() => void loadAllDashboards()}
         />
       ) : null}
     </S.Page>
