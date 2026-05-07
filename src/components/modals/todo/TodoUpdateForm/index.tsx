@@ -10,7 +10,9 @@ import { cardsApi } from '@/src/apis/cards';
 import { membersApi } from '@/src/apis/members';
 import { columnsApi } from '@/src/apis/columns';
 import type { Member } from '@/src/apis/members/type';
-import type { Tag, TagColor } from '../TodoUpdateModal/type';
+import type { Tag } from '@/src/types/tag';
+import { getTagColorByName, TAG_PREVIEW_COLOR } from '@/src/utils/tagColor';
+import { getProfileColorByNickname } from '@/src/utils/profileColor';
 import * as S from '../TodoUpdateModal/styles';
 import UploadImage from '@/src/components/icons/icon-uploadimg.svg';
 import DeleteIcon from '@/src/components/icons/icon-delete.svg';
@@ -22,56 +24,6 @@ type TodoUpdateFormProps = {
   dashboardId: number;
   columnId: number;
   onSuccess: () => void;
-};
-
-const ASSIGNEE_AVATAR_COLORS = [
-  '#F44336',
-  '#E91E63',
-  '#9C27B0',
-  '#673AB7',
-  '#3F51B5',
-  '#2196F3',
-  '#03A9F4',
-  '#00BCD4',
-  '#009688',
-  '#4CAF50',
-  '#FF9800',
-  '#FF5722',
-];
-
-const TAG_COLORS = [
-  { backgroundColor: '#E5E7EB', color: '#374151' },
-  { backgroundColor: '#F4E3D7', color: '#8A4B2A' },
-  { backgroundColor: '#FADFCB', color: '#B85C2E' },
-  { backgroundColor: '#F8E7B8', color: '#A36A00' },
-  { backgroundColor: '#DDEFE3', color: '#2F6F4E' },
-  { backgroundColor: '#D8ECFF', color: '#2D6FA3' },
-  { backgroundColor: '#E7DDF7', color: '#6E4BA3' },
-  { backgroundColor: '#F7DDE8', color: '#A33E68' },
-  { backgroundColor: '#F9D9D6', color: '#B84038' },
-];
-
-const getTagColorByName = (tagName: string) => {
-  let hash = 0;
-
-  for (let i = 0; i < tagName.length; i += 1) {
-    hash = tagName.charCodeAt(i) + ((hash << 5) - hash);
-  }
-
-  return TAG_COLORS[Math.abs(hash) % TAG_COLORS.length];
-};
-
-const getRandomTagColor = (excludeColor?: TagColor | null) => {
-  const availableColors = excludeColor
-    ? TAG_COLORS.filter(
-        (tagColor) =>
-          tagColor.backgroundColor !== excludeColor.backgroundColor ||
-          tagColor.color !== excludeColor.color
-      )
-    : TAG_COLORS;
-
-  const randomIndex = Math.floor(Math.random() * availableColors.length);
-  return availableColors[randomIndex];
 };
 
 export const TODO_UPDATE_FORM_ID = 'todo-update-form';
@@ -97,9 +49,6 @@ export default function TodoUpdateForm({
   const [isTagOpen, setIsTagOpen] = useState(false);
   const tagBoxRef = useRef<HTMLDivElement | null>(null);
   const [openedTagMenu, setOpenedTagMenu] = useState<string | null>(null);
-  const [previewTagColor, setPreviewTagColor] = useState<TagColor | null>(null);
-  const currentInputColorRef = useRef<TagColor | null>(null);
-  const lastTagColorRef = useRef<TagColor | null>(null);
 
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
@@ -214,24 +163,8 @@ export default function TodoUpdateForm({
     setIsAssigneeOpen(false);
   };
 
-  const getHashFromString = (value: string) => {
-    let hash = 0;
-
-    for (let i = 0; i < value.length; i += 1) {
-      hash = value.charCodeAt(i) + ((hash << 5) - hash);
-    }
-
-    return Math.abs(hash);
-  };
-
-  const getAssigneeAvatarColor = (member: Member) => {
-    const hashKey = `${member.userId ?? member.id}-${member.nickname}`;
-    const hash = getHashFromString(hashKey);
-    return ASSIGNEE_AVATAR_COLORS[hash % ASSIGNEE_AVATAR_COLORS.length];
-  };
-
   const selectedAssigneeBgColor = selectedAssignee
-    ? getAssigneeAvatarColor(selectedAssignee)
+    ? getProfileColorByNickname(selectedAssignee.nickname)
     : '';
 
   const getAvatarText = (nickname: string) => {
@@ -250,12 +183,9 @@ export default function TodoUpdateForm({
 
       const existingOption = tagOptions.find((tag) => tag.name === trimmedTag);
 
-      const tagColor =
-        currentInputColorRef.current ?? getTagColorByName(trimmedTag);
-
       const newTag = existingOption ?? {
         name: trimmedTag,
-        ...tagColor,
+        ...getTagColorByName(trimmedTag),
       };
 
       setTags((prev) =>
@@ -266,13 +196,6 @@ export default function TodoUpdateForm({
         prev.some((tag) => tag.name === trimmedTag) ? prev : [...prev, newTag]
       );
 
-      lastTagColorRef.current = {
-        backgroundColor: newTag.backgroundColor,
-        color: newTag.color,
-      };
-
-      currentInputColorRef.current = null;
-      setPreviewTagColor(null);
       setTagInput('');
       setIsTagOpen(true);
     },
@@ -424,7 +347,9 @@ export default function TodoUpdateForm({
               <S.SelectWrapper>
                 <S.SelectList role="listbox">
                   {members.map((member) => {
-                    const memberBgColor = getAssigneeAvatarColor(member);
+                    const memberBgColor = getProfileColorByNickname(
+                      member.nickname
+                    );
 
                     return (
                       <S.OptionItem key={member.id}>
@@ -500,24 +425,7 @@ export default function TodoUpdateForm({
               value={tagInput}
               onFocus={() => setIsTagOpen(true)}
               onChange={(e) => {
-                const nextValue = e.target.value;
-
-                if (!nextValue) {
-                  currentInputColorRef.current = null;
-                  setPreviewTagColor(null);
-                  setTagInput('');
-                  setIsTagOpen(true);
-                  return;
-                }
-
-                if (!currentInputColorRef.current) {
-                  const nextColor = getRandomTagColor(lastTagColorRef.current);
-
-                  currentInputColorRef.current = nextColor;
-                  setPreviewTagColor(nextColor);
-                }
-
-                setTagInput(nextValue);
+                setTagInput(e.target.value);
                 setIsTagOpen(true);
               }}
               onKeyDown={handleTagKeyDown}
@@ -595,11 +503,8 @@ export default function TodoUpdateForm({
                 <S.TagCreateButton type="button" onClick={() => handleAddTag()}>
                   생성{' '}
                   <S.TagBadge
-                    $backgroundColor={
-                      previewTagColor?.backgroundColor ??
-                      TAG_COLORS[0].backgroundColor
-                    }
-                    $color={previewTagColor?.color ?? TAG_COLORS[0].color}
+                    $backgroundColor={TAG_PREVIEW_COLOR.backgroundColor}
+                    $color={TAG_PREVIEW_COLOR.color}
                   >
                     {tagInput}
                   </S.TagBadge>
