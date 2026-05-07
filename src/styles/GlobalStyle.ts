@@ -105,6 +105,17 @@ const GlobalStyle = createGlobalStyle`
     --color-red: #CA372B;
 
     --color-blue-100: #76A5EA;
+    --color-blue-200: #83C6E5;
+
+    --color-brand-surface: #E1EAF1;
+
+    --color-error: #E5484D;
+
+    --color-text-body: #303030;
+    --color-text-dark: #404040;
+    --color-gray-muted: #667085;
+
+    --color-overlay: rgba(0, 0, 0, 0.5);
 
     --color-profile-green:#206E4E;
     --color-profile-violet: #593EA5;
