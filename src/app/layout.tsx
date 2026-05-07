@@ -24,8 +24,8 @@ export default function RootLayout({
       <body>
         <StyledComponentsRegistry>
           <GlobalStyle />
-          {children}
           <Toast />
+          {children}
         </StyledComponentsRegistry>
       </body>
     </html>
