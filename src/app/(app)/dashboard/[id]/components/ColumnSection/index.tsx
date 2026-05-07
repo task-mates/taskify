@@ -6,6 +6,7 @@ import * as S from './styles';
 import Card from '../Card';
 import Confirm from '@/src/components/Confirm';
 import ColumnEditModal from '@/src/components/modals/ColumnEditModal';
+import TodoCreateModal from '@/src/components/modals/todo/TodoCreateModal';
 import { columnsApi } from '@/src/apis/columns';
 import { showToast } from '@/src/utils/toast';
 import type { Card as CardInfo } from '@/src/apis/cards/type';
@@ -17,6 +18,7 @@ import ChevronDownIcon from '@/src/components/icons/icon-chevron-down.svg';
 import ChevronUpIcon from '@/src/components/icons/icon-chevron-up.svg';
 
 type ColumnSectionProps = {
+  dashboardId: number;
   columnId: number;
   title: string;
   totalCount: number;
@@ -26,6 +28,7 @@ type ColumnSectionProps = {
 
 export default function ColumnSection({
   columnId,
+  dashboardId,
   title,
   totalCount,
   cards,
@@ -35,6 +38,7 @@ export default function ColumnSection({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const droppableId = String(columnId);
 
@@ -119,7 +123,7 @@ export default function ColumnSection({
         </S.Setting>
       </S.Header>
 
-      <S.AddButton type="button">
+      <S.AddButton type="button" onClick={() => setIsCreateModalOpen(true)}>
         <S.IconContainer>
           <PlusIcon aria-hidden="true" />
         </S.IconContainer>
@@ -149,7 +153,11 @@ export default function ColumnSection({
                       {...dragProvided.dragHandleProps}
                       $isDragging={snapshot.isDragging}
                     >
-                      <Card card={card} />
+                      <Card
+                        card={card}
+                        dashboardId={dashboardId}
+                        columnTitle={title}
+                      />
                     </S.DraggableWrap>
                   )}
                 </Draggable>
@@ -176,6 +184,18 @@ export default function ColumnSection({
           confirmText="삭제"
           onConfirm={() => void handleDelete()}
           onClose={() => setIsDeleteConfirmOpen(false)}
+        />
+      )}
+
+      {isCreateModalOpen && (
+        <TodoCreateModal
+          dashboardId={dashboardId}
+          columnId={columnId}
+          onClose={() => setIsCreateModalOpen(false)}
+          onCreated={() => {
+            setIsCreateModalOpen(false);
+            onUpdated?.();
+          }}
         />
       )}
     </S.Section>

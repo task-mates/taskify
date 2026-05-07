@@ -136,6 +136,7 @@ export default function DashboardView({ dashboardId }: DashboardViewProps) {
           {columnsWithCards.map((column) => (
             <ColumnSection
               key={column.columnId}
+              dashboardId={dashboardId}
               columnId={column.columnId}
               title={column.title}
               totalCount={column.totalCount}

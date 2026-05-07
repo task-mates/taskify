@@ -27,6 +27,7 @@ const TODO_CREATE_FORM_ID = 'todo-create-form';
 
 export default function TodoCreateModal({
   onClose,
+  onCreated,
   dashboardId,
   columnId,
 }: TodoCreateModalProps) {
@@ -105,6 +106,7 @@ export default function TodoCreateModal({
       });
 
       showToast.success('카드가 생성되었습니다.');
+      onCreated?.();
       onClose();
     } catch {
     }
