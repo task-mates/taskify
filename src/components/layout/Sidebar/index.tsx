@@ -137,18 +137,20 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
           {!isError && dashboards.length > 0 && (
             <S.DashboardList>
-              {dashboards.map((board) => (
-                <S.DashboardItem
-                  key={board.id}
-                  $active={pathname === `/dashboard/${board.id}`}
-                >
-                  <Link href={`/dashboard/${board.id}`}>
-                    <S.ColorDot $color={board.color} />
-                    <S.Title>{board.title}</S.Title>
-                    {board.createdByMe && <CrownIcon aria-hidden="true" />}
-                  </Link>
-                </S.DashboardItem>
-              ))}
+              {dashboards.map((board) => {
+                const isActive = new RegExp(
+                  `^/dashboard/${board.id}(/|$)`
+                ).test(pathname);
+                return (
+                  <S.DashboardItem key={board.id} $active={isActive}>
+                    <Link href={`/dashboard/${board.id}`}>
+                      <S.ColorDot $color={board.color} />
+                      <S.Title>{board.title}</S.Title>
+                      {board.createdByMe && <CrownIcon aria-hidden="true" />}
+                    </Link>
+                  </S.DashboardItem>
+                );
+              })}
               <div ref={observerRef} style={{ height: '1px' }} />
             </S.DashboardList>
           )}
@@ -164,9 +166,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       </S.Wrapper>
 
       {isCreateModalOpen && (
-        <DashboardCreateModal
-          onClose={() => setIsCreateModalOpen(false)}
-        />
+        <DashboardCreateModal onClose={() => setIsCreateModalOpen(false)} />
       )}
     </>
   );
