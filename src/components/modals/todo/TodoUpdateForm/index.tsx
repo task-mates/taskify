@@ -9,14 +9,7 @@ import { showToast } from '@/src/utils/toast';
 import { emitCardChanged } from '@/src/utils/dashboardListEvent';
 import TodoFormFields from '../common/TodoFormFields';
 import * as S from './styles';
-
-type TodoUpdateFormProps = {
-  cardId: number;
-  dashboardId: number;
-  columnId: number;
-  onSuccess: () => void;
-  onValidChange?: (isValid: boolean) => void;
-};
+import { TodoUpdateFormProps } from './type';
 
 export const TODO_UPDATE_FORM_ID = 'todo-update-form';
 
