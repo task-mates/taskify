@@ -32,8 +32,11 @@ export default function TodoUpdateForm({
       try {
         await cardsApi.update(cardId, {
           ...data,
-          tags: data.tags.map((tag) => tag.name),
           columnId,
+          tags: data.tags.map((tag) => tag.name),
+          assigneeUserId: data.selectedAssignee
+            ? data.selectedAssignee.userId
+            : null,
         });
 
         showToast.success('카드가 수정되었습니다.');
