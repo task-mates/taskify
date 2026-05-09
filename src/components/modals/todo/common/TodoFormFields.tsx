@@ -1,10 +1,11 @@
-import { useTodoForm } from '@/src/hooks/useTodoForm';
-import DatePicker, { registerLocale } from 'react-datepicker';
-import * as S from './styles';
+import DatePicker from 'react-datepicker';
 import UploadImage from '@/src/components/icons/icon-uploadimg.svg';
 import DeleteIcon from '@/src/components/icons/icon-delete.svg';
-import { TAG_PREVIEW_COLOR } from '@/src/utils/tagColor';
+import { useTodoForm } from '@/src/hooks/useTodoForm';
 import { getProfileColorByNickname } from '@/src/utils/profileColor';
+import { TAG_PREVIEW_COLOR } from '@/src/utils/tagColor';
+import * as S from './styles';
+
 type TodoFormFieldsProps = ReturnType<typeof useTodoForm>;
 
 export default function TodoFormFields({

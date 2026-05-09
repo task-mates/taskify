@@ -29,15 +29,19 @@ export default function TodoUpdateForm({
   const form = useTodoForm({
     columnId,
     onSubmit: async (data) => {
-      await cardsApi.update(cardId, {
-        ...data,
-        tags: data.tags.map((tag) => tag.name),
-        columnId,
-      });
+      try {
+        await cardsApi.update(cardId, {
+          ...data,
+          tags: data.tags.map((tag) => tag.name),
+          columnId,
+        });
 
-      showToast.success('카드가 수정되었습니다.');
-      emitCardChanged(dashboardId);
-      onSuccess();
+        showToast.success('카드가 수정되었습니다.');
+        emitCardChanged(dashboardId);
+        onSuccess();
+      } catch {
+        showToast.error('카드 수정에 실패했습니다.');
+      }
     },
   });
 
