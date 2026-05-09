@@ -65,15 +65,17 @@ export default function TodoFormFields({
         <S.Label htmlFor="description" $required>
           설명
         </S.Label>
-        <S.Textarea
-          id="description"
-          placeholder="설명을 입력해주세요"
-          required
-          value={description}
-          onChange={(e) => {
-            setDescription(e.target.value);
-          }}
-        />
+        <S.TextareaWrapper>
+          <S.Textarea
+            id="description"
+            placeholder="설명을 입력해주세요"
+            required
+            value={description}
+            onChange={(e) => {
+              setDescription(e.target.value);
+            }}
+          />
+        </S.TextareaWrapper>
       </S.Field>
 
       <S.Row>

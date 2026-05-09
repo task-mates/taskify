@@ -121,10 +121,6 @@ export const Content = styled.div<{ $variant: layoutVariant }>`
     padding: 30px 30px 0;  
   `}
 
-  @media ${DEVICE.mobile} {
-    padding: 14px 20px;
-  }
-
   &::-webkit-scrollbar {
     width: 6px;
   }
@@ -140,6 +136,10 @@ export const Content = styled.div<{ $variant: layoutVariant }>`
 
   &::-webkit-scrollbar-thumb:hover {
     background-color: #0003;
+  }
+
+  @media ${DEVICE.mobile} {
+    padding: 14px 20px;
   }
 `;
 

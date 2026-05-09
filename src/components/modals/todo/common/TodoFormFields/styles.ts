@@ -307,13 +307,28 @@ export const DateInput = styled(Input)`
   }
 `;
 
-export const Textarea = styled.textarea`
+export const TextareaWrapper = styled.div`
+  overflow: hidden;
   padding: 20px;
   width: 100%;
   height: 160px;
   border-radius: 14px;
   border: 1px solid var(--color-gray-300);
   background: var(--color-white);
+
+  &:focus-within {
+    border-color: var(--color-brand-500);
+  }
+`;
+
+export const Textarea = styled.textarea`
+  width: 100%;
+  height: 100%;
+
+  border: none;
+  outline: none;
+  background: transparent;
+
   font-size: 16px;
   font-weight: 500;
   color: var(--color-black-200);
@@ -323,14 +338,29 @@ export const Textarea = styled.textarea`
     color: var(--color-gray-400);
   }
 
-  appearance: none;
-  -webkit-appearance: none;
-  transition: border-color 0.2s ease;
-
   &:focus {
     outline: none;
-    border-color: var(--color-brand-500);
     box-shadow: none;
+  }
+
+  appearance: none;
+  -webkit-appearance: none;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #0000001a;
+    border-radius: 999px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #0003;
   }
 
   @media ${DEVICE.mobile} {
