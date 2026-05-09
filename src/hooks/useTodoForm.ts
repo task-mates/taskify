@@ -1,18 +1,16 @@
 'use client';
 
-import { Tag } from '@/src/types/tag';
-import { Member } from '@/src/apis/members/type';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { getProfileColorByNickname } from '../utils/profileColor';
-import { getTagColorByName } from '../utils/tagColor';
-import { columnsApi } from '../apis/columns';
-import { showToast } from '../utils/toast';
-import { cardsApi } from '../apis/cards';
-import { emitCardChanged } from '../utils/dashboardListEvent';
 import dayjs from 'dayjs';
-import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/locale/ko';
 import { registerLocale } from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { columnsApi } from '../apis/columns';
+import { Member } from '@/src/apis/members/type';
+import { Tag } from '@/src/types/tag';
+import { getProfileColorByNickname } from '../utils/profileColor';
+import { getTagColorByName } from '../utils/tagColor';
+import { showToast } from '../utils/toast';
 
 registerLocale('ko', ko);
 
