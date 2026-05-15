@@ -6,7 +6,6 @@ export const BadgeGroup = styled.div`
   margin-top: 12px;
   display: flex;
   align-items: flex-start;
-  gap: 40px;
 
   @media ${DEVICE.mobile} {
     gap: 24px;
@@ -14,17 +13,36 @@ export const BadgeGroup = styled.div`
 `;
 
 export const ColumnBadge = styled.span`
+  position: relative;
   flex-shrink: 0;
-  padding: 4px 10px;
+  padding: 4px 10px 4px 20px;
   border-radius: 16px;
   font-size: 13px;
+  line-height: 1.3;
   font-weight: 600;
-  color: #cfe1fd;
-  background: var(--color-blue-100);
+  background: rgba(146, 204, 231, 0.4);
+  color: var(--color-blue-100);
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 5px;
+    height: 5px;
+    background: var(--color-blue-100);
+    border-radius: 50%;
+  }
 
   @media ${DEVICE.mobile} {
-    padding: 4px 8px;
+    padding: 4px 8px 4px 18px;
     font-size: 12px;
+
+    &::before {
+      width: 4px;
+      height: 4px;
+    }
   }
 `;
 
@@ -33,16 +51,6 @@ export const TagBadgeArea = styled.div`
   flex-wrap: wrap;
   gap: 8px;
   position: relative;
-
-  &::before {
-    content: '';
-    position: absolute;
-    left: -20px;
-    top: 2px;
-    width: 1px;
-    height: 18px;
-    background: var(--color-gray-400);
-  }
 
   @media ${DEVICE.mobile} {
     &::before {
@@ -182,8 +190,8 @@ export const TaskInfoNameBadge = styled.span<{
 }>`
   position: relative;
   flex-shrink: 0;
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
   font-size: 13px;
   font-weight: 600;
   display: flex;
@@ -218,6 +226,7 @@ export const ThumbnailImage = styled.img`
 `;
 
 export const Description = styled.p`
+  margin-top: 20px;
   font-size: 16px;
   line-height: 1.6;
   color: var(--color-black-200);
@@ -377,6 +386,10 @@ export const CommentCreated = styled.div`
   font-size: 14px;
   font-weight: 500;
   color: #787486;
+
+  @media ${DEVICE.mobile} {
+    font-size: 12px;
+  }
 `;
 
 export const CommentDate = styled.span``;
@@ -396,6 +409,10 @@ export const CommentActionGroup = styled.div`
   display: flex;
   gap: 8px;
   margin-left: auto;
+
+  @media ${DEVICE.mobile} {
+    gap: 5px;
+  }
 `;
 
 export const CommentActionButton = styled.button`
@@ -409,6 +426,10 @@ export const CommentActionButton = styled.button`
 
   &:hover {
     color: var(--color-black-200);
+  }
+
+  @media ${DEVICE.mobile} {
+    font-size: 12px;
   }
 `;
 

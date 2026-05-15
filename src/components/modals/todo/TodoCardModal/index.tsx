@@ -113,8 +113,6 @@ export default function TodoCardModal({
   const tags = (card?.tags ?? []).filter((tag) => tag.trim());
   const badgeGroup = (
     <S.BadgeGroup>
-      {columnTitle && <S.ColumnBadge>{columnTitle}</S.ColumnBadge>}
-
       {tags.length > 0 && (
         <S.TagBadgeArea>
           {tags.map((tag) => {
@@ -456,6 +454,15 @@ export default function TodoCardModal({
         {modalMode === 'detail' ? (
           <>
             <S.TaskInfo>
+              {columnTitle && (
+                <S.TaskInfoItem>
+                  <S.TaskInfoLabel>컬럼</S.TaskInfoLabel>
+                  <S.TaskInfoValue>
+                    <S.ColumnBadge>{columnTitle}</S.ColumnBadge>
+                  </S.TaskInfoValue>
+                </S.TaskInfoItem>
+              )}
+
               {assigneeNickname && (
                 <S.TaskInfoItem>
                   <S.TaskInfoLabel>담당자</S.TaskInfoLabel>
